@@ -71,6 +71,14 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
             return new HttpRestProviderForPush((URL) in[0], (Integer) in[1]);
         }
     };
+    
+    private Provider<GoogleCloudMessaging> gcmProvider = new Provider<GoogleCloudMessaging>() {
+
+        @Override
+        public GoogleCloudMessaging get(Object... context) {
+            return GoogleCloudMessaging.getInstance((Context) context[0]);
+        }
+    };
 
     public AeroGearGCMPushRegistrar(PushConfig config) {
         this.pushServerURI = config.getPushServerURI();
@@ -87,7 +95,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                 try {
 
                     if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(context);
+                        gcm = gcmProvider.get(context);
                     }
                     String regid = getRegistrationId(context);
 
@@ -162,7 +170,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                 try {
 
                     if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(context);
+                        gcm = gcmProvider.get(context);
                     }
 
                     gcm.unregister();
