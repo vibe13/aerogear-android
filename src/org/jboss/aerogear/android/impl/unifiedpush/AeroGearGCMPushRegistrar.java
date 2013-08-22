@@ -64,7 +64,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
     public static final long REGISTRATION_EXPIRY_TIME_MS = 1000 * 3600 * 24 * 7;
     private GoogleCloudMessaging gcm;
 
-    private final Provider<HttpRestProviderForPush> provider = new Provider<HttpRestProviderForPush> () {
+    private Provider<HttpRestProviderForPush> provider = new Provider<HttpRestProviderForPush> () {
 
         @Override
         public HttpRestProviderForPush get(Object... in) {
@@ -133,7 +133,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                         return ex;
                     }
 
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     return ex;
                 }
 
@@ -179,7 +179,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                         return ex;
                     }
 
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     return ex;
                 }
 
