@@ -64,11 +64,19 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
     public static final long REGISTRATION_EXPIRY_TIME_MS = 1000 * 3600 * 24 * 7;
     private GoogleCloudMessaging gcm;
 
-    private final Provider<HttpRestProviderForPush> provider = new Provider<HttpRestProviderForPush> () {
+    private Provider<HttpRestProviderForPush> httpProviderProvider = new Provider<HttpRestProviderForPush> () {
 
         @Override
         public HttpRestProviderForPush get(Object... in) {
             return new HttpRestProviderForPush((URL) in[0], (Integer) in[1]);
+        }
+    };
+    
+    private Provider<GoogleCloudMessaging> gcmProvider = new Provider<GoogleCloudMessaging>() {
+
+        @Override
+        public GoogleCloudMessaging get(Object... context) {
+            return GoogleCloudMessaging.getInstance((Context) context[0]);
         }
     };
 
@@ -87,7 +95,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                 try {
 
                     if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(context);
+                        gcm = gcmProvider.get(context);
                     }
                     String regid = getRegistrationId(context);
 
@@ -100,7 +108,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                     config.setDeviceToken(regid);
 
                     URL deviceRegistryURL = UrlUtils.appendToBaseURL(pushServerURI.toURL(), registryDeviceEndpoint);
-                    HttpRestProviderForPush httpProvider = provider.get(deviceRegistryURL, TIMEOUT);
+                    HttpRestProviderForPush httpProvider = httpProviderProvider.get(deviceRegistryURL, TIMEOUT);
                     httpProvider.setPasswordAuthentication(config.getVariantID(), config.getSecret());
 
                     Gson gson = new GsonBuilder().setExclusionStrategies(
@@ -133,7 +141,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                         return ex;
                     }
 
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     return ex;
                 }
 
@@ -162,13 +170,13 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                 try {
 
                     if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(context);
+                        gcm = gcmProvider.get(context);
                     }
 
                     gcm.unregister();
 
                     URL deviceRegistryURL = UrlUtils.appendToBaseURL(pushServerURI.toURL(), registryDeviceEndpoint);
-                    HttpRestProviderForPush provider = new HttpRestProviderForPush(deviceRegistryURL, TIMEOUT);
+                    HttpRestProviderForPush provider = httpProviderProvider.get(deviceRegistryURL, TIMEOUT);
                     provider.setPasswordAuthentication(config.getVariantID(), config.getSecret());
 
                     try {
@@ -179,7 +187,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                         return ex;
                     }
 
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     return ex;
                 }
 
