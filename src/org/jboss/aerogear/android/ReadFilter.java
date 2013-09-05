@@ -103,7 +103,7 @@ public class ReadFilter implements Serializable {
             amp = "&";
         }
 
-        return queryBuilder.toString();
+        return ("".equals(amp)) ? "" : queryBuilder.toString();
     }
 
     @SuppressWarnings( { "rawtypes" })
