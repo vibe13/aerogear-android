@@ -65,6 +65,7 @@ public final class UrlUtils {
     * @throws IllegalArgumentException if baseUrl+endpoint is not a real url.
     */
    public static URL appendQueryToBaseURL(final URL baseURL, String query) {
+
        try {
            String baseString = baseURL.toString();
            if (baseString.endsWith("/") ) {
@@ -75,13 +76,11 @@ public final class UrlUtils {
                query = URLEncoder.encode(query, "UTF-8");
                query = "?" + query;
            } else {
-               query = query.replaceFirst("?", "");
+               query = query.replaceFirst("[?]", "");
                query = URLEncoder.encode(query, "UTF-8");
                query = "?" + query;
            }
-           
-           
-           
+
            return new URL(baseString + query);
        } catch (MalformedURLException ex) {
            String message = "Could not append " + query + " to " + baseURL.toString();
