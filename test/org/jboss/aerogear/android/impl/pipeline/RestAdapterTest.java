@@ -77,6 +77,7 @@ public class RestAdapterTest {
     private static final String SERIALIZED_POINTS = "{\"points\":[{\"x\":0,\"y\":0},{\"x\":1,\"y\":2},{\"x\":2,\"y\":4},{\"x\":3,\"y\":6},{\"x\":4,\"y\":8},{\"x\":5,\"y\":10},{\"x\":6,\"y\":12},{\"x\":7,\"y\":14},{\"x\":8,\"y\":16},{\"x\":9,\"y\":18}],\"id\":\"1\"}";
     private static final String POINTS_ARRAY = "[{\"x\":0,\"y\":0},{\"x\":1,\"y\":2},{\"x\":2,\"y\":4},{\"x\":3,\"y\":6},{\"x\":4,\"y\":8},{\"x\":5,\"y\":10},{\"x\":6,\"y\":12},{\"x\":7,\"y\":14},{\"x\":8,\"y\":16},{\"x\":9,\"y\":18}]";
     private URL url;
+    private URL urlNoSlash;
     private final Provider<HttpProvider> stubHttpProviderFactory = new Provider<HttpProvider>() {
         @Override
         public HttpProvider get(Object... in) {
@@ -87,6 +88,7 @@ public class RestAdapterTest {
     @Before
     public void setup() throws MalformedURLException {
         url = new URL("http://server.com/context/");
+        urlNoSlash = new URL("http://server.com/context");
     }
 
     @Test
@@ -341,7 +343,7 @@ public class RestAdapterTest {
         });
         latch.await(500, TimeUnit.MILLISECONDS);
 
-        verify(factory).get(eq(new URL(url.toString() + "?limit=10&%7B%22model%22:%22BMW%22%7D&token=token")), eq(Integer.MAX_VALUE));
+        verify(factory).get(eq(new URL(urlNoSlash.toString() + "?limit=10&%7B%22model%22:%22BMW%22%7D&token=token")), eq(60000));
     }
 
     @Test
@@ -389,7 +391,7 @@ public class RestAdapterTest {
         });
         latch.await(50000, TimeUnit.MILLISECONDS);
 
-        verify(factory).get(new URL(url.toString() + "?limit=10&model=BMW&token=token"), Integer.MAX_VALUE);
+        verify(factory).get(new URL(urlNoSlash.toString() + "?limit=10&model=BMW&token=token"), 60000);
     }
 
     /**

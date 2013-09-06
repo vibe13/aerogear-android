@@ -45,7 +45,7 @@ public final class PipeConfig {
     private PageConfig pageConfig;
     private AuthenticationModule authModule;
     private PipeHandler handler;
-    private Integer timeout = Integer.MAX_VALUE;
+    private Integer timeout = 60000;
     private ResponseParser responseParser = new GsonResponseParser();
     /**
      * Where the data elements the pipe wants to extract are found in the

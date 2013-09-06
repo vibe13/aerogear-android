@@ -92,7 +92,7 @@ public class RestRunner<T> implements PipeHandler<T> {
         this.requestBuilder = new GsonRequestBuilder<T>();
         this.pageConfig = null;
         this.parameterProvider = new DefaultParameterProvider();
-        this.timeout = Integer.MAX_VALUE;
+        this.timeout = 60000;
         this.responseParser = new GsonResponseParser<T>();
     }
 
