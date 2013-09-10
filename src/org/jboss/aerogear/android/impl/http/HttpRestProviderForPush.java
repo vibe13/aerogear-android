@@ -16,8 +16,6 @@
  */
 package org.jboss.aerogear.android.impl.http;
 
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 
 import org.jboss.aerogear.android.Callback;
