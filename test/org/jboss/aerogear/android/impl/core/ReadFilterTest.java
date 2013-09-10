@@ -28,6 +28,12 @@ import org.junit.runner.RunWith;
 public class ReadFilterTest {
 
     @Test
+    public void testQueryBuilderWithEmptyReadFilter() throws JSONException {
+        ReadFilter filter = new ReadFilter();
+        assertEquals("", filter.getQuery());
+    }
+
+    @Test
     public void testFilterQueryBuilder() throws JSONException {
         ReadFilter filter = new ReadFilter();
         filter.setLimit(1);

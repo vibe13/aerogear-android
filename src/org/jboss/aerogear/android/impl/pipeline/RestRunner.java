@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.http.client.utils.URIUtils;
 import org.jboss.aerogear.android.Provider;
 import org.jboss.aerogear.android.ReadFilter;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
@@ -45,6 +44,7 @@ import org.jboss.aerogear.android.impl.pipeline.paging.WrappingPagedList;
 import org.jboss.aerogear.android.impl.reflection.Property;
 import org.jboss.aerogear.android.impl.reflection.Scan;
 import org.jboss.aerogear.android.impl.util.ParseException;
+import org.jboss.aerogear.android.impl.util.UrlUtils;
 import org.jboss.aerogear.android.impl.util.WebLinkParser;
 import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
@@ -92,7 +92,7 @@ public class RestRunner<T> implements PipeHandler<T> {
         this.requestBuilder = new GsonRequestBuilder<T>();
         this.pageConfig = null;
         this.parameterProvider = new DefaultParameterProvider();
-        this.timeout = Integer.MAX_VALUE;
+        this.timeout = 60000;
         this.responseParser = new GsonResponseParser<T>();
     }
 
@@ -291,22 +291,23 @@ public class RestRunner<T> implements PipeHandler<T> {
     }
 
     private HttpProvider getHttpProvider(URI relativeUri) {
-        try {
-            AuthorizationFields fields = loadAuth(relativeUri, "GET");
-
-            URL authorizedURL = addAuthorization(fields.getQueryParameters(), URIUtils.resolve(baseURL.toURI(), relativeUri).toURL());
-
-            final HttpProvider httpProvider = httpProviderFactory.get(authorizedURL, timeout);
-            httpProvider.setDefaultHeader("Content-TYpe", requestBuilder.getContentType());
-            addAuthHeaders(httpProvider, fields);
-            return httpProvider;
-        } catch (MalformedURLException ex) {
-            Log.e(TAG, "error resolving " + baseURL + " with " + relativeUri, ex);
-            throw new RuntimeException(ex);
-        } catch (URISyntaxException ex) {
-            Log.e(TAG, "error resolving " + baseURL + " with " + relativeUri, ex);
-            throw new RuntimeException(ex);
+        final String queryString;
+        
+        AuthorizationFields fields = loadAuth(relativeUri, "GET");
+        
+        if (relativeUri == null || relativeUri.getQuery() == null){
+        	queryString = "";
+        } else {
+        	queryString = relativeUri.getQuery().toString();
         }
+        
+        URL authorizedURL = addAuthorization(fields.getQueryParameters(), UrlUtils.appendQueryToBaseURL(baseURL, queryString));
+
+        final HttpProvider httpProvider = httpProviderFactory.get(authorizedURL, timeout);
+        httpProvider.setDefaultHeader("Content-TYpe", requestBuilder.getContentType());
+        addAuthHeaders(httpProvider, fields);
+        return httpProvider;
+        
     }
 
     /**
