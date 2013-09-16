@@ -16,21 +16,26 @@
  */
 package org.jboss.aerogear.android.impl.http;
 
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.net.URL;
+
+import org.jboss.aerogear.android.Callback;
+import org.jboss.aerogear.android.authentication.impl.HttpBasicAuthenticationModule;
 import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.http.HttpException;
 import org.jboss.aerogear.android.http.HttpProvider;
+
+import android.util.Pair;
 
 /**
  * This is a stopgap class to provide HTTP Basic Authentication until we move
  * Authenticator support to the HttpProvider level.
  */
 public class HttpRestProviderForPush implements HttpProvider {
-    
+
     private final HttpRestProvider provider;
 
+    private HttpBasicAuthenticationModule basicAuth;
+    
     public HttpRestProviderForPush(URL url, Integer timeout) {
         this.provider = new HttpRestProvider(url, timeout);
     }
@@ -76,11 +81,30 @@ public class HttpRestProviderForPush implements HttpProvider {
     }
 
     public void setPasswordAuthentication(final String username, final String password) {
-        Authenticator.setDefault(new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password.toCharArray());
-            }
-        });
+        basicAuth = new HttpBasicAuthenticationModule(getUrl());
+        basicAuth.login(username, password, new EmptyCallback());
+        for ( Pair<String, String> header : basicAuth.getAuthorizationFields().getHeaders()) {
+            setDefaultHeader(header.first, header.second);
+        }
     }
+    
+
+    /**
+     * This class does nothing, but basic auth needs some form of callback.
+     */
+    private static class EmptyCallback implements Callback<HeaderAndBody> {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public void onSuccess(HeaderAndBody data) {
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+        }
+
+    }
+    
     
 }

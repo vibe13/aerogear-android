@@ -202,7 +202,7 @@ public class HttpBasicAuthenticationModule extends AbstractAuthenticationModule 
     private String getHashedAuth() {
         StringBuilder headerValueBuilder = new StringBuilder(AUTHORIZATION_METHOD).append(" ");
         String unhashedCredentials = new StringBuilder(auth.getUserName()).append(":").append(auth.getPassword()).toString();
-        String hashedCrentials = Base64.encodeToString(unhashedCredentials.getBytes(), Base64.DEFAULT);
+        String hashedCrentials = Base64.encodeToString(unhashedCredentials.getBytes(), Base64.DEFAULT | Base64.NO_WRAP);
         return headerValueBuilder.append(hashedCrentials).toString();
     }
 
