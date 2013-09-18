@@ -88,10 +88,10 @@ public class SupportLoginLoader extends AbstractSupportAuthenticationLoader {
 
     @Override
     protected void onStartLoading() {
-        if (!module.isLoggedIn() && result == null) {
-            forceLoad();
-        } else {
+        if (module.isLoggedIn() && result != null) {
             deliverResult(result);
+        } else {
+            forceLoad();
         }
     }
 
