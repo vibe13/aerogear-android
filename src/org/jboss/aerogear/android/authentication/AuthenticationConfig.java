@@ -30,7 +30,7 @@ public class AuthenticationConfig {
 
     private AuthType authType = AuthTypes.AG_SECURITY;
 
-    private Integer timeout = Integer.MAX_VALUE;
+    private Integer timeout = 60000;
 
     public String getLoginEndpoint() {
         return loginEndpoint;
