@@ -25,8 +25,12 @@ import org.jboss.aerogear.android.authentication.AuthorizationFields;
 import org.jboss.aerogear.android.http.HeaderAndBody;
 
 import android.util.Log;
+import java.net.CookieManager;
+import java.net.CookieStore;
+import java.net.HttpCookie;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -148,6 +152,15 @@ public final class AGSecurityAuthenticationModule extends AbstractAuthentication
                 Exception exception = null;
                 try {
                     runner.onLogout();
+                    
+                    CookieStore store = ((CookieManager) CookieManager.getDefault()).getCookieStore();
+                    List<HttpCookie> cookies = store.get(getBaseURL().toURI());
+
+                    for (HttpCookie cookie : cookies) {
+                        store.remove(getBaseURL().toURI(), cookie);
+                    }
+
+                    
                     isLoggedIn = false;
                 } catch (Exception e) {
                     Log.e(TAG, "Error with Login", e);
