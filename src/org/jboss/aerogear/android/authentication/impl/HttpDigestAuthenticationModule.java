@@ -22,6 +22,8 @@ import java.net.URL;
 import java.util.Map;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.authentication.AbstractAuthenticationModule;
+import static org.jboss.aerogear.android.authentication.AbstractAuthenticationModule.PASSWORD_PARAMETER_NAME;
+import static org.jboss.aerogear.android.authentication.AbstractAuthenticationModule.USERNAME_PARAMETER_NAME;
 import org.jboss.aerogear.android.authentication.AuthenticationConfig;
 import org.jboss.aerogear.android.authentication.AuthorizationFields;
 import org.jboss.aerogear.android.http.HeaderAndBody;
@@ -178,5 +180,12 @@ public class HttpDigestAuthenticationModule extends AbstractAuthenticationModule
     }
     
     
+    /**
+     * This will log in the user using the keys "loginName" and "password".
+     */
+    @Override
+    public void login(Map<String, String> loginData, Callback<HeaderAndBody> callback) {
+        login(loginData.get(USERNAME_PARAMETER_NAME), loginData.get(PASSWORD_PARAMETER_NAME), callback);
+    }
     
 }

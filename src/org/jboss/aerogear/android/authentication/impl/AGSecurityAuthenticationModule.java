@@ -44,9 +44,6 @@ public final class AGSecurityAuthenticationModule extends AbstractAuthentication
 
     private static final String TAG = AGSecurityAuthenticationModule.class.getSimpleName();
 
-    static final String USERNAME_PARAMETER_NAME = "loginName";
-    static final String PASSWORD_PARAMETER_NAME = "password";
-    
     private boolean isLoggedIn = false;
 
     private final AGSecurityAuthenticationModuleRunner runner;
@@ -118,6 +115,7 @@ public final class AGSecurityAuthenticationModule extends AbstractAuthentication
         login(loginData, callback);
     }
 
+    @Override
     public void login(final Map<String, String> loginData,
             final Callback<HeaderAndBody> callback) {
         THREAD_POOL_EXECUTOR.execute(new Runnable() {

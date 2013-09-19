@@ -34,6 +34,9 @@ import org.jboss.aerogear.android.http.HeaderAndBody;
 public abstract class AbstractAuthenticationModule implements
         AuthenticationModule {
 
+    public static final String USERNAME_PARAMETER_NAME = "loginName";
+    public static final String PASSWORD_PARAMETER_NAME = "password";
+    
     private static final int CORE_POOL_SIZE = 5;
     private static final int MAX_POOL_SIZE = 64;
     private static final int KEEP_ALIVE = 1;

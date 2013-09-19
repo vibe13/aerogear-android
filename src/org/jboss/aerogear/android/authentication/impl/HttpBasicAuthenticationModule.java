@@ -36,6 +36,7 @@ import org.jboss.aerogear.android.pipeline.Pipe;
 import android.util.Base64;
 import android.util.Pair;
 import java.net.URI;
+import static org.jboss.aerogear.android.authentication.AbstractAuthenticationModule.USERNAME_PARAMETER_NAME;
 
 /**
  * This class provides Authentication using HTTP Basic
@@ -215,5 +216,14 @@ public class HttpBasicAuthenticationModule extends AbstractAuthenticationModule 
         for (int i = 0; i < password.length; i++) {
             password[i] = '0';
         }
+    }
+
+    /**
+     * This will log in the user using the keys "loginName" and "password".
+     * 
+     */
+    @Override
+    public void login(Map<String, String> loginData, Callback<HeaderAndBody> callback) {
+        login(loginData.get(USERNAME_PARAMETER_NAME), loginData.get(PASSWORD_PARAMETER_NAME), callback);
     }
 }

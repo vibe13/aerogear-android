@@ -25,6 +25,9 @@ import org.jboss.aerogear.android.http.HeaderAndBody;
 import android.content.Context;
 import android.content.Loader;
 import android.util.Log;
+import java.util.HashMap;
+import java.util.Map;
+import org.jboss.aerogear.android.authentication.AbstractAuthenticationModule;
 
 /**
  * This class is a {@link Loader} which performs an login operation on behalf 
@@ -35,19 +38,31 @@ public class LoginLoader extends AbstractAuthenticationLoader {
     private static final String TAG = LoginLoader.class.getSimpleName();
 
     private HeaderAndBody result = null;
-    private final String username;
-    private final String password;
-
+    private final Map<String, String> loginData;
+    
+    @Deprecated
+    /**
+     * Use LoginLoader(Context, Callback, AuthenticationModule, Map) instead.
+     */
     LoginLoader(Context context, Callback callback, AuthenticationModule module, String username, String password) {
         super(context, module, callback);
-        this.username = username;
-        this.password = password;
+        Map<String, String> loginParams = new HashMap<String, String>();
+        loginParams.put(AbstractAuthenticationModule.USERNAME_PARAMETER_NAME, username);
+        loginParams.put(AbstractAuthenticationModule.PASSWORD_PARAMETER_NAME, password);
+        this.loginData = loginParams;
     }
 
+    
+    LoginLoader(Context context, Callback callback, AuthenticationModule module, Map<String, String> loginData) {
+        super(context, module, callback);
+        this.loginData = new HashMap<String, String>(loginData);
+    }
+
+    
     @Override
     public HeaderAndBody loadInBackground() {
         final CountDownLatch latch = new CountDownLatch(1);
-        module.login(username, password, new Callback<HeaderAndBody>() {
+        module.login(loginData, new Callback<HeaderAndBody>() {
 
             @Override
             public void onSuccess(HeaderAndBody data) {
@@ -79,5 +94,5 @@ public class LoginLoader extends AbstractAuthenticationLoader {
             deliverResult(result);
         }
     }
-
+    
 }
