@@ -64,7 +64,7 @@ public class AuthenticationModuleAdapter implements LoaderAuthenticationModule, 
 
     private static final String TAG = AuthenticationModuleAdapter.class.getSimpleName();
 
-    private static enum Methods {
+    public static enum Methods {
 
         LOGIN, LOGOUT, ENROLL
     };
@@ -148,7 +148,12 @@ public class AuthenticationModuleAdapter implements LoaderAuthenticationModule, 
         bundle.putSerializable(CALLBACK, callback);
         bundle.putBundle(PARAMS, loginBundle);
         bundle.putSerializable(METHOD, AuthenticationModuleAdapter.Methods.LOGIN);
-        manager.initLoader(id, bundle, this);
+        
+        if (manager.getLoader(id) != null && !module.isLoggedIn()) {
+            manager.restartLoader(id, bundle, this);
+        } else {
+            manager.initLoader(id, bundle, this);
+        }
     }
     
     @Override

@@ -60,7 +60,7 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
 
     private static final String TAG = SupportAuthenticationModuleAdapter.class.getSimpleName();
 
-    static enum Methods {
+    public static enum Methods {
 
         LOGIN, LOGOUT, ENROLL
     };
@@ -145,7 +145,11 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
         bundle.putSerializable(CALLBACK, callback);
         bundle.putBundle(PARAMS, loginBundle);
         bundle.putSerializable(METHOD, Methods.LOGIN);
-        manager.initLoader(id, bundle, this);
+        if (manager.getLoader(id) != null && !module.isLoggedIn()) {
+            manager.restartLoader(id, bundle, this);
+        } else {
+            manager.initLoader(id, bundle, this);
+        }    
     }
 
     @Override
