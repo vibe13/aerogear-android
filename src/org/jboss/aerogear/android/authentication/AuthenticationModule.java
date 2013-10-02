@@ -67,6 +67,17 @@ public interface AuthenticationModule {
             Callback<HeaderAndBody> callback);
 
     /**
+     * Will try to log in a user
+     * <p/>
+     * It will call the callbacks onSuccess with a parameter of a Map of the
+     * values returned by the enroll service or onFailure if there is an error
+     * 
+     * @param loginData
+     * @param callback
+     */
+    void login(Map<String, String> loginData, Callback<HeaderAndBody> callback);
+    
+    /**
      * Performs a logout of the current user.
      * <p/>
      * It will call callback.onSuccess with no value on success and

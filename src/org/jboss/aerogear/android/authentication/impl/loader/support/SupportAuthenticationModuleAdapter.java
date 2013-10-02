@@ -42,6 +42,10 @@ import android.util.Log;
 
 import com.google.common.base.Objects;
 import java.net.URI;
+import org.jboss.aerogear.android.authentication.AbstractAuthenticationModule;
+import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.CALLBACK;
+import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.METHOD;
+import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.PARAMS;
 
 /**
  * This class manages the relationship between Android's Loader framework and
@@ -56,7 +60,7 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
 
     private static final String TAG = SupportAuthenticationModuleAdapter.class.getSimpleName();
 
-    static enum Methods {
+    public static enum Methods {
 
         LOGIN, LOGOUT, ENROLL
     };
@@ -119,15 +123,33 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
         manager.initLoader(id, bundle, this);
     }
 
+    
     @Override
     public void login(String username, String password, Callback<HeaderAndBody> callback) {
-        int id = Objects.hashCode(name, username, password, callback);
+        Map<String, String> loginData = new HashMap<String, String>(4);
+        loginData.put(AbstractAuthenticationModule.USERNAME_PARAMETER_NAME, username);
+        loginData.put(AbstractAuthenticationModule.PASSWORD_PARAMETER_NAME, password);
+        login(loginData, callback);
+    }
+
+    @Override
+    public void login(Map<String, String> loginData, Callback<HeaderAndBody> callback) {
+        int id = Objects.hashCode(name, loginData, callback, Math.random());
         Bundle bundle = new Bundle();
+        Bundle loginBundle = new Bundle();
+        
+        for (Map.Entry<String, String> entry : loginData.entrySet()) {
+            loginBundle.putString(entry.getKey(), entry.getValue());
+        }
+        
         bundle.putSerializable(CALLBACK, callback);
-        bundle.putSerializable(USERNAME, username);
-        bundle.putSerializable(PASSWORD, password);
-        bundle.putSerializable(METHOD, SupportAuthenticationModuleAdapter.Methods.LOGIN);
-        manager.initLoader(id, bundle, this);
+        bundle.putBundle(PARAMS, loginBundle);
+        bundle.putSerializable(METHOD, Methods.LOGIN);
+        if (manager.getLoader(id) != null && !module.isLoggedIn()) {
+            manager.restartLoader(id, bundle, this);
+        } else {
+            manager.initLoader(id, bundle, this);
+        }    
     }
 
     @Override
@@ -136,7 +158,11 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
         Bundle bundle = new Bundle();
         bundle.putSerializable(CALLBACK, callback);
         bundle.putSerializable(METHOD, SupportAuthenticationModuleAdapter.Methods.LOGOUT);
-        manager.initLoader(id, bundle, this);
+        if (manager.getLoader(id) != null && module.isLoggedIn()) {
+            manager.restartLoader(id, bundle, this);
+        } else {
+            manager.initLoader(id, bundle, this);
+        }
     }
 
     @Override
@@ -166,9 +192,12 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
         Loader loader = null;
         switch (method) {
         case LOGIN: {
-            String username = bundle.getString(USERNAME);
-            String password = bundle.getString(PASSWORD);
-            loader = new SupportLoginLoader(applicationContext, callback, module, username, password);
+            Bundle loginBundle = bundle.getBundle(PARAMS);
+            Map<String, String> loginParams = new HashMap<String, String>(loginBundle.size());
+            for (String key : loginBundle.keySet()) {
+                loginParams.put(key, loginBundle.getString(key));
+            }
+            loader = new SupportLoginLoader(applicationContext, callback, module, loginParams);
         }
             break;
         case LOGOUT: {
