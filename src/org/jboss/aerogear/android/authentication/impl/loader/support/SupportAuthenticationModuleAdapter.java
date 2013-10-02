@@ -158,7 +158,11 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
         Bundle bundle = new Bundle();
         bundle.putSerializable(CALLBACK, callback);
         bundle.putSerializable(METHOD, SupportAuthenticationModuleAdapter.Methods.LOGOUT);
-        manager.initLoader(id, bundle, this);
+        if (manager.getLoader(id) != null && module.isLoggedIn()) {
+            manager.restartLoader(id, bundle, this);
+        } else {
+            manager.initLoader(id, bundle, this);
+        }
     }
 
     @Override
