@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.net.CookieManager;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public class AGSecurityAuthenticationModuleTest implements AuthenticationModuleT
     static {
         try {
             SIMPLE_URL = new URL("http://localhost:8080/todo-server");
+            CookieManager.setDefault(new java.net.CookieManager());
         } catch (MalformedURLException ex) {
             throw new IllegalStateException(ex);
         }
