@@ -15,7 +15,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.jboss.aerogear</groupId>
@@ -41,10 +42,9 @@
 
     <developers>
         <developer>
-            <id>secondsun</id>
-            <name>Summers Pittman</name>
-            <url>http://blog.sagaoftherealms.net/</url>
-            <email>supittma@redhat.com</email>
+            <id>aerogear</id>
+            <name>AeroGear Team</name>
+            <email>aerogear-dev@lists.jboss.org</email>
         </developer>
     </developers>
 
@@ -52,15 +52,103 @@
         <connection>scm:git:git@github.com:aerogear/aerogear-android.git</connection>
         <developerConnection>scm:git:git@github.com:aerogear/aerogear-android.git</developerConnection>
         <url>git@github.com:aerogear/aerogear-android.git</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
+        <android.version>4.1.1.4</android.version>
+        <android.support.version>[18,)</android.support.version>
+        <google.playservice.version>[10,)</google.playservice.version>
+        <guava.version>13.0.1</guava.version>
+        <gson.version>2.2.2</gson.version>
+        <roboeletric.version>1.2</roboeletric.version>
+        <junit.version>4.8.2</junit.version>
+        <mockito.version>1.9.0</mockito.version>
+
+        <maven.android.plugin.verson>3.6.0</maven.android.plugin.verson>
+        <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
+        <java.version>1.6</java.version>
+        <maven.dependency.plugin.version>2.5.1</maven.dependency.plugin.version>
+        <builder.helper.plugin.version>1.7</builder.helper.plugin.version>
+
+        <android.avd>18</android.avd>
+        <android.platform>18</android.platform>
+        <android.debug>true</android.debug>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <proguard.skip>true</proguard.skip>
-        <android.avd>15</android.avd>
-        <debug>true</debug>
     </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <version>${android.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${android.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>android.support</groupId>
+            <artifactId>compatibility-v4</artifactId>
+            <version>${android.support.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.android.gms</groupId>
+            <artifactId>google-play-services</artifactId>
+            <version>${google.playservice.version}</version>
+            <type>apklib</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.android.gms</groupId>
+            <artifactId>google-play-services</artifactId>
+            <version>${google.playservice.version}</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.pivotallabs</groupId>
+            <artifactId>robolectric</artifactId>
+            <version>${roboeletric.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
     <build>
         <sourceDirectory>src</sourceDirectory>
@@ -70,15 +158,8 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.6.0</version>
-                    <configuration>
-                        <sdk>
-                            <platform>17</platform>
-                        </sdk>
-                        <undeployBeforeDeploy>true</undeployBeforeDeploy>
-                    </configuration>
+                    <version>${maven.android.plugin.verson}</version>
                     <extensions>true</extensions>
-
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -86,10 +167,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -97,9 +178,10 @@
                 <artifactId>android-maven-plugin</artifactId>
                 <configuration>
                     <run>
-                        <debug>${debug}</debug>
+                        <debug>${android.debug}</debug>
                     </run>
                     <sdk>
+                        <platform>${android.platform}</platform>
                     </sdk>
                     <emulator>
                         <avd>${android.avd}</avd>
@@ -113,18 +195,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>${maven.dependency.plugin.version}</version>
                 <configuration>
                     <artifactItems>
                         <artifactItem>
                             <groupId>com.google.code.gson</groupId>
                             <artifactId>gson</artifactId>
-                            <version>2.2.2</version>
                         </artifactItem>
                         <artifactItem>
                             <groupId>com.google.guava</groupId>
                             <artifactId>guava</artifactId>
-                            <version>13.0.1</version>
                         </artifactItem>
                     </artifactItems>
                     <outputDirectory>${basedir}/libs</outputDirectory>
@@ -133,7 +213,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
+                <version>${builder.helper.plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -154,82 +234,5 @@
         </plugins>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android</artifactId>
-            <version>[4.0.1.2,)</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>annotations</artifactId>
-            <version>[4.1.1.4,)</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>android.support</groupId>
-            <artifactId>compatibility-v4</artifactId>
-            <version>[18,)</version>
-        </dependency>
-
-        <!-- Gson: Java to Json conversion -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.2.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Make sure this is below the android dependencies -->
-        <dependency>
-            <groupId>com.pivotallabs</groupId>
-            <artifactId>robolectric</artifactId>
-            <version>1.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>1.9.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>13.0.1</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>com.google.android.gms</groupId>
-            <artifactId>google-play-services</artifactId>
-            <version>[10,)</version>
-            <type>apklib</type>
-        </dependency>
-        <dependency>
-            <groupId>com.google.android.gms</groupId>
-            <artifactId>google-play-services</artifactId>
-            <version>[10,)</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
-
-    <profiles>
-        <profile>
-            <id>release</id>
-            <properties>
-                <proguard.skip>false</proguard.skip>
-            </properties>
-        </profile>
-    </profiles>
 </project>
+
