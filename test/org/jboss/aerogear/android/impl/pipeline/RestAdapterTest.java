@@ -316,7 +316,7 @@ public class RestAdapterTest {
     }
 
     @Test
-    public void runReadWithFilterUsingUri() throws Exception {
+    public void runReadWithFilterUsingUriQuery() throws Exception {
 
         final CountDownLatch latch = new CountDownLatch(1);
 
@@ -346,6 +346,37 @@ public class RestAdapterTest {
         verify(factory).get(eq(new URL(urlNoSlash.toString() + "?limit=10&%7B%22model%22:%22BMW%22%7D&token=token")), eq(60000));
     }
 
+    @Test
+    public void runReadWithFilterUsingUriPath() throws Exception {
+
+        final CountDownLatch latch = new CountDownLatch(1);
+
+        HttpProviderFactory factory = mock(HttpProviderFactory.class);
+        when(factory.get(anyObject())).thenReturn(mock(HttpProvider.class));
+
+        RestAdapter<Data> adapter = new RestAdapter<Data>(Data.class, url);
+        Object restRunner = UnitTestUtils.getPrivateField(adapter, "restRunner");
+        UnitTestUtils.setPrivateField(restRunner, "httpProviderFactory", factory);
+
+        ReadFilter filter = new ReadFilter();
+        filter.setLinkUri(URI.create("/token"));
+
+        adapter.read(filter, new Callback<List<Data>>() {
+            @Override
+            public void onSuccess(List<Data> data) {
+                latch.countDown();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                latch.countDown();
+            }
+        });
+        latch.await(500, TimeUnit.MILLISECONDS);
+
+        verify(factory).get(eq(new URL(urlNoSlash.toString() + "/token")), eq(60000));
+    }
+    
     @Test
     public void runReadWithFilterAndAuthentication() throws Exception {
 
