@@ -301,7 +301,8 @@ public class RestRunner<T> implements PipeHandler<T> {
         	queryString = relativeUri.getQuery().toString();
         }
         
-        URL authorizedURL = addAuthorization(fields.getQueryParameters(), UrlUtils.appendQueryToBaseURL(baseURL, queryString));
+        URL mergedURL = UrlUtils.appendToBaseURL(baseURL, relativeUri.getPath());
+        URL authorizedURL = addAuthorization(fields.getQueryParameters(), UrlUtils.appendQueryToBaseURL(mergedURL, queryString));
 
         final HttpProvider httpProvider = httpProviderFactory.get(authorizedURL, timeout);
         httpProvider.setDefaultHeader("Content-TYpe", requestBuilder.getContentType());
@@ -409,6 +410,10 @@ public class RestRunner<T> implements PipeHandler<T> {
                 }
             }
 
+            if (baseQuery.isEmpty()) {
+                baseQuery = null;
+            }
+            
             return new URI(baseURI.getScheme(), baseURI.getUserInfo(), baseURI.getHost(), baseURI.getPort(), baseURI.getPath(), baseQuery, baseURI.getFragment()).toURL();
         } catch (MalformedURLException ex) {
             Log.e(TAG, "The URL could not be created from " + baseURL.toString(), ex);
