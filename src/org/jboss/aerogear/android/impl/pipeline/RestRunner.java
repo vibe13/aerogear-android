@@ -409,6 +409,10 @@ public class RestRunner<T> implements PipeHandler<T> {
                 }
             }
 
+            if (baseQuery.isEmpty()) {
+                baseQuery = null;
+            }
+            
             return new URI(baseURI.getScheme(), baseURI.getUserInfo(), baseURI.getHost(), baseURI.getPort(), baseURI.getPath(), baseQuery, baseURI.getFragment()).toURL();
         } catch (MalformedURLException ex) {
             Log.e(TAG, "The URL could not be created from " + baseURL.toString(), ex);
