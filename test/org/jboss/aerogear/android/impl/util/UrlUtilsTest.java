@@ -67,7 +67,7 @@ public class UrlUtilsTest {
     public void testAppendQueryWithEmptyQuery() throws Exception {
         URL baseURL = new URL("http://fakeurl.com/endpoint");
         String query = "";
-        URL expectURL = new URL("http://fakeurl.com/endpoint?");
+        URL expectURL = new URL("http://fakeurl.com/endpoint");
 
         assertEquals(expectURL, appendQueryToBaseURL(baseURL, query));
     }
@@ -76,7 +76,7 @@ public class UrlUtilsTest {
     public void testAppendQueryWithUrlEndSlash() throws Exception {
         URL baseURL = new URL("http://fakeurl.com/endpoint/");
         String query = "";
-        URL expectURL = new URL("http://fakeurl.com/endpoint?");
+        URL expectURL = new URL("http://fakeurl.com/endpoint/");
 
         assertEquals(expectURL, appendQueryToBaseURL(baseURL, query));
     }

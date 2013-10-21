@@ -66,6 +66,10 @@ public final class UrlUtils {
     */
    public static URL appendQueryToBaseURL(final URL baseURL, String query) {
 
+       if (query == null || query.isEmpty()) {
+           return baseURL;
+       }
+       
        try {
            String baseString = baseURL.toString();
            if (baseString.endsWith("/") ) {
