@@ -16,14 +16,14 @@
  */
 package org.jboss.aerogear.android.impl.datamanager;
 
+import android.content.Context;
+import com.google.gson.GsonBuilder;
+import org.jboss.aerogear.R;
 import org.jboss.aerogear.android.datamanager.IdGenerator;
 import org.jboss.aerogear.android.datamanager.Store;
 import org.jboss.aerogear.android.datamanager.StoreFactory;
 import org.jboss.aerogear.android.datamanager.StoreType;
-
-import android.content.Context;
-
-import com.google.gson.GsonBuilder;
+import org.jboss.aerogear.crypto.keys.PrivateKey;
 
 public final class DefaultStoreFactory implements StoreFactory {
 
@@ -34,6 +34,7 @@ public final class DefaultStoreFactory implements StoreFactory {
         Class klass = config.getKlass();
         Context context = config.getContext();
         GsonBuilder builder = config.getBuilder();
+        PrivateKey privateKey = config.getPrivateKey();
 
         if (type.equals(StoreTypes.MEMORY)) {
             return new MemoryStorage(idGenerator);
@@ -51,6 +52,8 @@ public final class DefaultStoreFactory implements StoreFactory {
             }
 
             return new SQLStore(klass, context, builder, idGenerator);
+        } else if(StoreTypes.ENCRYPTED_MEMORY.equals(type)) {
+            return new EncryptedMemoryStore(idGenerator, privateKey, klass);
         }
         throw new IllegalArgumentException("Type is not supported yet");
     }

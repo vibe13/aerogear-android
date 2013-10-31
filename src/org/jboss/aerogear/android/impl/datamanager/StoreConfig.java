@@ -16,14 +16,13 @@
  */
 package org.jboss.aerogear.android.impl.datamanager;
 
+import android.content.Context;
+import com.google.gson.GsonBuilder;
 import org.jboss.aerogear.android.datamanager.IdGenerator;
 import org.jboss.aerogear.android.datamanager.Store;
 import org.jboss.aerogear.android.datamanager.StoreFactory;
 import org.jboss.aerogear.android.datamanager.StoreType;
-
-import android.content.Context;
-
-import com.google.gson.GsonBuilder;
+import org.jboss.aerogear.crypto.keys.PrivateKey;
 
 /**
  * This class bundles up all of the possible variables which may be used to instantiate a {@link Store}
@@ -58,6 +57,11 @@ public final class StoreConfig {
      * Defaults to new DefaultIdGenerator();
      */
     private IdGenerator idGenerator = new DefaultIdGenerator();
+
+    /**
+     * The PrivateKey used to crypt/decrypt data
+     */
+    private PrivateKey privateKey;
 
     public StoreConfig() {
     }
@@ -100,6 +104,14 @@ public final class StoreConfig {
 
     public void setIdGenerator(IdGenerator idGenerator) {
         this.idGenerator = idGenerator;
+    }
+
+    public PrivateKey getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(PrivateKey privateKey) {
+        this.privateKey = privateKey;
     }
 
 }
