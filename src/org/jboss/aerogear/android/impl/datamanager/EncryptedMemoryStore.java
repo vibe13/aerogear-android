@@ -28,11 +28,10 @@ import org.jboss.aerogear.crypto.keys.PrivateKey;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class EncryptedMemoryStore<T> implements Store<T> {
 
-    private final MemoryStorage<Map<String, byte[]>> memoryStorage;
+    private final MemoryStorage<byte[]> memoryStorage;
     private final CryptoUtils<T> cryptoUtils;
 
     public EncryptedMemoryStore(IdGenerator idGenerator, PrivateKey privateKey, Class<T> modelClass) {
@@ -54,7 +53,7 @@ public class EncryptedMemoryStore<T> implements Store<T> {
      */
     @Override
     public Collection<T> readAll() throws InvalidKeyException {
-        Collection<Map<String, byte[]>> encryptedCollection = memoryStorage.readAll();
+        Collection<byte[]> encryptedCollection = memoryStorage.readAll();
         return cryptoUtils.decrypt(encryptedCollection);
     }
 
@@ -63,7 +62,7 @@ public class EncryptedMemoryStore<T> implements Store<T> {
      */
     @Override
     public T read(Serializable id) throws InvalidKeyException {
-        Map<String, byte[]> encryptedItem = memoryStorage.read(id);
+        byte[] encryptedItem = memoryStorage.read(id);
         return cryptoUtils.decrypt(encryptedItem);
     }
 

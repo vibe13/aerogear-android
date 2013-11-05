@@ -32,6 +32,10 @@ public class Property {
     private Method getMethod;
     private Method setMethod;
 
+    public Class getType() {
+        return type;
+    }
+
     /**
      * Constructor to access field with get/set
      *
