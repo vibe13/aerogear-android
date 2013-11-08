@@ -16,6 +16,7 @@
  */
 package org.jboss.aerogear.android.impl.datamanager;
 
+import org.jboss.aerogear.AeroGearCrypto;
 import org.jboss.aerogear.android.ReadFilter;
 import org.jboss.aerogear.android.datamanager.IdGenerator;
 import org.jboss.aerogear.android.datamanager.Store;
@@ -44,7 +45,7 @@ public class EncryptedMemoryStore<T> implements Store<T> {
         byte[] rawPassword = new byte[0];
 
         try {
-            Pbkdf2 pbkdf2 = new Pbkdf2();
+            Pbkdf2 pbkdf2 = AeroGearCrypto.pbkdf2();
             rawPassword = pbkdf2.encrypt(passphrase, salt);
         } catch (InvalidKeySpecException e) {
         }

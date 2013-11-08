@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.google.gson.GsonBuilder;
+import org.jboss.aerogear.AeroGearCrypto;
 import org.jboss.aerogear.android.ReadFilter;
 import org.jboss.aerogear.android.datamanager.IdGenerator;
 import org.jboss.aerogear.android.datamanager.Store;
@@ -139,7 +140,7 @@ public class EncryptedSQLStore<T> extends SQLiteOpenHelper implements Store<T> {
         }
 
         try {
-            Pbkdf2 pbkdf2 = new Pbkdf2();
+            Pbkdf2 pbkdf2 = AeroGearCrypto.pbkdf2();
             byte[] rawPassword = pbkdf2.encrypt(passphrase, salt);
             PrivateKey privateKey = new PrivateKey(rawPassword);
             cryptoUtils = new CryptoUtils<T>(privateKey, iv, modelClass, builder);
