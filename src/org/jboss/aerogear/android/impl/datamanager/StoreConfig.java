@@ -22,7 +22,6 @@ import org.jboss.aerogear.android.datamanager.IdGenerator;
 import org.jboss.aerogear.android.datamanager.Store;
 import org.jboss.aerogear.android.datamanager.StoreFactory;
 import org.jboss.aerogear.android.datamanager.StoreType;
-import org.jboss.aerogear.crypto.keys.PrivateKey;
 
 /**
  * This class bundles up all of the possible variables which may be used to instantiate a {@link Store}
@@ -61,7 +60,7 @@ public final class StoreConfig {
     /**
      * The PrivateKey used to crypt/decrypt data
      */
-    private PrivateKey privateKey;
+    private String passphrase;
 
     public StoreConfig() {
     }
@@ -106,12 +105,12 @@ public final class StoreConfig {
         this.idGenerator = idGenerator;
     }
 
-    public PrivateKey getPrivateKey() {
-        return privateKey;
+    public String getPassphrase() {
+        return passphrase;
     }
 
-    public void setPrivateKey(PrivateKey privateKey) {
-        this.privateKey = privateKey;
+    public void setPassphrase(String passphrase) {
+        this.passphrase = passphrase;
     }
 
 }

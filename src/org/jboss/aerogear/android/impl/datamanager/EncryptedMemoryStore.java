@@ -24,8 +24,10 @@ import org.jboss.aerogear.android.impl.crypto.InvalidKeyException;
 import org.jboss.aerogear.android.impl.util.CryptoUtils;
 import org.jboss.aerogear.crypto.Random;
 import org.jboss.aerogear.crypto.keys.PrivateKey;
+import org.jboss.aerogear.crypto.password.Pbkdf2;
 
 import java.io.Serializable;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,10 +36,21 @@ public class EncryptedMemoryStore<T> implements Store<T> {
     private final MemoryStorage<byte[]> memoryStorage;
     private final CryptoUtils<T> cryptoUtils;
 
-    public EncryptedMemoryStore(IdGenerator idGenerator, PrivateKey privateKey, Class<T> modelClass) {
+    public EncryptedMemoryStore(IdGenerator idGenerator, String passphrase, Class<T> modelClass) {
         memoryStorage = new MemoryStorage(idGenerator);
-        byte[] IV = new Random().randomBytes();
-        cryptoUtils = new CryptoUtils<T>(privateKey, IV, modelClass);
+
+        byte[] iv = new Random().randomBytes();
+        byte[] salt = new Random().randomBytes();
+        byte[] rawPassword = new byte[0];
+
+        try {
+            Pbkdf2 pbkdf2 = new Pbkdf2();
+            rawPassword = pbkdf2.encrypt(passphrase, salt);
+        } catch (InvalidKeySpecException e) {
+        }
+
+        PrivateKey privateKey = new PrivateKey(rawPassword);
+        cryptoUtils = new CryptoUtils<T>(privateKey, iv, modelClass);
     }
 
     /**

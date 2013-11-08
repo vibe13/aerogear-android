@@ -149,12 +149,7 @@ public class DataManager {
      */
     public Store encryptedStore(String storeName, StoreConfig config, String passphrase, Class modelClass)
             throws InvalidKeySpecException {
-        Pbkdf2 pbkdf2 = new Pbkdf2();
-        byte[] rawPassword = pbkdf2.encrypt(passphrase);
-
-        PrivateKey privateKey = new PrivateKey(rawPassword);
-        config.setPrivateKey(privateKey);
-
+        config.setPassphrase(passphrase);
         config.setKlass(modelClass);
 
         Store store = storeFactory.createStore(config);

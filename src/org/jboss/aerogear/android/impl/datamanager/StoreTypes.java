@@ -25,7 +25,8 @@ public enum StoreTypes implements StoreType {
 
     MEMORY("MEMORY"),
     SQL("SQL"),
-    ENCRYPTED_MEMORY("ENCRYPTED_MEMORY");
+    ENCRYPTED_MEMORY("ENCRYPTED_MEMORY"),
+    ENCRYPTED_SQL("ENCRYPTED_SQL");
 
     private final String typeDescription;
 

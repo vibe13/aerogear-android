@@ -17,4 +17,7 @@
 package org.jboss.aerogear.android.impl.crypto;
 
 public class InvalidKeyException extends RuntimeException {
+    public InvalidKeyException(RuntimeException e) {
+        super(e);
+    }
 }

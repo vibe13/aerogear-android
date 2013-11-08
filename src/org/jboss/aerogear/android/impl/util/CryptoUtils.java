@@ -16,7 +16,10 @@
  */
 package org.jboss.aerogear.android.impl.util;
 
+import android.util.Log;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.jboss.aerogear.android.impl.crypto.InvalidKeyException;
 import org.jboss.aerogear.crypto.CryptoBox;
 import org.jboss.aerogear.crypto.keys.PrivateKey;
 
@@ -32,10 +35,14 @@ public class CryptoUtils<T> {
     private final Gson gson;
 
     public CryptoUtils(PrivateKey privateKey, byte[] iv, Class<T> modelClass) {
+        this(privateKey, iv, modelClass, new GsonBuilder());
+    }
+
+    public CryptoUtils(PrivateKey privateKey, byte[] iv, Class<T> modelClass, GsonBuilder builder) {
         this.modelClass = modelClass;
         this.cryptoBox = new CryptoBox(privateKey);
         this.IV = iv;
-        this.gson = new Gson();
+        this.gson = builder.create();
     }
 
     public Collection<T> decrypt(Collection<byte[]> encryptedCollection) {
@@ -53,9 +60,13 @@ public class CryptoUtils<T> {
     }
 
     public T decrypt(byte[] data) {
-        byte[] decryptedData = cryptoBox.decrypt(IV, data);
-        String json = new String(decryptedData);
-        return gson.fromJson(json, modelClass);
+        try {
+            byte[] decryptedData = cryptoBox.decrypt(IV, data);
+            String json = new String(decryptedData);
+            return gson.fromJson(json, modelClass);
+        } catch (RuntimeException e) {
+            throw new InvalidKeyException(e);
+        }
     }
 
 }
