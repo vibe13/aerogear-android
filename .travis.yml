@@ -3,20 +3,46 @@ language: java
 notifications:
   irc: "irc.freenode.org#aerogear"
 
+env:
+    matrix:
+      - ANDROID_SDKS=android-19,sysimg-19,android-18,sysimg-18 ANDROID_TARGET=android-18  ANDROID_ABI=armeabi-v7a
+
 before_install:
 
   # download the latest android sdk and unzip
   - sudo apt-get update -qq
   - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
-  - wget http://dl.google.com/android/android-sdk_r21-linux.tgz
-  - tar -zxf android-sdk_r21-linux.tgz
+  - wget http://dl.google.com/android/android-sdk_r22.2.1-linux.tgz
+  - tar -zxf android-sdk_r22.2.1-linux.tgz
   - export ANDROID_HOME=$PWD/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-
+  
+  - echo y | android update sdk --filter platform-tools,android-17,extra-android-support,extra-google-google_play_services,$ANDROID_SDKS --no-ui --force --all
+  - echo y | android update sdk -u -a -t 3
   # Install required components.
-  - android update sdk --filter platform-tools,android-17,extra-android-support,extra-google-google_play_services,$ANDROID_SDKS --no-ui --force --all
 
   # Checkout maven-android-sdk-deployer
   - git clone git://github.com/mosabua/maven-android-sdk-deployer.git
+# Install android maven repository
+  - cd $PWD/maven-android-sdk-deployer/platforms/$ANDROID_TARGET
+  - mvn  install -N --quiet
+  - cd -
+
+  # Install locally google-play-services
   - cd $PWD/maven-android-sdk-deployer/extras/google-play-services
+  - mvn  install -N --quiet
+  - cd ../../..
+
+  # Install locally compatibility-v4
+  - cd $PWD/maven-android-sdk-deployer/extras/compatibility-v4
   - mvn install -N --quiet
+  - cd ../../..
+
+
+  # Checkout AeroGear Crypto 
+  - git clone git://github.com/aerogear/aerogear-crypto-java.git
+  - cd $PWD/aerogear-crypto-java
+  - mvn install -N --quiet
+  - cd ..
+
+
