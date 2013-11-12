@@ -9,11 +9,16 @@ env:
 
 before_install:
 
+  #download and configure newer version of maven
+  - wget http://www.picotopia.org/apache/maven/maven-3/3.1.1/binaries/apache-maven-3.1.1-bin.tar.gz;
+  - tar -zvxf apache-maven-3.1.1-bin.tar.gz;
+  - export PATH=$PWD/apache-maven-3.1.1/bin:$PATH
+  
   # download the latest android sdk and unzip
   - sudo apt-get update -qq
   - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
-  - wget http://dl.google.com/android/android-sdk_r22.2.1-linux.tgz
-  - tar -zxf android-sdk_r22.2.1-linux.tgz
+  - wget http://dl.google.com/android/android-sdk_r22.3-linux.tgz
+  - tar -zxf android-sdk_r22.3-linux.tgz
   - export ANDROID_HOME=$PWD/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   
@@ -31,18 +36,18 @@ before_install:
   # Install locally google-play-services
   - cd $PWD/maven-android-sdk-deployer/extras/google-play-services
   - mvn  install -N --quiet
-  - cd ../../..
+  - cd -
 
   # Install locally compatibility-v4
   - cd $PWD/maven-android-sdk-deployer/extras/compatibility-v4
   - mvn install -N --quiet
-  - cd ../../..
+  - cd -
 
 
   # Checkout AeroGear Crypto 
   - git clone git://github.com/aerogear/aerogear-crypto-java.git
   - cd $PWD/aerogear-crypto-java
   - mvn install -N --quiet
-  - cd ..
+  - cd -
 
 
