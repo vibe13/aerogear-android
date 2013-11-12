@@ -65,6 +65,7 @@
         <roboeletric.version>1.2</roboeletric.version>
         <junit.version>4.8.2</junit.version>
         <mockito.version>1.9.0</mockito.version>
+        <scprov.version>1.47.0.3</scprov.version>
 
         <maven.android.plugin.verson>3.6.0</maven.android.plugin.verson>
         <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
@@ -132,6 +133,13 @@
             <groupId>org.jboss.aerogear</groupId>
             <artifactId>aerogear-crypto</artifactId>
             <version>${aerogear.crypto.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>scprov-jdk15on</artifactId>
+            <version>${scprov.version}</version>
             <scope>provided</scope>
         </dependency>
 
