@@ -45,7 +45,7 @@ public class EncryptedSQLStore<T> extends SQLiteOpenHelper implements Store<T> {
 
     private final Class<T> modelClass;
     private final GsonBuilder builder;
-    private final IdGenerator generator;
+    private final IdGenerator idGenerator;
     private final String passphrase;
 
     private CryptoUtils<T> cryptoUtils;
@@ -61,13 +61,13 @@ public class EncryptedSQLStore<T> extends SQLiteOpenHelper implements Store<T> {
 
 
     public EncryptedSQLStore(Class<T> modelClass, Context context, GsonBuilder builder,
-                             IdGenerator generator, String passphrase) {
+                             IdGenerator idGenerator, String passphrase) {
 
         super(context, modelClass.getSimpleName(), null, 1);
 
         this.modelClass = modelClass;
         this.builder = builder;
-        this.generator = generator;
+        this.idGenerator = idGenerator;
         this.passphrase = passphrase;
 
         this.TABLE_NAME = modelClass.getSimpleName();
@@ -219,7 +219,7 @@ public class EncryptedSQLStore<T> extends SQLiteOpenHelper implements Store<T> {
         Serializable idValue = (Serializable) property.getValue(item);
 
         if (idValue == null) {
-            idValue = generator.generate();
+            idValue = idGenerator.generate();
             property.setValue(item, idValue);
         }
 
