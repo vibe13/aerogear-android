@@ -73,19 +73,27 @@ public class MemoryStorage<T> implements Store<T> {
      */
     @Override
     public void save(T item) {
+        Serializable idValue = getOrGenerateIdValue(item);
+        save(idValue, item);
+    }
 
-        String recordIdFieldName = Scan.recordIdFieldNameIn(item.getClass());
+    void save(Serializable id, T item) {
+        data.put(id, item);
+    }
 
-        Property property = new Property(item.getClass(), recordIdFieldName);
+    Serializable getOrGenerateIdValue(Object data) {
+        String recordIdFieldName = Scan.recordIdFieldNameIn(data.getClass());
 
-        Serializable idValue = (Serializable) property.getValue(item);
+        Property property = new Property(data.getClass(), recordIdFieldName);
+
+        Serializable idValue = (Serializable) property.getValue(data);
 
         if (idValue == null) {
             idValue = idGenerator.generate();
-            property.setValue(item, idValue);
+            property.setValue(data, idValue);
         }
 
-        data.put(idValue, item);
+        return idValue;
     }
 
     /**

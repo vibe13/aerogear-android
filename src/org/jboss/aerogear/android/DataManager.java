@@ -16,15 +16,19 @@
  */
 package org.jboss.aerogear.android;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.jboss.aerogear.android.datamanager.IdGenerator;
 import org.jboss.aerogear.android.datamanager.Store;
 import org.jboss.aerogear.android.datamanager.StoreFactory;
 import org.jboss.aerogear.android.impl.datamanager.DefaultIdGenerator;
 import org.jboss.aerogear.android.impl.datamanager.DefaultStoreFactory;
 import org.jboss.aerogear.android.impl.datamanager.StoreConfig;
+import org.jboss.aerogear.android.impl.datamanager.StoreTypes;
+import org.jboss.aerogear.crypto.keys.PrivateKey;
+import org.jboss.aerogear.crypto.password.Pbkdf2;
+
+import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents an abstraction layer for a storage system.
@@ -59,7 +63,6 @@ public class DataManager {
      *
      * @param idGenerator
      * @throws IllegalArgumentException if idGenerator is null
-     *
      */
     public DataManager(IdGenerator idGenerator) {
         this(idGenerator, new DefaultStoreFactory());
@@ -77,7 +80,6 @@ public class DataManager {
     }
 
     /**
-     *
      * Creates a DataManager using the supplied parameters
      *
      * @param idGenerator
@@ -115,9 +117,41 @@ public class DataManager {
      * type argument.
      *
      * @param storeName The name of the actual data store object.
-     * @param config The config object used to build the store
+     * @param config    The config object used to build the store
      */
     public Store store(String storeName, StoreConfig config) {
+        Store store = storeFactory.createStore(config);
+        stores.put(storeName, store);
+        return store;
+    }
+
+    /**
+     * Creates a new default encrypted (in memory) Store implementation.
+     *
+     * @param storeName  The name of the actual data store object.
+     * @param passphrase The passphrase used to create a KeyStore
+     * @param modelClass The model class will be encrypted
+     */
+    public Store encryptedStore(String storeName, String passphrase, Class modelClass) throws InvalidKeySpecException {
+        StoreConfig config = new StoreConfig();
+        config.setType(StoreTypes.ENCRYPTED_MEMORY);
+        return encryptedStore(storeName, config, passphrase, modelClass);
+    }
+
+    /**
+     * Creates a new Store implementation. The actual type is determined by the
+     * type argument.
+     *
+     * @param storeName  The name of the actual data store object.
+     * @param config     The config object used to build the store
+     * @param passphrase The passphrase used to create a KeyStore
+     * @param modelClass The model class will be encrypted
+     */
+    public Store encryptedStore(String storeName, StoreConfig config, String passphrase, Class modelClass)
+            throws InvalidKeySpecException {
+        config.setPassphrase(passphrase);
+        config.setKlass(modelClass);
+
         Store store = storeFactory.createStore(config);
         stores.put(storeName, store);
         return store;

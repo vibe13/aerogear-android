@@ -14,28 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.aerogear.android.impl.datamanager;
+package org.jboss.aerogear.android.impl.crypto;
 
-import org.jboss.aerogear.android.datamanager.StoreType;
-
-/**
- * Types of store
- */
-public enum StoreTypes implements StoreType {
-
-    MEMORY("MEMORY"),
-    SQL("SQL"),
-    ENCRYPTED_MEMORY("ENCRYPTED_MEMORY"),
-    ENCRYPTED_SQL("ENCRYPTED_SQL");
-
-    private final String typeDescription;
-
-    StoreTypes(String typeDescription) {
-        this.typeDescription = typeDescription;
-    }
-
-    @Override
-    public String getName() {
-        return this.typeDescription;
+public class InvalidKeyException extends RuntimeException {
+    public InvalidKeyException(RuntimeException e) {
+        super(e);
     }
 }
