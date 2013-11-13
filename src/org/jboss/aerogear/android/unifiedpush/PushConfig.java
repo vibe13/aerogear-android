@@ -22,7 +22,9 @@ import java.io.Serializable;
 import com.google.common.collect.ImmutableSet;
 
 import java.net.URI;
+import java.util.List;
 
+import org.jboss.aerogear.android.datamanager.Store;
 import org.jboss.aerogear.android.impl.unifiedpush.PushTypes;
 
 public class PushConfig implements Serializable {
@@ -35,7 +37,7 @@ public class PushConfig implements Serializable {
     private String operatingSystem = "android";
     private String osVersion = android.os.Build.VERSION.RELEASE;
     private String alias;
-    private String category;
+    private List<String> categories;
     private PushType type = PushTypes.AEROGEAR_GCM;
     private URI pushServerURI;
     
@@ -167,17 +169,17 @@ public class PushConfig implements Serializable {
     }
 
     /**
-     * The category specifies a channel which may be used to send messages
+     * The categories specifies a channel which may be used to send messages
      */
-    public String getCategory() {
-        return category;
+    public List<String> getCategories() {
+        return categories;
     }
 
     /**
-     * The category specifies a channel which may be used to send messages
+     * The categories specifies a channel which may be used to send messages
      */
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
     }
 
     /**
