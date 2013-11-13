@@ -20,6 +20,6 @@
           android:versionName="1.0"
           package="org.jboss.aerogear">
 
-    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17"/>
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19"/>
 
 </manifest>
