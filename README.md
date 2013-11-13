@@ -17,11 +17,12 @@ If you are unfamiliar with Maven, developerWorks has a detailed [introduction](h
 
 #### Prerequisites
 
-* Java 6.0 (Java SDK 1.6)+
-* Maven 3+
+* Java 7.0 (Java SDK 1.7)+
+** Note Android versions less than 19 do not support try-with-resources but all other Java 7 features are available.
+* Maven 3.1.1+
 * Git
 * Android SDK
-* Need to have an AVD image running 2.3.3 (API level 10)
+* Need to have an AVD image running 2.3.3 (API level 10) or higher.
 * Need to include the Android Support Library.
 * Need to include the Google Play services.
 
@@ -34,20 +35,14 @@ If you are unfamiliar with Maven, developerWorks has a detailed [introduction](h
 
 We need to have the [Android Maven SDK Deployer](https://github.com/mosabua/maven-android-sdk-deployer) installed and configured. These are only quickstart instructions, the Android Maven SDK Deployer GitHub has a much more in depth install guide.
 
-You must have the version of the platform installed through the Android SDK as you are using for your profile. In this example, make sure Android 4.2 is installed.
+Before you run the SDK Deployer, you should have installed ALL PACKAGES in the Android SDK.  Once that has finished, you may run the following.
 
     export ANDROID_HOME=YOUR_ANDROID_SDK_DIRECTORY
     git clone https://github.com/mosabua/maven-android-sdk-deployer.git
     cd maven-android-sdk-deployer/extras/
+    mvn clean install
 
-Edit the pom.xml and comment all modules except compatibility-v4 and google-play-services
-
-![Maven SDK Deployer Extras Modules](http://f.cl.ly/items/2Q1S0n2m2f043J323M0T/maven-sdk-deployer%20-%20extras%20modules.png)
-
-    cd ..
-    mvn install -P 4.2
-
-Now Maven will be able to include Android 4.2 as a dependency. There are also profiles for other version of Android.
+Now Maven will be able to include all versions of Android and its libraries as dependencies.
 
 #### Install aerogear-android
 
