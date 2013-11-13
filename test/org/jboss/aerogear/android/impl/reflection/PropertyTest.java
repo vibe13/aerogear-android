@@ -99,4 +99,18 @@ public class PropertyTest {
         assertFalse(data.isEnable());
     }
 
+    @Test
+    public void testMessageException() {
+        String expectedMessage = "Cannot find get/set to field id (Integer) on Data";
+        try {
+            DataWithNoPropertyId data = new DataWithNoPropertyId();
+
+            Property property = new Property(Data.class, "id");
+            property.setValue(data, "dummy");
+        } catch (PropertyNotFoundException e) {
+            assertEquals(expectedMessage, e.getMessage());
+        }
+
+    }
+
 }

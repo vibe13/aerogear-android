@@ -94,7 +94,7 @@ public class Property {
             getMethod = klass.getMethod(getMethodName());
             setMethod = klass.getMethod(setMethodName(), type);
         } catch (Exception e) {
-            throw new PropertyNotFoundException(klass, fieldName);
+            throw new PropertyNotFoundException(klass, getType(), fieldName);
         }
 
     }
@@ -125,7 +125,7 @@ public class Property {
         try {
             return getMethod.invoke(instance);
         } catch (Exception e) {
-            throw new PropertyNotFoundException(klass, fieldName);
+            throw new PropertyNotFoundException(klass, getType(), fieldName);
         }
 
     }
@@ -140,7 +140,7 @@ public class Property {
         try {
             setMethod.invoke(instance, value);
         } catch (Exception e) {
-            throw new PropertyNotFoundException(klass, fieldName);
+            throw new PropertyNotFoundException(klass, getType(), fieldName);
         }
 
     }
