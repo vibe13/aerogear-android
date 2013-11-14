@@ -17,16 +17,14 @@ If you are unfamiliar with Maven, developerWorks has a detailed [introduction](h
 
 #### Prerequisites
 
+
 * Java 7.0 (Java SDK 1.7)+
 ** Note Android versions less than 19 do not support try-with-resources but all other Java 7 features are available.
 * Maven 3.1.1+
 * Git
 * Android SDK
 * Need to have an AVD image running 2.3.3 (API level 10) or higher.
-* Need to include the Android Support Library.
-* Need to include the Google Play services.
-
-![Android SDK Manager](http://f.cl.ly/items/0J0m3H1m440I0Y173A1G/Android%20SDK%20-%20AeroGear.png)
+* Android SDK with *ALL* packages installed
 
 * You may use any IDE that supports Maven, but this guide currently focuses on the command line.
 
@@ -52,6 +50,8 @@ From the command line run the following. This will clone the aerogear-android gi
     cd aerogear-android/
     mvn install
 
+This will create apklibs and aars that you can include in your projects.  Please refer to the [AeroGear guides](http://aerogear.org/docs/guides/aerogear-android/) for more specific instructions.
+
 #### If your build fails with "Could not find tool 'aapt'"
 
 Android SDK version r17 broke our Maven build tool, android-maven-plugin.  This is a known issue and will be fixed with version 3.7.0 of the tool.  However, as a workaround (in Linux and Mac envrionments), you can create a symbolic link to the missing binaries.
@@ -69,6 +69,15 @@ Some installations use a slightly different structure such that the following wi
      ln -s ../build-tools/17.0.0/aapt aapt
      ln -s ../build-tools/17.0.0/lib lib
      ln -s ../build-tools/17.0.0/aidl aidl
+
+#### If your build fails with 'bad ELF interpreter: No such file or directory'
+
+This means you are running the Android SDK tools on a 64-bit Linux system where the ia32 libraries are not installed.   Please refer to your distribution's documention for instructions on how to include these.
+
+    ## In Fedora 
+    # yum install glibc.i686 glibc-devel.i686 libstdc++.i686 zlib-devel.i686 ncurses-devel.i686 libX11-devel.i686 libXrender.i686 libXrandr.i686
+
+
 
 If you are having troubles feel free to contact us via IRC #aerogear or our mailing list aerogear-dev@lists.jboss.org.
 
