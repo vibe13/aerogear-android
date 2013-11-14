@@ -118,9 +118,12 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                                 {
                                     fields = ImmutableSet.<String> builder()
                                             .add("deviceToken")
-                                            .add("deviceType").add("alias")
+                                            .add("deviceType")
+                                            .add("alias")
                                             .add("operatingSystem")
-                                            .add("osVersion").build();
+                                            .add("osVersion")
+                                            .add("categories")
+                                            .build();
                                 }
 
                                 @Override
