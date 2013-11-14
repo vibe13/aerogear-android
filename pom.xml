@@ -69,11 +69,11 @@
 
         <maven.android.plugin.verson>3.8.0</maven.android.plugin.verson>
         <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
-        <java.version>1.6</java.version>
+        <java.version>1.7</java.version>
         <maven.dependency.plugin.version>2.5.1</maven.dependency.plugin.version>
         <builder.helper.plugin.version>1.7</builder.helper.plugin.version>
 
-        <android.avd>18</android.avd>
+        <android.avd>19</android.avd>
         <android.platform>19</android.platform>
         <android.debug>true</android.debug>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -133,7 +133,7 @@
             <groupId>org.jboss.aerogear</groupId>
             <artifactId>aerogear-crypto</artifactId>
             <version>${aerogear.crypto.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
