@@ -61,7 +61,7 @@
         <google.playservice.version>[10,)</google.playservice.version>
         <guava.version>13.0.1</guava.version>
         <gson.version>2.2.2</gson.version>
-        <aerogear.crypto.version>0.1.0-SNAPSHOT</aerogear.crypto.version>
+        <aerogear.crypto.version>0.1.0</aerogear.crypto.version>
         <roboeletric.version>1.2</roboeletric.version>
         <junit.version>4.8.2</junit.version>
         <mockito.version>1.9.0</mockito.version>
