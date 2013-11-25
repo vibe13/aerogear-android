@@ -71,3 +71,15 @@ Some installations use a slightly different structure such that the following wi
      ln -s ../build-tools/17.0.0/aidl aidl
 
 If you are having troubles feel free to contact us via IRC #aerogear or our mailing list aerogear-dev@lists.jboss.org.
+
+#### Generating Emma code coverage
+
+Generation of code coverage report is executed by
+
+    mvn emma:emma -Pemma
+
+after you have built the sources. The generation of the code coverage into HTML report is done as
+
+    java -cp path/to/emma-2.0.5312.jar emma report -r html -in target/coverage-0.ec -in target/coverage.em
+
+You find generated HTML report in coverage directory.
