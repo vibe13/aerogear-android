@@ -221,6 +221,10 @@
                             <groupId>com.google.guava</groupId>
                             <artifactId>guava</artifactId>
                         </artifactItem>
+                        <artifactItem>
+                            <groupId>org.jboss.aerogear</groupId>
+                            <artifactId>aerogear-crypto</artifactId>
+                        </artifactItem>
                     </artifactItems>
                     <outputDirectory>${basedir}/libs</outputDirectory>
                 </configuration>
