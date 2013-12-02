@@ -206,6 +206,14 @@
                         <skip>${proguard.skip}</skip>
                     </proguard>
                 </configuration>
+                <executions>
+                        <execution>
+                                <phase>package</phase>
+                                <goals>
+                                        <goal>aar</goal>
+                                </goals>
+                        </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -241,6 +249,10 @@
                         </goals>
                         <configuration>
                             <artifacts>
+                                <artifact>
+                                    <type>aar</type>
+                                    <file>${project.build.directory}/${project.build.finalName}.aar</file>
+                                </artifact>
                                 <artifact>
                                     <type>jar</type>
                                     <file>${project.build.directory}/${project.build.finalName}.jar</file>
