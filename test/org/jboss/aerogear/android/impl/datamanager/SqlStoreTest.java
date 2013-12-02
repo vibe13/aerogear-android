@@ -19,10 +19,6 @@ package org.jboss.aerogear.android.impl.datamanager;
 import android.content.Context;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.ReadFilter;
 import org.jboss.aerogear.android.RecordId;
@@ -30,13 +26,18 @@ import org.jboss.aerogear.android.impl.helper.Data;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 @RunWith(RobolectricTestRunner.class)
-@Ignore
 public class SqlStoreTest {
 
     private Context context;
@@ -45,10 +46,13 @@ public class SqlStoreTest {
 
     @Before
     public void setUp() {
+        // Let's not run this test on Mac OS X with Java 1.7 until SQLite is compatible with that configuration
+        Assume.assumeTrue(!System.getProperty("os.name").toLowerCase().startsWith("mac os x") ||
+                !System.getProperty("java.version").startsWith("1.7.0"));
+
         this.context = Robolectric.application.getApplicationContext();
         this.store = new SQLStore<Data>(Data.class, context);
         this.nestedStore = new SQLStore<TrivialNestedClass>(TrivialNestedClass.class, context);
-
     }
 
     @Test
@@ -162,16 +166,36 @@ public class SqlStoreTest {
 
     }
 
+    @Test
+    public void testSuccessCallback() throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(2);
+        store.open(new Callback<SQLStore<Data>>() {
+            @Override
+            public void onSuccess(SQLStore<Data> data) {
+                latch.countDown();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        latch.await(5, TimeUnit.SECONDS);
+        Assert.assertEquals("OnSuccess should be called exactly once!", 1, latch.getCount());
+
+    }
+
     private void saveData(Integer id, String name, String desc) throws InterruptedException {
         open(store);
         store.save(new Data(id, name, desc));
     }
 
-    private void open(SQLStore<?> store) throws InterruptedException {
+    private <T> void open(SQLStore<T> store) throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
-        store.open(new Callback() {
+        store.open(new Callback<SQLStore<T>>() {
             @Override
-            public void onSuccess(Object data) {
+            public void onSuccess(SQLStore<T> sqlStore) {
                 latch.countDown();
             }
 
