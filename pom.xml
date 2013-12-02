@@ -256,6 +256,9 @@
     <profiles>
         <profile>
             <id>emma</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
             <reporting>
                 <plugins>
                     <plugin>
