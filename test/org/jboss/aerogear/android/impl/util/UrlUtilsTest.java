@@ -45,6 +45,16 @@ public class UrlUtilsTest {
         assertEquals(expectURL, appendToBaseURL(baseURL, endpoint));
     }
 
+    
+    @Test
+    public void testEmptyEndpointDoesNotAlterBaseUrl() throws Exception {
+        URL baseURL = new URL("http://fakeurl.com/path");
+        String endpoint = "";
+        URL expectURL = new URL("http://fakeurl.com/path");
+
+        assertEquals(expectURL, appendToBaseURL(baseURL, endpoint));
+    }
+    
     @Test
     public void testAppendToBaseURLWithOnlyEndpointHasSlash() throws Exception {
         URL baseURL = new URL("http://fakeurl.com");

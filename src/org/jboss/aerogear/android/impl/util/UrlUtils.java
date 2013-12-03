@@ -42,7 +42,9 @@ public final class UrlUtils {
     public static URL appendToBaseURL(final URL baseURL, String endpoint) {
         try {
             String baseString = baseURL.toString();
-            if (!baseString.endsWith("/") && !endpoint.startsWith("/")) {
+            if (endpoint.isEmpty()) {
+                return baseURL;
+            } else if (!baseString.endsWith("/") && !endpoint.startsWith("/")) {
                 baseString += "/";
             } else if (baseString.endsWith("/") && endpoint.startsWith("/")) {
                 endpoint = endpoint.replaceFirst("/", "");
