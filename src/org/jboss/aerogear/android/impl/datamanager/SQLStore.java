@@ -44,6 +44,7 @@ import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -220,6 +221,11 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
             String propertyName = member.getKey();
             if (jsonValue.isJsonObject()) {
                 saveElement((JsonObject) jsonValue, path + pathVar + propertyName, id);
+            } else if (jsonValue.isJsonArray()){
+                JsonArray jsonArray = jsonValue.getAsJsonArray();
+                for (int index = 0; index < jsonArray.size(); index++) {
+                    saveElement(jsonArray.get(index).getAsJsonObject(), path + pathVar + propertyName + String.format("[%d]", index), id);
+                }
             } else {
                 if (jsonValue.isJsonPrimitive()) {
                     JsonPrimitive primitive = jsonValue.getAsJsonPrimitive();
@@ -328,16 +334,50 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
 
     private void add(JsonObject result, String propertyName, String propertyValue) {
         if (!propertyName.contains(".")) {
-            result.addProperty(propertyName, propertyValue);
+            if (propertyName.contains("[")) {
+                String unArrayPropertyName = propertyName.split("\\[")[0];
+                if (!result.has(unArrayPropertyName))  {
+                    result.add(unArrayPropertyName, new JsonArray());
+                }
+                JsonArray array = result.getAsJsonArray(unArrayPropertyName);
+                array.add(gson.toJsonTree(propertyValue));
+            } else {
+                result.addProperty(propertyName, propertyValue);
+            }
         } else {
             String[] names = propertyName.split("\\.", 2);
-            JsonObject subObject = (JsonObject) result.get(names[0]);
-            if (subObject == null) {
-                subObject = new JsonObject();
-                result.add(names[0], subObject);
+            
+            if (names[0].contains("[")) {
+                String key = names[0].split("\\[")[0];
+                Integer  index = Integer.parseInt(names[0].split("\\[")[1].split("\\]")[0]);
+                JsonArray subObject = result.getAsJsonArray(key);
+                
+                if (subObject == null) {
+                    subObject = new JsonArray();
+                    result.add(key, subObject);
+                }
+                
+                if ( (index) >= subObject.size()) {
+                    for (int i = subObject.size(); i < (index +1); i++ ) {
+                        subObject.add(new JsonObject());
+                    }
+                }
+                
+                JsonObject arrayItem = subObject.get(index).getAsJsonObject();
+                
+                
+                add(arrayItem, names[1], propertyValue);
+                
+            } else {
+            
+                JsonObject subObject = (JsonObject) result.get(names[0]);
+                if (subObject == null) {
+                    subObject = new JsonObject();
+                    result.add(names[0], subObject);
+                }
+                
+                add(subObject, names[1], propertyValue);
             }
-            add(subObject, names[1], propertyValue);
-
         }
     }
 

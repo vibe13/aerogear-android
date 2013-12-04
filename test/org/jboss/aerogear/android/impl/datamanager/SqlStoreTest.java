@@ -43,6 +43,7 @@ public class SqlStoreTest {
     private Context context;
     private SQLStore<Data> store;
     private SQLStore<TrivialNestedClass> nestedStore;
+    private SQLStore<TrivialNestedClassWithCollection> nestedWithCollectionStore;
 
     @Before
     public void setUp() {
@@ -53,6 +54,7 @@ public class SqlStoreTest {
         this.context = Robolectric.application.getApplicationContext();
         this.store = new SQLStore<Data>(Data.class, context);
         this.nestedStore = new SQLStore<TrivialNestedClass>(TrivialNestedClass.class, context);
+        this.nestedWithCollectionStore = new SQLStore<TrivialNestedClassWithCollection>(TrivialNestedClassWithCollection.class, context);
     }
 
     @Test
@@ -167,6 +169,38 @@ public class SqlStoreTest {
     }
 
     @Test
+    public void testNestedListSaveAndFilter() throws InterruptedException, JSONException {
+        ReadFilter filter;
+        JSONObject where;
+        List<TrivialNestedClassWithCollection> result;
+
+        List<Data> data = new ArrayList<Data>();
+        data.add(new Data(10, "name", "description"));
+        data.add(new Data(30, "name", "description"));
+
+        TrivialNestedClassWithCollection newNested = new TrivialNestedClassWithCollection();
+        newNested.setId(1);
+        newNested.setText("nestedText");
+        newNested.setData(data);
+
+        open(nestedWithCollectionStore);
+        nestedWithCollectionStore.save(newNested);
+
+        filter = new ReadFilter();
+        where = new JSONObject();
+        where.put("text", "nestedText");
+        where.put("id", 1);
+        
+        filter.setWhere(where);
+        result = nestedWithCollectionStore.readWithFilter(filter);
+        Assert.assertEquals(1, result.size());
+        TrivialNestedClassWithCollection nestedResult = result.get(0);
+        Assert.assertEquals((Integer)10, nestedResult.data.get(0).getId());
+        Assert.assertEquals((Integer)30, nestedResult.data.get(1).getId());
+
+    }
+    
+    @Test
     public void testSuccessCallback() throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(2);
         store.open(new Callback<SQLStore<Data>>() {
@@ -248,4 +282,39 @@ public class SqlStoreTest {
             this.data = data;
         }
     }
+    
+    public static final class TrivialNestedClassWithCollection {
+
+        @RecordId
+        private Integer id;
+        private String text;
+        private List<Data> data;
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public List<Data> getData() {
+            return data;
+        }
+
+        public void setData(List<Data> data) {
+            this.data = data;
+        }
+
+        
+    }
+    
 }
