@@ -209,7 +209,13 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
         }
 
         JsonObject serialized = (JsonObject) gson.toJsonTree(item, klass);
-        saveElement(serialized, "", idValue);
+        database.beginTransaction();
+        try {
+            saveElement(serialized, "", idValue);
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
+        }
     }
 
     private void saveElement(JsonObject serialized, String path, Serializable id) {
