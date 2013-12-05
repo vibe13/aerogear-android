@@ -224,7 +224,26 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
             } else if (jsonValue.isJsonArray()){
                 JsonArray jsonArray = jsonValue.getAsJsonArray();
                 for (int index = 0; index < jsonArray.size(); index++) {
-                    saveElement(jsonArray.get(index).getAsJsonObject(), path + pathVar + propertyName + String.format("[%d]", index), id);
+                    JsonElement arrayElement = jsonArray.get(index);
+                    if (arrayElement.isJsonPrimitive()) {
+                        JsonPrimitive primitive = arrayElement.getAsJsonPrimitive();
+                        if (primitive.isBoolean()) {
+                            Integer value = primitive.getAsBoolean() ? 1 : 0;
+                            database.execSQL(sql, new Object[] { path + pathVar + propertyName + String.format("[%d]", index), value, id });
+                        } else if (primitive.isNumber()) {
+                            Number value = primitive.getAsNumber();
+                            database.execSQL(sql, new Object[] { path + pathVar + propertyName + String.format("[%d]", index), value, id });
+                        } else if (primitive.isString()) {
+                            String value = primitive.getAsString();
+                            database.execSQL(sql, new Object[] { path + pathVar + propertyName + String.format("[%d]", index), value, id });
+                        } else {
+                            throw new IllegalArgumentException(arrayElement + " isn't a number, boolean, or string");
+                        }
+
+                    } else {
+                        saveElement(arrayElement.getAsJsonObject(), path + pathVar + propertyName + String.format("[%d]", index), id);
+                    }
+
                 }
             } else {
                 if (jsonValue.isJsonPrimitive()) {

@@ -225,6 +225,22 @@ public class SqlStoreTest {
         store.save(new Data(id, name, desc));
     }
 
+    @Test
+    public void testSaveListOfBoringData() throws InterruptedException {
+        SQLStore<ListWithId> longStore = new SQLStore<ListWithId>(ListWithId.class, context);
+        open(longStore);
+        ListWithId<Long> longList = new ListWithId<Long>(100);
+        
+        longList.setId(1);
+        
+        for (long i = 0;i < 100; i++) {
+            longList.data.add(i);
+        }
+        longStore.save(longList);
+        Assert.assertEquals(100, longStore.readAll().iterator().next().data.size());
+        
+    }
+    
     private <T> void open(SQLStore<T> store) throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
         store.open(new Callback<SQLStore<T>>() {
@@ -314,6 +330,26 @@ public class SqlStoreTest {
             this.data = data;
         }
 
+        
+    }
+    
+    public static final class ListWithId<T> {
+        @RecordId
+        private Integer id;
+
+        public final List<T> data;
+        
+        public ListWithId(int size) {
+            data = new ArrayList<T>(size);
+        }
+        
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
         
     }
     
