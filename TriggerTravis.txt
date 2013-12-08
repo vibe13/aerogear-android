@@ -1,0 +1,2 @@
+Simple file to force the triggering of Travis after a simple push to GitHub
+
