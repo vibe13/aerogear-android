@@ -1,7 +1,8 @@
 language: java
 
 notifications:
-  irc: "irc.freenode.org#aerogear"
+  email:
+    - andrea.vibelli@gmail.com
 
 env:
     matrix:
