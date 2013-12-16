@@ -209,44 +209,51 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
         }
 
         JsonObject serialized = (JsonObject) gson.toJsonTree(item, klass);
-        saveElement(serialized, "", idValue);
+        database.beginTransaction();
+        try {
+            saveElement(serialized, "", idValue);
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
+        }
     }
 
-    private void saveElement(JsonObject serialized, String path, Serializable id) {
+    private void saveElement(JsonElement serialized, String path, Serializable id) {
         String sql = String.format("insert into %s_property (PROPERTY_NAME, PROPERTY_VALUE, PARENT_ID) values (?,?,?)", className);
-        Set<Entry<String, JsonElement>> members = serialized.entrySet();
-        String pathVar = path.isEmpty() ? "" : ".";
-        for (Entry<String, JsonElement> member : members) {
-            JsonElement jsonValue = member.getValue();
-            String propertyName = member.getKey();
-            if (jsonValue.isJsonObject()) {
-                saveElement((JsonObject) jsonValue, path + pathVar + propertyName, id);
-            } else if (jsonValue.isJsonArray()){
-                JsonArray jsonArray = jsonValue.getAsJsonArray();
-                for (int index = 0; index < jsonArray.size(); index++) {
-                    saveElement(jsonArray.get(index).getAsJsonObject(), path + pathVar + propertyName + String.format("[%d]", index), id);
-                }
-            } else {
-                if (jsonValue.isJsonPrimitive()) {
-                    JsonPrimitive primitive = jsonValue.getAsJsonPrimitive();
-                    if (primitive.isBoolean()) {
-                        Integer value = primitive.getAsBoolean() ? 1 : 0;
-                        database.execSQL(sql, new Object[] { path + pathVar + propertyName, value, id });
-                    } else if (primitive.isNumber()) {
-                        Number value = primitive.getAsNumber();
-                        database.execSQL(sql, new Object[] { path + pathVar + propertyName, value, id });
-                    } else if (primitive.isString()) {
-                        String value = primitive.getAsString();
-                        database.execSQL(sql, new Object[] { path + pathVar + propertyName, value, id });
-                    } else {
-                        throw new IllegalArgumentException(jsonValue + " isn't a number, boolean, or string");
+
+        if (serialized.isJsonObject()) {
+            Set<Entry<String, JsonElement>> members = ((JsonObject)serialized).entrySet();
+            String pathVar = path.isEmpty() ? "" : ".";
+
+            for (Entry<String, JsonElement> member : members) {
+                JsonElement jsonValue = member.getValue();
+                String propertyName = member.getKey();
+
+                if (jsonValue.isJsonArray()){
+                    JsonArray jsonArray = jsonValue.getAsJsonArray();
+                    for (int index = 0; index < jsonArray.size(); index++) {
+                        saveElement(jsonArray.get(index), path + pathVar + propertyName + String.format("[%d]", index), id);
                     }
-
                 } else {
-                    throw new IllegalArgumentException(jsonValue + " isn't a JsonPrimitive");
+                    saveElement(jsonValue, path + pathVar + propertyName, id);
                 }
-
             }
+        } else if (serialized.isJsonPrimitive()) {
+                JsonPrimitive primitive = serialized.getAsJsonPrimitive();
+                if (primitive.isBoolean()) {
+                    String value = primitive.getAsBoolean() ? "true" : "false";
+                    database.execSQL(sql, new Object[] { path, value, id });
+                } else if (primitive.isNumber()) {
+                    Number value = primitive.getAsNumber();
+                    database.execSQL(sql, new Object[] { path, value, id });
+                } else if (primitive.isString()) {
+                    String value = primitive.getAsString();
+                    database.execSQL(sql, new Object[] { path, value, id });
+                } else {
+                    throw new IllegalArgumentException(serialized + " isn't a number, boolean, or string");
+                }
+        } else {
+            throw new IllegalArgumentException(serialized + " isn't a JsonObject or JsonPrimitive");
         }
     }
 
@@ -394,8 +401,8 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
                 if (jsonValue.isJsonPrimitive()) {
                     JsonPrimitive primitive = jsonValue.getAsJsonPrimitive();
                     if (primitive.isBoolean()) {
-                        Integer value = primitive.getAsBoolean() ? 1 : 0;
-                        keyValues.add(new Pair<String, String>(path, value.toString()));
+                        String value = primitive.getAsBoolean() ? "true" : "false";
+                        keyValues.add(new Pair<String, String>(path, value));
                     } else if (primitive.isNumber()) {
                         Number value = primitive.getAsNumber();
                         keyValues.add(new Pair<String, String>(path, value.toString()));
