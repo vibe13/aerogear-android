@@ -23,8 +23,7 @@ import android.content.Context;
  * Encryption services from a config object.
  */
 public interface EncryptionServiceFactory {
-    
-    
+
     /**
      * 
      * This method provides a EncryptionService.  Services MAY be cached and 
@@ -35,5 +34,5 @@ public interface EncryptionServiceFactory {
      * @return A valid Encryption Service
      */
     public EncryptionService getService(CryptoConfig config, Context context);
-    
+
 }

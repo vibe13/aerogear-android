@@ -24,8 +24,8 @@ import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 
 @RunWith(RobolectricTestRunner.class)
-public class DigestHeaderParserTest  {
-    
+public class DigestHeaderParserTest {
+
     private static final String PASSING_HEADER_SINGLE_QOP = " Digest realm=\"default\",domain=\"/aerogear-controller-demo\",nonce=\"MTM3MjQ0MTQzNDE5MTozMzRhMWY1NC1mNWE1LTQ4Y2EtODkyYi01NWJjMWM4ZWIwM2Y=\",algorithm=MD5,qop=auth,stale=\"false\"";
     private static final String PASSING_HEADER_MULTI_QOP = " Digest realm=\"default\",domain=\"/aerogear-controller-demo\",nonce=\"MTM3MjQ0MTQzNDE5MTozMzRhMWY1NC1mNWE1LTQ4Y2EtODkyYi01NWJjMWM4ZWIwM2Y=\",algorithm=MD5,qop=\"auth,auth-int\",stale=\"false\"";
     private static final String FAILING_HEADER = "NotDigest values=\"someValue\"";
@@ -35,7 +35,7 @@ public class DigestHeaderParserTest  {
     private static final String STALE = "stale";
     private static final String ALGORITHM = "algorithm";
     private static final String QOP_OPTIONS = "qop";
-    
+
     @Test
     public void testSingleHeaderPasses() {
         Map<String, String> values = DigestHeaderUtils.extractValues(PASSING_HEADER_SINGLE_QOP);
@@ -46,8 +46,7 @@ public class DigestHeaderParserTest  {
         assertEquals("auth", values.get(QOP_OPTIONS));
         assertEquals("false", values.get(STALE));
     }
-    
-    
+
     @Test
     public void testMultiHeaderPasses() {
         Map<String, String> values = DigestHeaderUtils.extractValues(PASSING_HEADER_MULTI_QOP);
@@ -58,14 +57,14 @@ public class DigestHeaderParserTest  {
         assertEquals("auth,auth-int", values.get(QOP_OPTIONS));
         assertEquals("false", values.get(STALE));
     }
-    
+
     @Test
     public void testHeaderFails() {
         try {
             DigestHeaderUtils.extractValues(FAILING_HEADER);
             fail();
         } catch (IllegalArgumentException ex) {
-            assertEquals(FAILING_HEADER + " Did not begin with the Digest challenge string.", ex.getMessage());                
+            assertEquals(FAILING_HEADER + " Did not begin with the Digest challenge string.", ex.getMessage());
         }
     }
 }

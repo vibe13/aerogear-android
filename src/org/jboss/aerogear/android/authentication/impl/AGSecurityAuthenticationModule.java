@@ -141,7 +141,7 @@ public final class AGSecurityAuthenticationModule extends AbstractAuthentication
         });
 
     }
-    
+
     @Override
     public void logout(final Callback<Void> callback) {
         THREAD_POOL_EXECUTOR.execute(new Runnable() {
@@ -150,7 +150,7 @@ public final class AGSecurityAuthenticationModule extends AbstractAuthentication
                 Exception exception = null;
                 try {
                     runner.onLogout();
-                    
+
                     CookieStore store = ((CookieManager) CookieManager.getDefault()).getCookieStore();
                     List<HttpCookie> cookies = store.get(getBaseURL().toURI());
 
@@ -158,7 +158,6 @@ public final class AGSecurityAuthenticationModule extends AbstractAuthentication
                         store.remove(getBaseURL().toURI(), cookie);
                     }
 
-                    
                     isLoggedIn = false;
                 } catch (Exception e) {
                     Log.e(TAG, "Error with Login", e);
@@ -190,13 +189,9 @@ public final class AGSecurityAuthenticationModule extends AbstractAuthentication
         return getAuthorizationFields();
     }
 
-    
-    
     @Override
     public boolean retryLogin() {
         return false;
     }
-    
-    
 
 }

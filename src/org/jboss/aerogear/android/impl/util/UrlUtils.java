@@ -58,45 +58,45 @@ public final class UrlUtils {
     }
 
     /**
-    *
-    * Append the base url with the query.
-    *
-    * @param baseURL 
-    * @param query
-    * @return a new url baseUrl + endpoint
-    * @throws IllegalArgumentException if baseUrl+endpoint is not a real url.
-    */
-   public static URL appendQueryToBaseURL(final URL baseURL, String query) {
+     *
+     * Append the base url with the query.
+     *
+     * @param baseURL 
+     * @param query
+     * @return a new url baseUrl + endpoint
+     * @throws IllegalArgumentException if baseUrl+endpoint is not a real url.
+     */
+    public static URL appendQueryToBaseURL(final URL baseURL, String query) {
 
-       if (query == null || query.isEmpty()) {
-           return baseURL;
-       }
-       
-       try {
-           String baseString = baseURL.toString();
-           if (baseString.endsWith("/") ) {
-               baseString = baseString.replaceAll("/$", "");
-           } 
-           
-           if (!query.startsWith("?")) {
-               query = URLEncoder.encode(query, "UTF-8");
-               query = "?" + query;
-           } else {
-               query = query.replaceFirst("[?]", "");
-               query = URLEncoder.encode(query, "UTF-8");
-               query = "?" + query;
-           }
+        if (query == null || query.isEmpty()) {
+            return baseURL;
+        }
 
-           return new URL(baseString + query);
-       } catch (MalformedURLException ex) {
-           String message = "Could not append " + query + " to " + baseURL.toString();
-           Log.e(TAG, message, ex);
-           throw new IllegalArgumentException(message, ex);
-       } catch (UnsupportedEncodingException ex) {
-           String message = "UTF-8 is not a supported encoding";
-           Log.e(TAG, message, ex);
-           throw new IllegalStateException(message, ex);
-       }
-   }
-    
+        try {
+            String baseString = baseURL.toString();
+            if (baseString.endsWith("/")) {
+                baseString = baseString.replaceAll("/$", "");
+            }
+
+            if (!query.startsWith("?")) {
+                query = URLEncoder.encode(query, "UTF-8");
+                query = "?" + query;
+            } else {
+                query = query.replaceFirst("[?]", "");
+                query = URLEncoder.encode(query, "UTF-8");
+                query = "?" + query;
+            }
+
+            return new URL(baseString + query);
+        } catch (MalformedURLException ex) {
+            String message = "Could not append " + query + " to " + baseURL.toString();
+            Log.e(TAG, message, ex);
+            throw new IllegalArgumentException(message, ex);
+        } catch (UnsupportedEncodingException ex) {
+            String message = "UTF-8 is not a supported encoding";
+            Log.e(TAG, message, ex);
+            throw new IllegalStateException(message, ex);
+        }
+    }
+
 }

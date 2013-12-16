@@ -45,7 +45,6 @@ public class UrlUtilsTest {
         assertEquals(expectURL, appendToBaseURL(baseURL, endpoint));
     }
 
-    
     @Test
     public void testEmptyEndpointDoesNotAlterBaseUrl() throws Exception {
         URL baseURL = new URL("http://fakeurl.com/path");
@@ -54,7 +53,7 @@ public class UrlUtilsTest {
 
         assertEquals(expectURL, appendToBaseURL(baseURL, endpoint));
     }
-    
+
     @Test
     public void testAppendToBaseURLWithOnlyEndpointHasSlash() throws Exception {
         URL baseURL = new URL("http://fakeurl.com");
@@ -117,7 +116,5 @@ public class UrlUtilsTest {
 
         assertEquals(expectURL, appendQueryToBaseURL(baseURL, query));
     }
-
-
 
 }

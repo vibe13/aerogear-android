@@ -27,11 +27,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.mockito.Mockito;
 
-
 public class RegistrationsTest {
-    
+
     private static final String PUSH = "push";
-    
+
     @Test
     public void testDefaultConfig() throws URISyntaxException {
         Registrations reg = new Registrations();
@@ -39,9 +38,9 @@ public class RegistrationsTest {
         reg.push(PUSH, config);
         PushRegistrar registrar = reg.get(PUSH);
         assertNotNull(registrar);
-        assertTrue(registrar instanceof AeroGearGCMPushRegistrar);         
+        assertTrue(registrar instanceof AeroGearGCMPushRegistrar);
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testFailsOnUnsupportedType() throws URISyntaxException {
         Registrations reg = new Registrations();
@@ -54,7 +53,7 @@ public class RegistrationsTest {
             }
         });
         reg.push(PUSH, config);
-        
+
     }
 
     @Test
@@ -80,7 +79,7 @@ public class RegistrationsTest {
             }
         });
         assertNotNull(reg.push(PUSH, config));
-        
+
     }
-    
+
 }

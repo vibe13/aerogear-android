@@ -25,20 +25,19 @@ import org.jboss.aerogear.crypto.encoders.Hex;
 
 /**
  * This class will manage Instance and Application scoped IVs.
- */ 
+ */
 public abstract class AbstractEncryptionService implements EncryptionService {
-    
+
     private static final String APPLICATION_IV_KEY = "applicationIV";
     private static final Random RANDOM = new Random();
     private static final String TAG = AbstractEncryptionService.class.getSimpleName();
     private static final int DEFAULT_IV_LENGHT = 1024;
-    
+
     protected static final byte[] INSTANCE_IV = RANDOM.randomBytes(DEFAULT_IV_LENGHT);
     protected final byte[] applicationIV;
-    
-    
+
     public AbstractEncryptionService(Context appContext) {
-        synchronized(getClass()) {
+        synchronized (getClass()) {
             SharedPreferences preferences = appContext.getApplicationContext().getSharedPreferences(TAG, Context.MODE_PRIVATE);
             if (preferences.contains(APPLICATION_IV_KEY)) {
                 applicationIV = new Hex().decode(preferences.getString(APPLICATION_IV_KEY, ""));
@@ -49,9 +48,9 @@ public abstract class AbstractEncryptionService implements EncryptionService {
                 editor.commit();
             }
         }
-        
+
     }
-    
+
     protected abstract CryptoBox getCryptoInstance();
 
     @Override
@@ -73,7 +72,5 @@ public abstract class AbstractEncryptionService implements EncryptionService {
     public byte[] encrypt(byte[] iv, byte[] message) {
         return getCryptoInstance().encrypt(iv, message);
     }
-    
-    
-    
+
 }

@@ -77,7 +77,7 @@ public class EncryptedMemoryStore<T> implements Store<T> {
     @Override
     public T read(Serializable id) throws InvalidKeyException {
         byte[] encryptedItem = memoryStorage.read(id);
-        if(encryptedItem == null) {
+        if (encryptedItem == null) {
             return null;
         } else {
             return cryptoUtils.decrypt(encryptedItem);

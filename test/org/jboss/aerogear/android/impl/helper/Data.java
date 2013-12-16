@@ -101,8 +101,6 @@ public class Data implements Comparable<Data> {
         return true;
     }
 
-    
-
     @Override
     public int hashCode() {
         return id.hashCode();
@@ -128,6 +126,4 @@ public class Data implements Comparable<Data> {
         return "Data{" + "id=" + id + ", name=" + name + ", description=" + description + ", enable=" + enable + '}';
     }
 
-    
-    
 }

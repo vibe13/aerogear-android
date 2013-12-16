@@ -53,27 +53,26 @@ import org.jboss.aerogear.crypto.keys.KeyPair;
 public class PasswordEncryptionServices extends AbstractEncryptionService implements EncryptionService {
 
     private static final String TAG = PasswordEncryptionServices.class.getSimpleName();
-    
+
     private final CryptoBox crypto;
-    
+
     public PasswordEncryptionServices(PasswordProtectedKeystoreCryptoConfig config, Context appContext) {
         super(appContext);
         this.crypto = getCrypto(appContext, config);
     }
-    
-    
+
     private CryptoBox getCrypto(Context appContext, PasswordProtectedKeystoreCryptoConfig config) {
         validate(config);
-        
+
         String keyAlias = config.getAlias();
         if (keyAlias == null) {
             throw new IllegalArgumentException("Alias in CryptoConfig may not be null");
         }
-        
+
         char[] password = config.password.toCharArray();
-        
+
         KeyStore.ProtectionParameter passwordProtectionParameter = new KeyStore.PasswordProtection(password);
-        
+
         try {
             KeyStore store = KeyStore.getInstance("BKS");
             store.load(getKeystoreStream(appContext, config.getKeyStoreFile()), password);
@@ -109,26 +108,25 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
         PublicKey publicKey = pair.getPublicKey();
         MessageDigest hash;
         KeyAgreement keyAgree;
-        
+
         final char[] password = config.password.toCharArray();
         final String keyAlias = config.getAlias();
         final String keyStoreFile = config.getKeyStoreFile();
         final KeyStore.ProtectionParameter passwordProtectionParameter = new KeyStore.PasswordProtection(password);
-        
+
         try {
             hash = MessageDigest.getInstance("SHA-256", AeroGearCrypto.PROVIDER);
             keyAgree = KeyAgreement.getInstance("ECDH", AeroGearCrypto.PROVIDER);
             keyAgree.init(privateKey);
             keyAgree.doPhase(publicKey, true);
-        
 
             byte[] keyBytes = hash.digest(keyAgree.generateSecret());
 
             KeyStore.SecretKeyEntry secretEntry = new KeyStore.SecretKeyEntry(new SecretKeySpec(keyBytes, "ECDH"));
             store.setEntry(keyAlias, secretEntry, passwordProtectionParameter);
             store.store(context.openFileOutput(keyStoreFile, Context.MODE_PRIVATE), password);
-            return  new CryptoBox(keyBytes);
-            
+            return new CryptoBox(keyBytes);
+
         } catch (NoSuchAlgorithmException ex) {
             Log.e(TAG, ex.getMessage(), ex);
             throw new RuntimeException(ex);
@@ -148,11 +146,7 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
             Log.e(TAG, ex.getMessage(), ex);
             throw new RuntimeException(ex);
         }
-    
-        
-        
-        
-        
+
     }
 
     private InputStream getKeystoreStream(Context context, String keystoreFile) {
@@ -169,17 +163,17 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
             }
         }
     }
-    
-     private void validate(PasswordProtectedKeystoreCryptoConfig config) {
-        
+
+    private void validate(PasswordProtectedKeystoreCryptoConfig config) {
+
         if (config.alias == null) {
             throw new IllegalArgumentException("The alias must not be null");
         }
-        
+
         if (config.password == null) {
             throw new IllegalArgumentException("The password must not be null");
         }
-        
+
         if (config.keyStoreFile == null) {
             throw new IllegalArgumentException("The keystoreFile must not be null");
         }
@@ -189,12 +183,12 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
     protected CryptoBox getCryptoInstance() {
         return crypto;
     }
-    
+
     public static class PasswordProtectedKeystoreCryptoConfig implements CryptoConfig {
         private String alias;
         private String password;
         private String keyStoreFile = "default.keystore";
-        
+
         public String getAlias() {
             return alias;
         }
@@ -223,7 +217,7 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
         public EncryptionServiceType getType() {
             return EncryptionServiceTypes.PASSWORD_KEYSTORE;
         }
-        
+
     }
-    
+
 }

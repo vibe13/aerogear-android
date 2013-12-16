@@ -50,7 +50,6 @@ import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthen
 import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.PASSWORD;
 import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.USERNAME;
 
-
 /**
  * This class manages the relationship between Android's Loader framework and
  * requests to Authentication. This class acts as a proxy for an
@@ -140,22 +139,22 @@ public class AuthenticationModuleAdapter implements LoaderAuthenticationModule, 
         int id = Objects.hashCode(name, loginData, callback);
         Bundle bundle = new Bundle();
         Bundle loginBundle = new Bundle();
-        
+
         for (Map.Entry<String, String> entry : loginData.entrySet()) {
             loginBundle.putString(entry.getKey(), entry.getValue());
         }
-        
+
         bundle.putSerializable(CALLBACK, callback);
         bundle.putBundle(PARAMS, loginBundle);
         bundle.putSerializable(METHOD, AuthenticationModuleAdapter.Methods.LOGIN);
-        
+
         if (manager.getLoader(id) != null && !module.isLoggedIn()) {
             manager.restartLoader(id, bundle, this);
         } else {
             manager.initLoader(id, bundle, this);
         }
     }
-    
+
     @Override
     public void logout(Callback<Void> callback) {
         int id = Objects.hashCode(name, callback);
@@ -195,14 +194,14 @@ public class AuthenticationModuleAdapter implements LoaderAuthenticationModule, 
         Callback callback = (Callback) bundle.get(CALLBACK);
         Loader loader = null;
         switch (method) {
-            case LOGIN: {
-                Bundle loginBundle = bundle.getBundle(PARAMS);
-                Map<String, String> loginParams = new HashMap<String, String>(loginBundle.size());
-                for (String key : loginBundle.keySet()) {
-                    loginParams.put(key, loginBundle.getString(key));
-                }
-                loader = new LoginLoader(applicationContext, callback, module, loginParams);
+        case LOGIN: {
+            Bundle loginBundle = bundle.getBundle(PARAMS);
+            Map<String, String> loginParams = new HashMap<String, String>(loginBundle.size());
+            for (String key : loginBundle.keySet()) {
+                loginParams.put(key, loginBundle.getString(key));
             }
+            loader = new LoginLoader(applicationContext, callback, module, loginParams);
+        }
             break;
         case LOGOUT: {
             loader = new LogoutLoader(applicationContext, callback, module);

@@ -31,13 +31,13 @@ import org.jboss.aerogear.android.impl.unifiedpush.DefaultPushRegistrarFactory;
  * This is the factory and accessors for PushRegistrars
  */
 public class Registrations {
-    
+
     private final PushRegistrarFactory factory;
     private final Map<String, PushRegistrar> registrars = new HashMap<String, PushRegistrar>();
 
     private static List<MessageHandler> mainThreadHandlers = new ArrayList<MessageHandler>();
     private static List<MessageHandler> backgroundThreadHandlers = new ArrayList<MessageHandler>();
-    
+
     public Registrations() {
         this.factory = new DefaultPushRegistrarFactory();
     }
@@ -45,7 +45,7 @@ public class Registrations {
     public Registrations(PushRegistrarFactory factory) {
         this.factory = factory;
     }
-    
+
     /**
      * 
      * This method will try to build a PuserRegistrar based on the values
@@ -64,7 +64,7 @@ public class Registrations {
         registrars.put(name, registrar);
         return registrar;
     }
-    
+
     /**
      * Recalls a PushRegister instance which was created with 
      * {@link Registrations#push(java.lang.String, org.jboss.aerogear.android.unifiedpush.PushConfig) }.
@@ -75,7 +75,7 @@ public class Registrations {
     public PushRegistrar get(String name) {
         return registrars.get(name);
     }
-    
+
     /**
      * 
      * When a push message is received, all main thread handlers will be 
@@ -124,7 +124,7 @@ public class Registrations {
         backgroundThreadHandlers.remove(handler);
     }
 
-        /**
+    /**
      * 
      * This will deliver an intent to all registered handlers.  
      * See {@link PushConstants} for information on how messages will be routed.
@@ -133,17 +133,17 @@ public class Registrations {
      * @param message the message to pass
      * @param defaultHandler a default handler is a handler which will be called 
      *          if there are no other handlers registered.  May be null
-     */  
+     */
     public static void notifyHandlers(final Context context, final Intent message, final MessageHandler defaultHandler) {
 
         if (backgroundThreadHandlers.isEmpty() && mainThreadHandlers.isEmpty()
-            && defaultHandler != null) {
+                && defaultHandler != null) {
             new Thread(new Runnable() {
                 public void run() {
 
                     if (message.getBooleanExtra(PushConstants.ERROR, false)) {
                         defaultHandler.onError();
-                    } else if (message.getBooleanExtra(PushConstants.DELETED, false)) { 
+                    } else if (message.getBooleanExtra(PushConstants.DELETED, false)) {
                         defaultHandler.onDeleteMessage(context, message.getExtras());
                     } else {
                         defaultHandler.onMessage(context, message.getExtras());
@@ -159,7 +159,7 @@ public class Registrations {
 
                     if (message.getBooleanExtra(PushConstants.ERROR, false)) {
                         handler.onError();
-                    } else if (message.getBooleanExtra(PushConstants.DELETED, false)) { 
+                    } else if (message.getBooleanExtra(PushConstants.DELETED, false)) {
                         handler.onDeleteMessage(context, message.getExtras());
                     } else {
                         handler.onMessage(context, message.getExtras());
@@ -177,7 +177,7 @@ public class Registrations {
                 public void run() {
                     if (message.getBooleanExtra(PushConstants.ERROR, false)) {
                         handler.onError();
-                    } else if (message.getBooleanExtra(PushConstants.DELETED, false)) { 
+                    } else if (message.getBooleanExtra(PushConstants.DELETED, false)) {
                         handler.onDeleteMessage(context, message.getExtras());
                     } else {
                         handler.onMessage(context, message.getExtras());
@@ -196,10 +196,10 @@ public class Registrations {
      * 
      * @param context the application's context
      * @param message the message to pass
-     */ 
+     */
     protected static void notifyHandlers(final Context context,
             final Intent message) {
         notifyHandlers(context, message, null);
     }
-    
+
 }

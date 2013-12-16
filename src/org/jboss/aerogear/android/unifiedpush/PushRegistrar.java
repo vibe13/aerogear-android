@@ -19,7 +19,6 @@ package org.jboss.aerogear.android.unifiedpush;
 import android.content.Context;
 import org.jboss.aerogear.android.Callback;
 
-
 public interface PushRegistrar {
 
     /**
@@ -39,5 +38,5 @@ public interface PushRegistrar {
      * @param callback a callback.
      */
     void unregister(final Context context, final Callback<Void> callback);
-    
+
 }

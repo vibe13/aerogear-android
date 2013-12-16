@@ -60,7 +60,7 @@ public class HttpDigestAuthenticationModule extends AbstractAuthenticationModule
     public HttpDigestAuthenticationModule(URL baseURL, AuthenticationConfig config) {
         this.runner = new DigestAuthenticationModuleRunner(baseURL, config);
     }
-    
+
     @Override
     public URL getBaseURL() {
         return runner.getBaseURL();
@@ -173,13 +173,12 @@ public class HttpDigestAuthenticationModule extends AbstractAuthenticationModule
         fields.addHeader("Authorization", runner.getAuthorizationHeader(requestUri, method, requestBody));
         return fields;
     }
-    
+
     @Override
     public boolean retryLogin() {
         return runner.retryLogin();
     }
-    
-    
+
     /**
      * This will log in the user using the keys "loginName" and "password".
      */
@@ -187,5 +186,5 @@ public class HttpDigestAuthenticationModule extends AbstractAuthenticationModule
     public void login(Map<String, String> loginData, Callback<HeaderAndBody> callback) {
         login(loginData.get(USERNAME_PARAMETER_NAME), loginData.get(PASSWORD_PARAMETER_NAME), callback);
     }
-    
+
 }

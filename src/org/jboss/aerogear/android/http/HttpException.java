@@ -37,7 +37,7 @@ public class HttpException extends RuntimeException {
      * The headers returned
      */
     private final Map<String, String> headers = new HashMap<String, String>();
-    
+
     /**
      * The returned status code
      */
@@ -46,7 +46,7 @@ public class HttpException extends RuntimeException {
     public HttpException(byte[] data, int statusCode) {
         this(data, statusCode, String.format(DEFAULT_MESSAGE, statusCode), new HashMap<String, String>());
     }
-    
+
     public HttpException(byte[] data, int statusCode, Map<String, String> headers) {
         this(data, statusCode, String.format(DEFAULT_MESSAGE, statusCode), headers);
     }
@@ -54,7 +54,7 @@ public class HttpException extends RuntimeException {
     public HttpException(byte[] data, int statusCode, String message) {
         this(data, statusCode, message, new HashMap<String, String>());
     }
-    
+
     public HttpException(byte[] data, int statusCode, String message, Map<String, String> headers) {
         super(message);
         this.data = data;
@@ -73,5 +73,5 @@ public class HttpException extends RuntimeException {
     public Map<String, String> getHeaders() {
         return new HashMap<String, String>(headers);
     }
-    
+
 }

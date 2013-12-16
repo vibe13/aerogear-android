@@ -18,7 +18,6 @@ package org.jboss.aerogear.android.unifiedpush;
 
 import java.io.Serializable;
 
-
 import com.google.common.collect.ImmutableSet;
 
 import java.net.URI;
@@ -40,14 +39,14 @@ public class PushConfig implements Serializable {
     private List<String> categories;
     private PushType type = PushTypes.AEROGEAR_GCM;
     private URI pushServerURI;
-    
+
     public final ImmutableSet<String> senderIds;
 
     public PushConfig(URI pushServerURI, String... senderId) {
-            senderIds = ImmutableSet.copyOf(senderId);
-            this.pushServerURI = pushServerURI;
+        senderIds = ImmutableSet.copyOf(senderId);
+        this.pushServerURI = pushServerURI;
     }
-    
+
     public PushConfig(String... senderId) {
         senderIds = ImmutableSet.copyOf(senderId);
     }
@@ -195,7 +194,7 @@ public class PushConfig implements Serializable {
     /**
      * The type is a key which is used by Registrations to know which 
      * implementation of PushRegister to use.
-     */ 
+     */
     public void setType(PushType type) {
         this.type = type;
     }

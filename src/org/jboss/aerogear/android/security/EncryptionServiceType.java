@@ -22,6 +22,6 @@ import org.jboss.aerogear.android.TypeDescriptor;
  * Implementations of this interface provide identifying information to 
  * KeyManager and KeyServiceFactory.
  */
-public interface EncryptionServiceType extends TypeDescriptor{
-    
+public interface EncryptionServiceType extends TypeDescriptor {
+
 }

@@ -23,10 +23,9 @@ import org.jboss.aerogear.android.security.EncryptionServiceFactory;
 
 public class DefaultEncryptionServiceFactory implements EncryptionServiceFactory {
 
-   
     @Override
     public EncryptionService getService(CryptoConfig config, Context context) {
-        
+
         if (EncryptionServiceTypes.PASSWORD_KEYSTORE.equals(config.getType())) {
             return makePasswordKeyStoreService(config, context);
         } else {
@@ -34,9 +33,8 @@ public class DefaultEncryptionServiceFactory implements EncryptionServiceFactory
         }
     }
 
-
     private EncryptionService makePasswordKeyStoreService(CryptoConfig config, Context context) {
         return new PasswordEncryptionServices((PasswordEncryptionServices.PasswordProtectedKeystoreCryptoConfig) config, context);
     }
-    
+
 }

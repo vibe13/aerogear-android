@@ -59,7 +59,7 @@ public class AGSecurityAuthenticationModuleTest implements AuthenticationModuleT
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
                 SIMPLE_URL, new AuthenticationConfig());
         Object runner = UnitTestUtils.getPrivateField(module, "runner");
-        HttpProvider provider = (HttpProvider) ((Provider)UnitTestUtils.getSuperPrivateField(runner,
+        HttpProvider provider = (HttpProvider) ((Provider) UnitTestUtils.getSuperPrivateField(runner,
                 "httpProviderFactory")).get(SIMPLE_URL);
         Assert.assertEquals(SIMPLE_URL, provider.getUrl());
 
@@ -126,9 +126,9 @@ public class AGSecurityAuthenticationModuleTest implements AuthenticationModuleT
 
         SimpleCallback callback = new SimpleCallback(latch);
         Map<String, String> loginData = new HashMap<String, String>(2);
-        
+
         loginData.put("username", PASSING_USERNAME);
-        
+
         loginData.put("password", LOGIN_PASSWORD);
         module.login(loginData, callback);
         latch.await();
@@ -136,13 +136,13 @@ public class AGSecurityAuthenticationModuleTest implements AuthenticationModuleT
         Assert.assertNull(callback.exception);
         Assert.assertNotNull(callback.data);
         Assert.assertTrue(module.isLoggedIn());
-        
+
         JSONObject request = new JSONObject(requestData.toString());
         Assert.assertEquals(PASSING_USERNAME, request.getString("username"));
         Assert.assertEquals(LOGIN_PASSWORD, request.getString("password"));
-        
+
     }
-    
+
     @Test(timeout = 500L)
     public void loginSucceedsUsernamePassword() throws IOException, NoSuchFieldException,
             InterruptedException, IllegalArgumentException,
@@ -176,11 +176,11 @@ public class AGSecurityAuthenticationModuleTest implements AuthenticationModuleT
         Assert.assertNull(callback.exception);
         Assert.assertNotNull(callback.data);
         Assert.assertTrue(module.isLoggedIn());
-        
+
         JSONObject request = new JSONObject(requestData.toString());
         Assert.assertEquals(PASSING_USERNAME, request.getString(AGSecurityAuthenticationModule.USERNAME_PARAMETER_NAME));
         Assert.assertEquals(LOGIN_PASSWORD, request.getString(AGSecurityAuthenticationModule.PASSWORD_PARAMETER_NAME));
-        
+
     }
 
     @Test(timeout = 500L)
@@ -225,7 +225,7 @@ public class AGSecurityAuthenticationModuleTest implements AuthenticationModuleT
     public void logoutSucceeds() throws Exception {
         AGSecurityAuthenticationModule module = new AGSecurityAuthenticationModule(
                 SIMPLE_URL, new AuthenticationConfig());
-        
+
         final CountDownLatch latch = new CountDownLatch(1);
         SimpleCallback callback = new SimpleCallback(latch);
 
@@ -238,8 +238,8 @@ public class AGSecurityAuthenticationModuleTest implements AuthenticationModuleT
                             @Override
                             public HeaderAndBody post(String ignore)
                                     throws RuntimeException {
-                                    HashMap<String, Object> headers = new HashMap<String, Object>();
-                                    return new HeaderAndBody(new byte[1],
+                                HashMap<String, Object> headers = new HashMap<String, Object>();
+                                return new HeaderAndBody(new byte[1],
                                             headers);
                             }
                         };
@@ -254,10 +254,9 @@ public class AGSecurityAuthenticationModuleTest implements AuthenticationModuleT
         Assert.assertNotNull(callback.data);
         Assert.assertTrue(module.isLoggedIn());
 
-
         final CountDownLatch latch2 = new CountDownLatch(1);
         VoidCallback voidCallback = new VoidCallback(latch2);
-        
+
         UnitTestUtils.setPrivateField(runner, "httpProviderFactory",
                 new Provider<HttpProvider>() {
                     @Override
@@ -266,9 +265,9 @@ public class AGSecurityAuthenticationModuleTest implements AuthenticationModuleT
                             @Override
                             public HeaderAndBody post(String ignore)
                                     throws RuntimeException {
-                                    HashMap<String, Object> headers = new HashMap<String, Object>();
+                                HashMap<String, Object> headers = new HashMap<String, Object>();
 
-                                    return new HeaderAndBody(new byte[1],
+                                return new HeaderAndBody(new byte[1],
                                             headers);
                             }
                         };

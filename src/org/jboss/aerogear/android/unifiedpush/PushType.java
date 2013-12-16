@@ -19,5 +19,5 @@ package org.jboss.aerogear.android.unifiedpush;
 import org.jboss.aerogear.android.TypeDescriptor;
 
 public interface PushType extends TypeDescriptor {
-    
+
 }

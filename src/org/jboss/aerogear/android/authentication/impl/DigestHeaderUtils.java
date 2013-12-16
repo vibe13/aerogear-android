@@ -25,11 +25,12 @@ import java.util.Map;
 public final class DigestHeaderUtils {
 
     private static final String TAG = DigestHeaderUtils.class.getSimpleName();
-    
+
     private static enum States {
 
         DIGEST, KEY, VALUE
     };
+
     private static final String DIGEST = "Digest";
     private static final String WHITESPACE = "\\s";
     private static final String COMMA = ",";
@@ -54,42 +55,42 @@ public final class DigestHeaderUtils {
                 continue;
             }
             switch (state) {
-                case DIGEST:
-                    word.append(character);
-                    if (word.lastIndexOf(DIGEST) != -1) {
-                        word = new StringBuilder();
-                        state = States.KEY;
-                    }
+            case DIGEST:
+                word.append(character);
+                if (word.lastIndexOf(DIGEST) != -1) {
+                    word = new StringBuilder();
+                    state = States.KEY;
+                }
+                break;
+            case KEY:
+                if (matches(character, EQ)) {
+                    key = word.toString();
+                    word = new StringBuilder();
+                    state = States.VALUE;
                     break;
-                case KEY:
-                    if (matches(character, EQ)) {
-                        key = word.toString();
-                        word = new StringBuilder();
-                        state = States.VALUE;
-                        break;
-                    } else if (matches(character, COMMA)) {
+                } else if (matches(character, COMMA)) {
+                    break;
+                } else {
+                    word.append(character);
+                }
+                break;
+            case VALUE:
+                if (matches(character, valueTerminator)) {
+                    value = word.toString();
+                    word = new StringBuilder();
+                    valueTerminator = COMMA;
+                    values.put(key, value);
+                    state = States.KEY;
+                    break;
+                } else {
+                    if (matches(character, QUOTE)) {
+                        valueTerminator = QUOTE;
                         break;
                     } else {
                         word.append(character);
                     }
-                    break;
-                case VALUE:
-                    if (matches(character, valueTerminator)) {
-                        value = word.toString();
-                        word = new StringBuilder();
-                        valueTerminator = COMMA;
-                        values.put(key, value);
-                        state = States.KEY;
-                        break;
-                    } else {
-                        if (matches(character, QUOTE)) {
-                            valueTerminator = QUOTE;
-                            break;
-                        } else {
-                            word.append(character);
-                        }
-                    }
-                    break;
+                }
+                break;
             }
         }
 
@@ -120,12 +121,11 @@ public final class DigestHeaderUtils {
             }
 
             return md5Hash.toString();
-             
+
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, e.getMessage(), e);
             throw new RuntimeException(e);
         }
-
 
     }
 }

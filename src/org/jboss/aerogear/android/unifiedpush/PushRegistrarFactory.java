@@ -27,5 +27,5 @@ public interface PushRegistrarFactory {
      * @throws  IllegalArgumentException is config.type is not a supported type
      */
     PushRegistrar createPushRegistrar(PushConfig config);
-    
+
 }

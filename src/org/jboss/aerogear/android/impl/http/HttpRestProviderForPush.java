@@ -35,11 +35,11 @@ public class HttpRestProviderForPush implements HttpProvider {
     private final HttpRestProvider provider;
 
     private HttpBasicAuthenticationModule basicAuth;
-    
+
     public HttpRestProviderForPush(URL url, Integer timeout) {
         this.provider = new HttpRestProvider(url, timeout);
     }
-    
+
     @Override
     public URL getUrl() {
         return this.provider.getUrl();
@@ -83,11 +83,10 @@ public class HttpRestProviderForPush implements HttpProvider {
     public void setPasswordAuthentication(final String username, final String password) {
         basicAuth = new HttpBasicAuthenticationModule(getUrl());
         basicAuth.login(username, password, new EmptyCallback());
-        for ( Pair<String, String> header : basicAuth.getAuthorizationFields().getHeaders()) {
+        for (Pair<String, String> header : basicAuth.getAuthorizationFields().getHeaders()) {
             setDefaultHeader(header.first, header.second);
         }
     }
-    
 
     /**
      * This class does nothing, but basic auth needs some form of callback.
@@ -105,6 +104,5 @@ public class HttpRestProviderForPush implements HttpProvider {
         }
 
     }
-    
-    
+
 }

@@ -222,14 +222,14 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
         String sql = String.format("insert into %s_property (PROPERTY_NAME, PROPERTY_VALUE, PARENT_ID) values (?,?,?)", className);
 
         if (serialized.isJsonObject()) {
-            Set<Entry<String, JsonElement>> members = ((JsonObject)serialized).entrySet();
+            Set<Entry<String, JsonElement>> members = ((JsonObject) serialized).entrySet();
             String pathVar = path.isEmpty() ? "" : ".";
 
             for (Entry<String, JsonElement> member : members) {
                 JsonElement jsonValue = member.getValue();
                 String propertyName = member.getKey();
 
-                if (jsonValue.isJsonArray()){
+                if (jsonValue.isJsonArray()) {
                     JsonArray jsonArray = jsonValue.getAsJsonArray();
                     for (int index = 0; index < jsonArray.size(); index++) {
                         saveElement(jsonArray.get(index), path + pathVar + propertyName + String.format("[%d]", index), id);
@@ -239,19 +239,19 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
                 }
             }
         } else if (serialized.isJsonPrimitive()) {
-                JsonPrimitive primitive = serialized.getAsJsonPrimitive();
-                if (primitive.isBoolean()) {
-                    String value = primitive.getAsBoolean() ? "true" : "false";
-                    database.execSQL(sql, new Object[] { path, value, id });
-                } else if (primitive.isNumber()) {
-                    Number value = primitive.getAsNumber();
-                    database.execSQL(sql, new Object[] { path, value, id });
-                } else if (primitive.isString()) {
-                    String value = primitive.getAsString();
-                    database.execSQL(sql, new Object[] { path, value, id });
-                } else {
-                    throw new IllegalArgumentException(serialized + " isn't a number, boolean, or string");
-                }
+            JsonPrimitive primitive = serialized.getAsJsonPrimitive();
+            if (primitive.isBoolean()) {
+                String value = primitive.getAsBoolean() ? "true" : "false";
+                database.execSQL(sql, new Object[] { path, value, id });
+            } else if (primitive.isNumber()) {
+                Number value = primitive.getAsNumber();
+                database.execSQL(sql, new Object[] { path, value, id });
+            } else if (primitive.isString()) {
+                String value = primitive.getAsString();
+                database.execSQL(sql, new Object[] { path, value, id });
+            } else {
+                throw new IllegalArgumentException(serialized + " isn't a number, boolean, or string");
+            }
         } else {
             throw new IllegalArgumentException(serialized + " isn't a JsonObject or JsonPrimitive");
         }
@@ -343,7 +343,7 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
         if (!propertyName.contains(".")) {
             if (propertyName.contains("[")) {
                 String unArrayPropertyName = propertyName.split("\\[")[0];
-                if (!result.has(unArrayPropertyName))  {
+                if (!result.has(unArrayPropertyName)) {
                     result.add(unArrayPropertyName, new JsonArray());
                 }
                 JsonArray array = result.getAsJsonArray(unArrayPropertyName);
@@ -353,36 +353,35 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
             }
         } else {
             String[] names = propertyName.split("\\.", 2);
-            
+
             if (names[0].contains("[")) {
                 String key = names[0].split("\\[")[0];
-                Integer  index = Integer.parseInt(names[0].split("\\[")[1].split("\\]")[0]);
+                Integer index = Integer.parseInt(names[0].split("\\[")[1].split("\\]")[0]);
                 JsonArray subObject = result.getAsJsonArray(key);
-                
+
                 if (subObject == null) {
                     subObject = new JsonArray();
                     result.add(key, subObject);
                 }
-                
-                if ( (index) >= subObject.size()) {
-                    for (int i = subObject.size(); i < (index +1); i++ ) {
+
+                if ((index) >= subObject.size()) {
+                    for (int i = subObject.size(); i < (index + 1); i++) {
                         subObject.add(new JsonObject());
                     }
                 }
-                
+
                 JsonObject arrayItem = subObject.get(index).getAsJsonObject();
-                
-                
+
                 add(arrayItem, names[1], propertyValue);
-                
+
             } else {
-            
+
                 JsonObject subObject = (JsonObject) result.get(names[0]);
                 if (subObject == null) {
                     subObject = new JsonObject();
                     result.add(names[0], subObject);
                 }
-                
+
                 add(subObject, names[1], propertyValue);
             }
         }

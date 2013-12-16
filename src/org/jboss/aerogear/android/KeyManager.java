@@ -24,17 +24,16 @@ import org.jboss.aerogear.android.security.CryptoConfig;
 import org.jboss.aerogear.android.security.EncryptionService;
 import org.jboss.aerogear.android.security.EncryptionServiceFactory;
 
-
 public class KeyManager {
 
     private final EncryptionServiceFactory serviceFactory;
-    
+
     private final Map<String, EncryptionService> services = new HashMap<String, EncryptionService>();
-    
-    public KeyManager(EncryptionServiceFactory serviceFactory ) {
+
+    public KeyManager(EncryptionServiceFactory serviceFactory) {
         this.serviceFactory = serviceFactory;
     }
-    
+
     public KeyManager() {
         serviceFactory = new DefaultEncryptionServiceFactory();
     }
@@ -50,12 +49,12 @@ public class KeyManager {
      * @param context The Android Application Context.
      * @return a encryption service.
      */
-    public EncryptionService encryptionService(String name, CryptoConfig config, Context context){
+    public EncryptionService encryptionService(String name, CryptoConfig config, Context context) {
         EncryptionService service = serviceFactory.getService(config, context);
         services.put(name, service);
         return service;
     }
-    
+
     /**
      * Fetches an instance of encryption service.
      * 
@@ -65,7 +64,7 @@ public class KeyManager {
     public EncryptionService get(String name) {
         return services.get(name);
     }
-    
+
     /**
      * Removes an instance of encryption service.
      * 
@@ -74,5 +73,5 @@ public class KeyManager {
     public void remove(String name) {
         services.remove(name);
     }
-    
+
 }

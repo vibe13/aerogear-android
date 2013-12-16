@@ -59,7 +59,6 @@ public class EncryptedSQLStore<T> extends SQLiteOpenHelper implements Store<T> {
     private final String ID_IV = "IV";
     private final String ID_SALT = "SALT";
 
-
     public EncryptedSQLStore(Class<T> modelClass, Context context, GsonBuilder builder,
                              IdGenerator idGenerator, String passphrase) {
 
@@ -93,12 +92,12 @@ public class EncryptedSQLStore<T> extends SQLiteOpenHelper implements Store<T> {
         String SQL_STORE_IV = "INSERT INTO " + getEncryptTableHelperName() +
                 " ( " + COLUMN_ID + ", " + COLUMN_DATA + " ) " +
                 " VALUES ( ?, ? ) ";
-        sqLiteDatabase.execSQL(SQL_STORE_IV, new Object[]{ID_IV, iv});
+        sqLiteDatabase.execSQL(SQL_STORE_IV, new Object[] { ID_IV, iv });
 
         String SQL_STORE_SALT = "INSERT INTO " + getEncryptTableHelperName() +
                 " ( " + COLUMN_ID + ", " + COLUMN_DATA + " ) " +
                 " VALUES ( ?, ? ) ";
-        sqLiteDatabase.execSQL(SQL_STORE_SALT, new Object[]{ID_SALT, salt});
+        sqLiteDatabase.execSQL(SQL_STORE_SALT, new Object[] { ID_SALT, salt });
 
         String SQL_CREATE_ENTITY_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
                 " ( " +
@@ -121,7 +120,7 @@ public class EncryptedSQLStore<T> extends SQLiteOpenHelper implements Store<T> {
 
         String SQL = "SELECT " + COLUMN_DATA + " FROM " + getEncryptTableHelperName() + " WHERE " + COLUMN_ID + " = ?";
 
-        Cursor cursorIV = db.rawQuery(SQL, new String[]{ID_IV});
+        Cursor cursorIV = db.rawQuery(SQL, new String[] { ID_IV });
         cursorIV.moveToFirst();
 
         try {
@@ -130,7 +129,7 @@ public class EncryptedSQLStore<T> extends SQLiteOpenHelper implements Store<T> {
             cursorIV.close();
         }
 
-        Cursor cursorSalt = db.rawQuery(SQL, new String[]{ID_SALT});
+        Cursor cursorSalt = db.rawQuery(SQL, new String[] { ID_SALT });
         cursorSalt.moveToFirst();
 
         try {
@@ -186,7 +185,7 @@ public class EncryptedSQLStore<T> extends SQLiteOpenHelper implements Store<T> {
     @Override
     public T read(Serializable id) throws InvalidKeyException {
         String sql = "SELECT " + COLUMN_DATA + " FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";
-        Cursor cursor = getReadableDatabase().rawQuery(sql, new String[]{id.toString()});
+        Cursor cursor = getReadableDatabase().rawQuery(sql, new String[] { id.toString() });
         cursor.moveToFirst();
 
         if (cursor.getCount() == 0) {
@@ -245,7 +244,7 @@ public class EncryptedSQLStore<T> extends SQLiteOpenHelper implements Store<T> {
     @Override
     public void remove(Serializable id) {
         String sql = "DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_ID + " = ?";
-        getWritableDatabase().execSQL(sql, new Object[]{id});
+        getWritableDatabase().execSQL(sql, new Object[] { id });
     }
 
     /**

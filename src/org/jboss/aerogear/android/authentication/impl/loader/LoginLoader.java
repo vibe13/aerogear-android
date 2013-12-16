@@ -39,7 +39,7 @@ public class LoginLoader extends AbstractAuthenticationLoader {
 
     private HeaderAndBody result = null;
     private final Map<String, String> loginData;
-    
+
     @Deprecated
     /**
      * Use LoginLoader(Context, Callback, AuthenticationModule, Map) instead.
@@ -52,13 +52,11 @@ public class LoginLoader extends AbstractAuthenticationLoader {
         this.loginData = loginParams;
     }
 
-    
     LoginLoader(Context context, Callback callback, AuthenticationModule module, Map<String, String> loginData) {
         super(context, module, callback);
         this.loginData = new HashMap<String, String>(loginData);
     }
 
-    
     @Override
     public HeaderAndBody loadInBackground() {
         final CountDownLatch latch = new CountDownLatch(1);
@@ -94,5 +92,5 @@ public class LoginLoader extends AbstractAuthenticationLoader {
             forceLoad();
         }
     }
-    
+
 }

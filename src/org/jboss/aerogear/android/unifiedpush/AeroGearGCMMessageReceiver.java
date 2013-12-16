@@ -65,7 +65,7 @@ public class AeroGearGCMMessageReceiver extends BroadcastReceiver {
                 }
             }
         }
-        
+
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
         String messageType = gcm.getMessageType(intent);
         if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {

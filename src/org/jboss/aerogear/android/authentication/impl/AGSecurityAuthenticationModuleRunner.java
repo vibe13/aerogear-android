@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import org.jboss.aerogear.android.authentication.AuthenticationConfig;
 import static org.jboss.aerogear.android.authentication.impl.AGSecurityAuthenticationModule.*;
 import org.jboss.aerogear.android.http.HeaderAndBody;
@@ -31,7 +30,7 @@ import org.json.JSONObject;
 class AGSecurityAuthenticationModuleRunner extends AbstractAuthenticationModuleRunner {
 
     private static final String TAG = AGSecurityAuthenticationModuleRunner.class.getSimpleName();
-    
+
     /**
      * @param baseURL
      * @param config
@@ -41,14 +40,14 @@ class AGSecurityAuthenticationModuleRunner extends AbstractAuthenticationModuleR
     public AGSecurityAuthenticationModuleRunner(URL baseURL, AuthenticationConfig config) {
         super(baseURL, config);
     }
-    
+
     String buildLoginData(String username, String password) {
         JsonObject response = new JsonObject();
         response.addProperty("loginName", username);
         response.addProperty("password", password);
         return response.toString();
     }
-    
+
     @Override
     public HeaderAndBody onEnroll(final Map<String, String> userData) {
         HttpProvider provider = httpProviderFactory.get(enrollURL, timeout);
@@ -60,13 +59,10 @@ class AGSecurityAuthenticationModuleRunner extends AbstractAuthenticationModuleR
     HeaderAndBody onLogin(String username, String password) {
         Map<String, String> loginData = new HashMap<String, String>(2);
         loginData.put(USERNAME_PARAMETER_NAME, username);
-        loginData.put(PASSWORD_PARAMETER_NAME, password);       
+        loginData.put(PASSWORD_PARAMETER_NAME, password);
         return onLogin(loginData);
     }
 
-
-    
-    
     public HeaderAndBody onLogin(final Map<String, String> loginData) {
         HttpProvider provider = httpProviderFactory.get(loginURL, timeout);
         String loginRequest = new JSONObject(loginData).toString();

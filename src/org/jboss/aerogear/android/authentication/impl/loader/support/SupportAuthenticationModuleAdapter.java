@@ -16,7 +16,6 @@
  */
 package org.jboss.aerogear.android.authentication.impl.loader.support;
 
-
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -123,7 +122,6 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
         manager.initLoader(id, bundle, this);
     }
 
-    
     @Override
     public void login(String username, String password, Callback<HeaderAndBody> callback) {
         Map<String, String> loginData = new HashMap<String, String>(4);
@@ -137,11 +135,11 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
         int id = Objects.hashCode(name, loginData, callback, Math.random());
         Bundle bundle = new Bundle();
         Bundle loginBundle = new Bundle();
-        
+
         for (Map.Entry<String, String> entry : loginData.entrySet()) {
             loginBundle.putString(entry.getKey(), entry.getValue());
         }
-        
+
         bundle.putSerializable(CALLBACK, callback);
         bundle.putBundle(PARAMS, loginBundle);
         bundle.putSerializable(METHOD, Methods.LOGIN);
@@ -149,7 +147,7 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
             manager.restartLoader(id, bundle, this);
         } else {
             manager.initLoader(id, bundle, this);
-        }    
+        }
     }
 
     @Override
@@ -184,7 +182,7 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
     public boolean retryLogin() {
         return module.retryLogin();
     }
-    
+
     @Override
     public Loader<HeaderAndBody> onCreateLoader(int id, Bundle bundle) {
         SupportAuthenticationModuleAdapter.Methods method = (SupportAuthenticationModuleAdapter.Methods) bundle.get(METHOD);

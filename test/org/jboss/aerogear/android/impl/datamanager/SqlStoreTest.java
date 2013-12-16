@@ -191,16 +191,16 @@ public class SqlStoreTest {
         where = new JSONObject();
         where.put("text", "nestedText");
         where.put("id", 1);
-        
+
         filter.setWhere(where);
         result = nestedWithCollectionStore.readWithFilter(filter);
         Assert.assertEquals(1, result.size());
         TrivialNestedClassWithCollection nestedResult = result.get(0);
-        Assert.assertEquals((Integer)10, nestedResult.data.get(0).getId());
-        Assert.assertEquals((Integer)30, nestedResult.data.get(1).getId());
+        Assert.assertEquals((Integer) 10, nestedResult.data.get(0).getId());
+        Assert.assertEquals((Integer) 30, nestedResult.data.get(1).getId());
 
     }
-    
+
     @Test
     public void testSuccessCallback() throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(2);
@@ -236,17 +236,17 @@ public class SqlStoreTest {
         SQLStore<ListWithId> longStore = new SQLStore<ListWithId>(ListWithId.class, context);
         open(longStore);
         ListWithId<Long> longList = new ListWithId<Long>(100);
-        
+
         longList.setId(1);
-        
-        for (long i = 0;i < 100; i++) {
+
+        for (long i = 0; i < 100; i++) {
             longList.data.add(i);
         }
         longStore.save(longList);
         Assert.assertEquals(100, longStore.readAll().iterator().next().data.size());
-        
+
     }
-    
+
     private <T> void open(SQLStore<T> store) throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
         store.open(new Callback<SQLStore<T>>() {
@@ -304,7 +304,7 @@ public class SqlStoreTest {
             this.data = data;
         }
     }
-    
+
     public static final class TrivialNestedClassWithCollection {
 
         @RecordId
@@ -336,19 +336,18 @@ public class SqlStoreTest {
             this.data = data;
         }
 
-        
     }
-    
+
     public static final class ListWithId<T> {
         @RecordId
         private Integer id;
 
         public final List<T> data;
-        
+
         public ListWithId(int size) {
             data = new ArrayList<T>(size);
         }
-        
+
         public Integer getId() {
             return id;
         }
@@ -356,7 +355,7 @@ public class SqlStoreTest {
         public void setId(Integer id) {
             this.id = id;
         }
-        
+
     }
-    
+
 }

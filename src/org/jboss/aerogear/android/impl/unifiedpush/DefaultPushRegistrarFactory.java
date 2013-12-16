@@ -27,9 +27,9 @@ public class DefaultPushRegistrarFactory implements PushRegistrarFactory {
         if (config.getType().equals(PushTypes.AEROGEAR_GCM)) {
             return new AeroGearGCMPushRegistrar(config);
         }
-        
+
         throw new IllegalArgumentException("Unsupported Push Type" + config.getType().getName());
-        
+
     }
-    
+
 }

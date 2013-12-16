@@ -195,9 +195,9 @@ public class RestRunner<T> implements PipeHandler<T> {
         } else {
             httpProvider = getHttpProvider(filter.getLinkUri());
         }
-        
+
         HeaderAndBody httpResponse;
-        
+
         try {
             httpResponse = httpProvider.get();
         } catch (HttpException exception) {
@@ -292,15 +292,15 @@ public class RestRunner<T> implements PipeHandler<T> {
 
     private HttpProvider getHttpProvider(URI relativeUri) {
         final String queryString;
-        
+
         AuthorizationFields fields = loadAuth(relativeUri, "GET");
-        
-        if (relativeUri == null || relativeUri.getQuery() == null){
-        	queryString = "";
+
+        if (relativeUri == null || relativeUri.getQuery() == null) {
+            queryString = "";
         } else {
-        	queryString = relativeUri.getQuery().toString();
+            queryString = relativeUri.getQuery().toString();
         }
-        
+
         URL mergedURL = UrlUtils.appendToBaseURL(baseURL, relativeUri.getPath());
         URL authorizedURL = addAuthorization(fields.getQueryParameters(), UrlUtils.appendQueryToBaseURL(mergedURL, queryString));
 
@@ -308,7 +308,7 @@ public class RestRunner<T> implements PipeHandler<T> {
         httpProvider.setDefaultHeader("Content-TYpe", requestBuilder.getContentType());
         addAuthHeaders(httpProvider, fields);
         return httpProvider;
-        
+
     }
 
     /**
@@ -413,7 +413,7 @@ public class RestRunner<T> implements PipeHandler<T> {
             if (baseQuery.isEmpty()) {
                 baseQuery = null;
             }
-            
+
             return new URI(baseURI.getScheme(), baseURI.getUserInfo(), baseURI.getHost(), baseURI.getPort(), baseURI.getPath(), baseQuery, baseURI.getFragment()).toURL();
         } catch (MalformedURLException ex) {
             Log.e(TAG, "The URL could not be created from " + baseURL.toString(), ex);

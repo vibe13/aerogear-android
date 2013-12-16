@@ -24,7 +24,7 @@ import org.jboss.aerogear.android.unifiedpush.PushType;
  * 
  */
 public enum PushTypes implements PushType {
-   
+
     /**
      * This value will cause AeroGear to provide a {@link PushRegistrar} 
      * instance which registers against both GCM and an AeroGear push server.

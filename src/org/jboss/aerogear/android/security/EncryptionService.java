@@ -30,8 +30,7 @@ public interface EncryptionService {
      * @return 
      */
     public byte[] encrypt(byte[] message);
-    
-    
+
     /**
      * 
      * Encrypt the message with
@@ -41,7 +40,7 @@ public interface EncryptionService {
      * @return 
      */
     public byte[] encrypt(byte[] iv, byte[] message);
-    
+
     /**
      * 
      * Decrypt the message with an application scoped IV
@@ -50,7 +49,7 @@ public interface EncryptionService {
      * @return 
      */
     public byte[] decrypt(byte[] message);
-    
+
     /**
      * 
      * Decrypt the message with
@@ -60,5 +59,5 @@ public interface EncryptionService {
      * @return 
      */
     public byte[] decrypt(byte[] iv, byte[] message);
-    
+
 }

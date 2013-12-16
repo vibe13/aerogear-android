@@ -19,8 +19,8 @@ package org.jboss.aerogear.android.security;
 /**
  * This is a marker interface used by the KeyManagement factory class.
  */
-public interface CryptoConfig { 
-    
+public interface CryptoConfig {
+
     /**
      * 
      * @return the type of this CryptoConfig.

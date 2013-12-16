@@ -23,7 +23,7 @@ import org.jboss.aerogear.android.security.EncryptionServiceType;
  */
 public enum EncryptionServiceTypes implements EncryptionServiceType {
     PASSWORD_KEYSTORE("PASSWORD_KEYSTORE");
-    
+
     private final String typeDescription;
 
     EncryptionServiceTypes(String typeDescription) {

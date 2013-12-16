@@ -23,7 +23,7 @@ package org.jboss.aerogear.android.unifiedpush;
  * 
  */
 public final class PushConstants {
-    
+
     /**
      * Intents with this key indicate that some error occurred.  There may be 
      * extra information in the Intent.  
@@ -32,7 +32,7 @@ public final class PushConstants {
      * will pass this message to {@link MessageHandler#onError() }
      */
     public static final String ERROR = "org.jboss.aerogear.android.unifiedpush.ERROR";
-    
+
     /**
      * Intents with this key encapsulate a push message
      * 
@@ -40,7 +40,7 @@ public final class PushConstants {
      * will pass this message to {@link MessageHandler#onMessage(android.content.Context, android.os.Bundle) }
      */
     public static final String MESSAGE = "org.jboss.aerogear.android.unifiedpush.MESSAGE";
-    
+
     /**
      * An intent with this key means that the message it encapsulates refers to 
      * messages which have been deleted by the push provider.
@@ -49,5 +49,5 @@ public final class PushConstants {
      * will pass this message to {@link MessageHandler#onDeleteMessage(android.content.Context, android.os.Bundle)  }
      */
     public static final String DELETED = "org.jboss.aerogear.android.unifiedpush.DELETED";
-    
+
 }

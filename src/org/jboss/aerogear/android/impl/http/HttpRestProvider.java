@@ -272,16 +272,15 @@ public final class HttpRestProvider implements HttpProvider {
                         .getErrorStream());
 
             byte[] errData = readBytes(err);
-            
-            Map<String, String> errorHeaders = Maps.transformValues(urlConnection.getHeaderFields(), 
+
+            Map<String, String> errorHeaders = Maps.transformValues(urlConnection.getHeaderFields(),
                     new Function<List<String>, String>() {
-                    @Override
-                    public String apply(List<String> input) {
-                        return TextUtils.join(",", input);
-                    }
-                });
-            
-            
+                        @Override
+                        public String apply(List<String> input) {
+                            return TextUtils.join(",", input);
+                        }
+                    });
+
             throw new HttpException(errData, statusCode, errorHeaders);
 
         }

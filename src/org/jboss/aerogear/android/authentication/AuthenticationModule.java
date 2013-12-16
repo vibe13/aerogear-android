@@ -76,7 +76,7 @@ public interface AuthenticationModule {
      * @param callback
      */
     void login(Map<String, String> loginData, Callback<HeaderAndBody> callback);
-    
+
     /**
      * Performs a logout of the current user.
      * <p/>
@@ -122,7 +122,6 @@ public interface AuthenticationModule {
      */
     public AuthorizationFields getAuthorizationFields(URI requestUri, String method, byte[] requestBody);
 
-    
     /**
      * Some authorization schemes (HTTP Digest, OAUTH) have a mechanism for retrying 
      * a login to fetch fresh credentials after the credentials expire.
@@ -137,5 +136,5 @@ public interface AuthenticationModule {
      * @return whether or not retrying the login succeeded.
      */
     public boolean retryLogin() throws HttpException;
-    
+
 }

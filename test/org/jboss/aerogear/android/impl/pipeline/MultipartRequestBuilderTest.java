@@ -110,7 +110,7 @@ public class MultipartRequestBuilderTest {
         URL url = new URL("http://example.com");
         final ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
         final HttpStubProvider provider = new HttpStubProvider(url, null) {
-            
+
             @Override
             public HeaderAndBody put(String id, byte[] data) throws HttpException {
                 byteBuffer.put(data);
@@ -135,7 +135,6 @@ public class MultipartRequestBuilderTest {
 
         final CountDownLatch latch = new CountDownLatch(1);
 
-
         restPipe.save(new MultipartRequestBuilderTest.MultiPartData(), new Callback<MultipartRequestBuilderTest.MultiPartData>() {
             @Override
             public void onSuccess(MultipartRequestBuilderTest.MultiPartData data) {
@@ -151,10 +150,9 @@ public class MultipartRequestBuilderTest {
 
         latch.await();
 
-        
         //move data past the header
         multiPartSerializedData.poll();
-        
+
         ByteArrayInputStream stream = new ByteArrayInputStream(byteBuffer.array());
         StringBuilder stringBuilder = new StringBuilder();
         int readByte;
@@ -182,9 +180,9 @@ public class MultipartRequestBuilderTest {
 
     public static class MultiPartData {
 
-        private byte[] byteArray = {'a', 'b', 'c', 'd', 'e', 'f'};
+        private byte[] byteArray = { 'a', 'b', 'c', 'd', 'e', 'f' };
         private InputStream inputStream = new ByteArrayInputStream(byteArray);
-        
+
         @RecordId
         private String string = STRING_DATA;
 

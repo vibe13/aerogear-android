@@ -376,7 +376,7 @@ public class RestAdapterTest {
 
         verify(factory).get(eq(new URL(urlNoSlash.toString() + "/token")), eq(60000));
     }
-    
+
     @Test
     public void runReadWithFilterAndAuthentication() throws Exception {
 
@@ -394,7 +394,7 @@ public class RestAdapterTest {
 
         AuthenticationModule urlModule = mock(AuthenticationModule.class);
         when(urlModule.isLoggedIn()).thenReturn(true);
-        when(urlModule.getAuthorizationFields((URI)anyObject(), anyString(), (byte[]) anyObject())).thenReturn(authFields);
+        when(urlModule.getAuthorizationFields((URI) anyObject(), anyString(), (byte[]) anyObject())).thenReturn(authFields);
 
         PipeConfig config = new PipeConfig(url, Data.class);
         config.setAuthModule(urlModule);

@@ -50,9 +50,9 @@ public final class DefaultStoreFactory implements StoreFactory {
             }
 
             return new SQLStore(klass, context, builder, idGenerator);
-        } else if(StoreTypes.ENCRYPTED_MEMORY.equals(type)) {
+        } else if (StoreTypes.ENCRYPTED_MEMORY.equals(type)) {
             return new EncryptedMemoryStore(idGenerator, passphrase, klass);
-        } else if(StoreTypes.ENCRYPTED_SQL.equals(type)) {
+        } else if (StoreTypes.ENCRYPTED_SQL.equals(type)) {
             return new EncryptedSQLStore(klass, context, builder, idGenerator, passphrase);
         }
         throw new IllegalArgumentException("Type is not supported yet");

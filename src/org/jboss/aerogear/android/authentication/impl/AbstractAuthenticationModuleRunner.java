@@ -68,13 +68,13 @@ public abstract class AbstractAuthenticationModuleRunner {
 
     public URI getBaseURI() {
         try {
-			return baseURL.toURI();
-		} catch (URISyntaxException e) {
-			Log.e(TAG, e.getMessage(), e);
-			throw new RuntimeException(e);
-		}
+            return baseURL.toURI();
+        } catch (URISyntaxException e) {
+            Log.e(TAG, e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
-    
+
     public String getEnrollEndpoint() {
         return enrollEndpoint;
     }
