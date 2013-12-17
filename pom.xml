@@ -223,6 +223,7 @@
                                 <phase>package</phase>
                                 <goals>
                                         <goal>aar</goal>
+                                        <goal>apklib</goal>
                                 </goals>
                         </execution>
                 </executions>
