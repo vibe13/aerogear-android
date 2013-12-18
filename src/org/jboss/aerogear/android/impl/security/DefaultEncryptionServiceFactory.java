@@ -26,11 +26,17 @@ public class DefaultEncryptionServiceFactory implements EncryptionServiceFactory
     @Override
     public EncryptionService getService(CryptoConfig config, Context context) {
 
-        if (EncryptionServiceTypes.PASSWORD_KEYSTORE.equals(config.getType())) {
+        if (EncryptionServiceTypes.PASSPHRASE.equals(config.getType())) {
+            return makePassPhraseService(config, context);
+        } else if (EncryptionServiceTypes.PASSWORD_KEYSTORE.equals(config.getType())) {
             return makePasswordKeyStoreService(config, context);
         } else {
             throw new IllegalStateException("Unsupported CryptoConfig type");
         }
+    }
+
+    private EncryptionService makePassPhraseService(CryptoConfig config, Context context) {
+        return new PassphraseEncryptionServices(context, (PassphraseEncryptionServices.PassPhraseCryptoConfig) config);
     }
 
     private EncryptionService makePasswordKeyStoreService(CryptoConfig config, Context context) {
