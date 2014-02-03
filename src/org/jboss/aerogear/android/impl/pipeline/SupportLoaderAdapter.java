@@ -68,7 +68,7 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
     private static enum Methods {
 
         READ, SAVE, REMOVE
-    };
+    }
 
     private final Context applicationContext;
     private final Pipe<T> pipe;

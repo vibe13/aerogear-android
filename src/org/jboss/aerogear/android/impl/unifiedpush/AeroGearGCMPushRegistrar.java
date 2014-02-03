@@ -16,7 +16,6 @@
  */
 package org.jboss.aerogear.android.impl.unifiedpush;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -158,7 +157,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                 } else {
                     callback.onFailure(result);
                 }
-            };
+            }
 
         }.execute((Void) null);
 
@@ -204,7 +203,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                 } else {
                     callback.onFailure(result);
                 }
-            };
+            }
 
         }.execute((Void) null);
     }

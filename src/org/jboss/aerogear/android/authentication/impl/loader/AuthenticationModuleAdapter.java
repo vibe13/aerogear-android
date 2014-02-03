@@ -40,15 +40,8 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Maps;
 import java.net.URI;
-import java.util.Collections;
 import org.jboss.aerogear.android.authentication.AbstractAuthenticationModule;
-import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.CALLBACK;
-import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.METHOD;
-import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.PASSWORD;
-import static org.jboss.aerogear.android.authentication.impl.loader.LoaderAuthenticationModule.USERNAME;
 
 /**
  * This class manages the relationship between Android's Loader framework and
@@ -66,7 +59,7 @@ public class AuthenticationModuleAdapter implements LoaderAuthenticationModule, 
     public static enum Methods {
 
         LOGIN, LOGOUT, ENROLL
-    };
+    }
 
     private final Context applicationContext;
     private final AuthenticationModule module;

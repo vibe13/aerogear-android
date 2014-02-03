@@ -16,7 +16,6 @@
  */
 package org.jboss.aerogear.android.impl.util;
 
-import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.jboss.aerogear.android.impl.crypto.InvalidKeyException;

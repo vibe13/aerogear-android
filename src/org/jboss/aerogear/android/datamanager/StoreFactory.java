@@ -17,7 +17,6 @@
 package org.jboss.aerogear.android.datamanager;
 
 import org.jboss.aerogear.android.impl.datamanager.StoreConfig;
-import org.jboss.aerogear.crypto.keys.PrivateKey;
 
 public interface StoreFactory {
 

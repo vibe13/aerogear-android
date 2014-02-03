@@ -29,7 +29,7 @@ public final class DigestHeaderUtils {
     private static enum States {
 
         DIGEST, KEY, VALUE
-    };
+    }
 
     private static final String DIGEST = "Digest";
     private static final String WHITESPACE = "\\s";

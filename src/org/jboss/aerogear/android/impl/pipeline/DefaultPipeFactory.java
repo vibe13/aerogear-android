@@ -16,14 +16,11 @@
  */
 package org.jboss.aerogear.android.impl.pipeline;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.jboss.aerogear.android.impl.util.UrlUtils;
 import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.PipeFactory;
-
-import android.util.Log;
 
 public final class DefaultPipeFactory implements PipeFactory {
 
