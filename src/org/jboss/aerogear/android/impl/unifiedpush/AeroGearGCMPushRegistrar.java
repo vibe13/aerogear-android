@@ -157,7 +157,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                 } else {
                     callback.onFailure(result);
                 }
-            };
+            }
 
         }.execute((Void) null);
 
@@ -203,7 +203,7 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
                 } else {
                     callback.onFailure(result);
                 }
-            };
+            }
 
         }.execute((Void) null);
     }

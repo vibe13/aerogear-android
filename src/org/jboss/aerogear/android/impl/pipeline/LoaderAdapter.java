@@ -74,7 +74,7 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
     private static enum Methods {
 
         READ, SAVE, REMOVE
-    };
+    }
 
     private final Context applicationContext;
     private Fragment fragment;

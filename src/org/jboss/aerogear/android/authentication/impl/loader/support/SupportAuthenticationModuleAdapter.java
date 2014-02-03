@@ -62,7 +62,7 @@ public class SupportAuthenticationModuleAdapter implements LoaderAuthenticationM
     public static enum Methods {
 
         LOGIN, LOGOUT, ENROLL
-    };
+    }
 
     private final Context applicationContext;
     private final AuthenticationModule module;
