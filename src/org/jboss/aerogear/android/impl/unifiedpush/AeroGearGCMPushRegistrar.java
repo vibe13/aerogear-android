@@ -16,7 +16,6 @@
  */
 package org.jboss.aerogear.android.impl.unifiedpush;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.sql.Timestamp;

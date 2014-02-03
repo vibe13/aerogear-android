@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

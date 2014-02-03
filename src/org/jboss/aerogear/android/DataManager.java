@@ -23,8 +23,6 @@ import org.jboss.aerogear.android.impl.datamanager.DefaultIdGenerator;
 import org.jboss.aerogear.android.impl.datamanager.DefaultStoreFactory;
 import org.jboss.aerogear.android.impl.datamanager.StoreConfig;
 import org.jboss.aerogear.android.impl.datamanager.StoreTypes;
-import org.jboss.aerogear.crypto.keys.PrivateKey;
-import org.jboss.aerogear.crypto.password.Pbkdf2;
 
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
