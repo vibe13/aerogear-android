@@ -453,7 +453,8 @@ public class RestRunner<T> implements PipeHandler<T> {
         try {
             httpResponse = httpProvider.get();
         } catch (HttpException exception) {
-            if (exception.getStatusCode() == 401 && retryAuth(authModule)) {
+            if ((exception.getStatusCode() == 401 || 
+                 exception.getStatusCode() == 403 ) && retryAuth(authModule)) {
                 httpResponse = httpProvider.get();
             } else {
                 throw exception;
