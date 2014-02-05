@@ -450,18 +450,18 @@ public class RestRunner<T> implements PipeHandler<T> {
 
     private HeaderAndBody getResponse(HttpProvider httpProvider) {
         HeaderAndBody httpResponse;
-        
+
         try {
             httpResponse = httpProvider.get();
         } catch (HttpException exception) {
-            if ((exception.getStatusCode() == HttpStatus.SC_UNAUTHORIZED || 
-                 exception.getStatusCode() == HttpStatus.SC_FORBIDDEN ) && retryAuth(authModule)) {
+            if ((exception.getStatusCode() == HttpStatus.SC_UNAUTHORIZED ||
+                    exception.getStatusCode() == HttpStatus.SC_FORBIDDEN) && retryAuth(authModule)) {
                 httpResponse = httpProvider.get();
             } else {
                 throw exception;
             }
         }
-        
+
         return httpResponse;
     }
 }

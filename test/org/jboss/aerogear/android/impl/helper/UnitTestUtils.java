@@ -77,10 +77,10 @@ public class UnitTestUtils {
 
         return fields;
     }
-    
+
     public static Object callPrivateMethod(Object instance, String methodName, Class[] types, Object[] params) {
         try {
-           
+
             Method method = instance.getClass().getDeclaredMethod(methodName, types);
             method.setAccessible(true);
             return method.invoke(instance, params);
@@ -88,7 +88,7 @@ public class UnitTestUtils {
             Logger.getLogger(UnitTestUtils.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
-        
+
     }
-    
+
 }

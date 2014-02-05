@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 public class RestRunnerTest {
     private static final URL SIMPLE_URL;
-    
+
     static {
         try {
             SIMPLE_URL = new URL("http://example.com");
@@ -48,16 +48,16 @@ public class RestRunnerTest {
         RestRunner<Data> runner = new RestRunner<Data>(Data.class, SIMPLE_URL);
         AuthenticationModule mockModule = createMockModule();
         runner.setAuthenticationModule(mockModule);
-        
+
         HttpProvider mockProvider = getProvider(401);
         try {
-            UnitTestUtils.callPrivateMethod(runner, "getResponse", new Class[] {HttpProvider.class}, new Object[] {mockProvider});
-        } catch (Exception ignore) {}
-        
-        
+            UnitTestUtils.callPrivateMethod(runner, "getResponse", new Class[] { HttpProvider.class }, new Object[] { mockProvider });
+        } catch (Exception ignore) {
+        }
+
         verify(mockModule, times(1)).retryLogin();
         verify(mockProvider, times(2)).get();
-        
+
     }
 
     @Test
@@ -65,21 +65,22 @@ public class RestRunnerTest {
         RestRunner<Data> runner = new RestRunner<Data>(Data.class, SIMPLE_URL);
         AuthenticationModule mockModule = createMockModule();
         runner.setAuthenticationModule(mockModule);
-        
+
         HttpProvider mockProvider = getProvider(403);
         try {
-            UnitTestUtils.callPrivateMethod(runner, "getResponse", new Class[] {HttpProvider.class}, new Object[] {mockProvider});
-        } catch (Exception ignore) {}
-        
+            UnitTestUtils.callPrivateMethod(runner, "getResponse", new Class[] { HttpProvider.class }, new Object[] { mockProvider });
+        } catch (Exception ignore) {
+        }
+
         verify(mockModule, times(1)).retryLogin();
         verify(mockProvider, times(2)).get();
     }
-    
+
     private AuthenticationModule createMockModule() {
         AuthenticationModule module = mock(AuthenticationModule.class);
         when(module.isLoggedIn()).thenReturn(true);
         when(module.retryLogin()).thenReturn(Boolean.TRUE);
-        return module;    
+        return module;
     }
 
     private HttpProvider getProvider(int statusCode) {
@@ -87,5 +88,5 @@ public class RestRunnerTest {
         when(provider.get()).thenThrow(new HttpException(new byte[0], statusCode));
         return provider;
     }
-    
+
 }
