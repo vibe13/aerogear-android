@@ -59,6 +59,7 @@ import android.util.Pair;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import org.apache.http.HttpStatus;
 
 public class RestRunner<T> implements PipeHandler<T> {
 
@@ -453,8 +454,8 @@ public class RestRunner<T> implements PipeHandler<T> {
         try {
             httpResponse = httpProvider.get();
         } catch (HttpException exception) {
-            if ((exception.getStatusCode() == 401 || 
-                 exception.getStatusCode() == 403 ) && retryAuth(authModule)) {
+            if ((exception.getStatusCode() == HttpStatus.SC_UNAUTHORIZED || 
+                 exception.getStatusCode() == HttpStatus.SC_FORBIDDEN ) && retryAuth(authModule)) {
                 httpResponse = httpProvider.get();
             } else {
                 throw exception;
