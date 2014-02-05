@@ -196,17 +196,8 @@ public class RestRunner<T> implements PipeHandler<T> {
             httpProvider = getHttpProvider(filter.getLinkUri());
         }
 
-        HeaderAndBody httpResponse;
+        HeaderAndBody httpResponse = getResponse(httpProvider);
 
-        try {
-            httpResponse = httpProvider.get();
-        } catch (HttpException exception) {
-            if (exception.getStatusCode() == 401 && retryAuth(authModule)) {
-                httpResponse = httpProvider.get();
-            } else {
-                throw exception;
-            }
-        }
         byte[] responseBody = httpResponse.getBody();
         String responseAsString = new String(responseBody, encoding);
         JsonParser parser = new JsonParser();
@@ -454,5 +445,21 @@ public class RestRunner<T> implements PipeHandler<T> {
 
     private boolean retryAuth(AuthenticationModule authModule) {
         return authModule != null && authModule.isLoggedIn() && authModule.retryLogin();
+    }
+
+    private HeaderAndBody getResponse(HttpProvider httpProvider) {
+        HeaderAndBody httpResponse;
+        
+        try {
+            httpResponse = httpProvider.get();
+        } catch (HttpException exception) {
+            if (exception.getStatusCode() == 401 && retryAuth(authModule)) {
+                httpResponse = httpProvider.get();
+            } else {
+                throw exception;
+            }
+        }
+        
+        return httpResponse;
     }
 }
