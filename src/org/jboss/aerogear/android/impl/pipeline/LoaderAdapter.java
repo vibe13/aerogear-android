@@ -28,9 +28,6 @@ import org.jboss.aerogear.android.impl.pipeline.loader.SaveLoader;
 import org.jboss.aerogear.android.pipeline.AbstractActivityCallback;
 import org.jboss.aerogear.android.pipeline.AbstractFragmentCallback;
 import org.jboss.aerogear.android.pipeline.LoaderPipe;
-import static org.jboss.aerogear.android.pipeline.LoaderPipe.CALLBACK;
-import static org.jboss.aerogear.android.pipeline.LoaderPipe.FILTER;
-import static org.jboss.aerogear.android.pipeline.LoaderPipe.METHOD;
 import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
 import org.jboss.aerogear.android.pipeline.PipeType;
@@ -54,7 +51,8 @@ import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.impl.reflection.Scan;
-import static org.jboss.aerogear.android.pipeline.LoaderPipe.ITEM;
+import org.jboss.aerogear.android.pipeline.support.AbstractFragmentActivityCallback;
+import org.jboss.aerogear.android.pipeline.support.AbstractSupportFragmentCallback;
 
 /**
  * This class wraps a Pipe in an asynchronous Loader.
@@ -223,6 +221,7 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
         this.idsForNamedPipes.put(name, id);
         Methods method = (Methods) bundle.get(METHOD);
         Callback callback = (Callback) bundle.get(CALLBACK);
+        verifyCallback(callback);
         AbstractPipeLoader loader = null;
         switch (method) {
         case READ: {
@@ -371,6 +370,22 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
                 }
             }
 
+        }
+    }
+
+    private void verifyCallback(Callback<List<T>> callback) {
+        if (callback instanceof AbstractActivityCallback) {
+            if (activity == null) {
+                throw new IllegalStateException("An AbstractActivityCallback was supplied, but there is no Activity.");
+            }
+        } else if (callback instanceof AbstractFragmentCallback) {
+            if (fragment == null) {
+                throw new IllegalStateException("An AbstractFragmentCallback was supplied, but there is no Fragment.");
+            }
+        } else if (callback instanceof AbstractFragmentActivityCallback) {
+            throw new IllegalStateException("An AbstractFragmentActivityCallback was supplied, but this is the modern Loader.");
+        } else if (callback instanceof AbstractSupportFragmentCallback) {
+            throw new IllegalStateException("An AbstractSupportFragmentCallback was supplied, but this is the modern Loader.");
         }
     }
 

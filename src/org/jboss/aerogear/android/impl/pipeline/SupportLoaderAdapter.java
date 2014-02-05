@@ -48,13 +48,9 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import org.jboss.aerogear.android.http.HeaderAndBody;
-import org.jboss.aerogear.android.impl.pipeline.loader.AbstractPipeLoader;
-import org.jboss.aerogear.android.impl.pipeline.loader.SaveLoader;
 import org.jboss.aerogear.android.impl.reflection.Scan;
-import static org.jboss.aerogear.android.pipeline.LoaderPipe.CALLBACK;
-import static org.jboss.aerogear.android.pipeline.LoaderPipe.ITEM;
-import static org.jboss.aerogear.android.pipeline.LoaderPipe.METHOD;
-import static org.jboss.aerogear.android.pipeline.LoaderPipe.SAVE_ID;
+import org.jboss.aerogear.android.pipeline.AbstractActivityCallback;
+import org.jboss.aerogear.android.pipeline.AbstractFragmentCallback;
 
 /**
  * This class wraps a Pipe in an asynchronous Loader.
@@ -214,6 +210,7 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
         this.idsForNamedPipes.put(name, id);
         Methods method = (Methods) bundle.get(METHOD);
         Callback callback = (Callback) bundle.get(CALLBACK);
+        verifyCallback(callback);
         Loader loader = null;
         switch (method) {
         case READ: {
@@ -362,7 +359,7 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
         callback.onFailure(exception);
         callback.setFragmentActivity(null);
     }
-    
+
     private Object extractObject(HeaderAndBody data, AbstractSupportPipeLoader<HeaderAndBody> supportLoader) {
         List results = responseParser.handleResponse(data, getKlass());
 
@@ -373,6 +370,21 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
         } else {
             return results;
         }
+    }
 
+    private void verifyCallback(Callback<List<T>> callback) {
+        if (callback instanceof AbstractFragmentActivityCallback) {
+            if (activity == null) {
+                throw new IllegalStateException("An AbstractFragmentActivityCallback was supplied, but there is no Activity.");
+            }
+        } else if (callback instanceof AbstractSupportFragmentCallback) {
+            if (fragment == null) {
+                throw new IllegalStateException("An AbstractSupportFragmentCallback was supplied, but there is no Fragment.");
+            }
+        } else if (callback instanceof AbstractActivityCallback) {
+            throw new IllegalStateException("An AbstractActivityCallback was supplied, but this is the support Loader.");
+        } else if (callback instanceof AbstractFragmentCallback) {
+            throw new IllegalStateException("An AbstractFragmentCallback was supplied, but this is the support Loader.");
+        }
     }
 }
