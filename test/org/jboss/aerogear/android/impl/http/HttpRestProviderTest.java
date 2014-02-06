@@ -51,6 +51,7 @@ public class HttpRestProviderTest {
     private static final String HEADER_KEY1_NAME = "KEY1";
     private static final String HEADER_KEY2_NAME = "KEY2";
     private static final byte[] RESPONSE_DATA = "12345".getBytes();/*Not real data*/
+    private static final byte[] EMPTY_DATA = "".getBytes();/*Not real data*/
     private static final String REQUEST_DATA = "12345";/*Not real data*/
     private static final Map<String, List<String>> RESPONSE_HEADERS;
     private static final String HEADER_VALUE = "VALUE";
@@ -180,6 +181,28 @@ public class HttpRestProviderTest {
         testDelete(HttpStatus.SC_NO_CONTENT);
     }
     
+    @Test
+    public void testDeleteNotFoundThrowsException() throws Exception {
+        try {
+            testDelete(HttpStatus.SC_NOT_FOUND);
+        } catch (HttpException exception) {
+            assertEquals(HttpStatus.SC_NOT_FOUND, exception.getStatusCode());
+            return;
+        }
+        fail();
+    }
+    
+    @Test
+    public void testDeleteBadRequestThrowsException() throws Exception {
+        try {
+            testDelete(HttpStatus.SC_BAD_REQUEST);
+        } catch (HttpException exception) {
+            assertEquals(HttpStatus.SC_BAD_REQUEST, exception.getStatusCode());
+            return;
+        }
+        fail();
+    }
+    
     private void testDelete(int statusCode) throws Exception {
         HttpURLConnection connection = mock(HttpURLConnection.class);
         HttpUrlConnectionProvider providerProvider = new HttpUrlConnectionProvider(
@@ -188,7 +211,7 @@ public class HttpRestProviderTest {
 
         doReturn(statusCode).when(connection).getResponseCode();
         when(connection.getInputStream()).thenReturn(
-                new ByteArrayInputStream(RESPONSE_DATA));
+                new ByteArrayInputStream(EMPTY_DATA));
         when(connection.getHeaderFields()).thenReturn(RESPONSE_HEADERS);
         doCallRealMethod().when(connection).setRequestMethod(anyString());
         when(connection.getRequestMethod()).thenCallRealMethod();
@@ -198,7 +221,7 @@ public class HttpRestProviderTest {
 
         HeaderAndBody result = provider.delete(id);
 
-        assertArrayEquals(RESPONSE_DATA, result.getBody());
+        assertArrayEquals(EMPTY_DATA, result.getBody());
         assertEquals("DELETE", connection.getRequestMethod());
         assertNotNull(result.getHeader(HEADER_KEY1_NAME));
         assertNotNull(result.getHeader(HEADER_KEY2_NAME));
