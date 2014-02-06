@@ -143,7 +143,16 @@ public class HttpRestProviderTest {
     }
 
     @Test
-    public void testPut() throws Exception {
+    public void testPutHttpCreated() throws Exception {
+        testPut(HttpStatus.SC_CREATED);
+    }
+    
+    @Test
+    public void testPutHttpOK() throws Exception {
+        testPut(HttpStatus.SC_OK);
+    }
+    
+    private void testPut(int statusCode) throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
                 RESPONSE_DATA.length);
         final HttpURLConnection connection = mock(HttpURLConnection.class);
@@ -151,7 +160,7 @@ public class HttpRestProviderTest {
                 connection);
         final String id = "1";
 
-        doAnswer(new ConnectingAnswer<Integer>(connection, HttpStatus.SC_OK)).when(connection).getResponseCode();
+        doAnswer(new ConnectingAnswer<Integer>(connection, statusCode)).when(connection).getResponseCode();
         doAnswer(new ConnectingAnswer<ByteArrayInputStream>(connection, new ByteArrayInputStream(RESPONSE_DATA))).when(connection).getInputStream();
         doAnswer(new ConnectingAnswer<ByteArrayOutputStream>(connection, outputStream)).when(connection).getOutputStream();
         doAnswer(new ConnectingAnswer<Map>(connection, RESPONSE_HEADERS)).when(connection).getHeaderFields();
