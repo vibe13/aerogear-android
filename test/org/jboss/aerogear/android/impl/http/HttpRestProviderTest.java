@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.http.HttpStatus;
 
 import static org.jboss.aerogear.android.impl.helper.UnitTestUtils.setPrivateField;
 import static org.junit.Assert.*;
@@ -75,7 +76,7 @@ public class HttpRestProviderTest {
     public void testGetFailsWith404() throws Exception {
         HttpURLConnection connection404 = mock(HttpURLConnection.class);
 
-        doReturn(404).when(connection404).getResponseCode();
+        doReturn(HttpStatus.SC_NOT_FOUND).when(connection404).getResponseCode();
         when(connection404.getErrorStream()).thenReturn(
                 new ByteArrayInputStream(RESPONSE_DATA));
 
@@ -87,7 +88,7 @@ public class HttpRestProviderTest {
             provider.get();
         } catch (HttpException exception) {
             assertArrayEquals(RESPONSE_DATA, exception.getData());
-            assertEquals(404, exception.getStatusCode());
+            assertEquals(HttpStatus.SC_NOT_FOUND, exception.getStatusCode());
             throw exception;
         }
     }
@@ -99,7 +100,7 @@ public class HttpRestProviderTest {
         setPrivateField(provider, "connectionPreparer",
                 new HttpUrlConnectionProvider(connection));
 
-        doReturn(200).when(connection).getResponseCode();
+        doReturn(HttpStatus.SC_OK).when(connection).getResponseCode();
         when(connection.getInputStream()).thenReturn(
                 new ByteArrayInputStream(RESPONSE_DATA));
         when(connection.getHeaderFields()).thenReturn(RESPONSE_HEADERS);
@@ -122,7 +123,7 @@ public class HttpRestProviderTest {
         setPrivateField(provider, "connectionPreparer",
                 new HttpUrlConnectionProvider(connection));
 
-        doReturn(200).when(connection).getResponseCode();
+        doReturn(HttpStatus.SC_OK).when(connection).getResponseCode();
         when(connection.getInputStream()).thenReturn(
                 new ByteArrayInputStream(RESPONSE_DATA));
         when(connection.getOutputStream()).thenReturn(outputStream);
@@ -149,7 +150,7 @@ public class HttpRestProviderTest {
                 connection);
         final String id = "1";
 
-        doAnswer(new ConnectingAnswer<Integer>(connection, 200)).when(connection).getResponseCode();
+        doAnswer(new ConnectingAnswer<Integer>(connection, HttpStatus.SC_OK)).when(connection).getResponseCode();
         doAnswer(new ConnectingAnswer<ByteArrayInputStream>(connection, new ByteArrayInputStream(RESPONSE_DATA))).when(connection).getInputStream();
         doAnswer(new ConnectingAnswer<ByteArrayOutputStream>(connection, outputStream)).when(connection).getOutputStream();
         doAnswer(new ConnectingAnswer<Map>(connection, RESPONSE_HEADERS)).when(connection).getHeaderFields();
@@ -176,7 +177,7 @@ public class HttpRestProviderTest {
                 connection);
         final String id = "1";
 
-        doReturn(200).when(connection).getResponseCode();
+        doReturn(HttpStatus.SC_OK).when(connection).getResponseCode();
         when(connection.getInputStream()).thenReturn(
                 new ByteArrayInputStream(RESPONSE_DATA));
         when(connection.getHeaderFields()).thenReturn(RESPONSE_HEADERS);
