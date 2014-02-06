@@ -255,6 +255,7 @@ public final class HttpRestProvider implements HttpProvider {
 
         switch (statusCode) {
         case HttpStatus.SC_OK:
+        case HttpStatus.SC_CREATED:
             InputStream in = new BufferedInputStream(urlConnection
                         .getInputStream());
 
