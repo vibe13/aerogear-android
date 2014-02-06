@@ -209,8 +209,10 @@ public class HttpRestProviderTest {
                 connection);
         final String id = "1";
 
-        doReturn(statusCode).when(connection).getResponseCode();
+        when(connection.getResponseCode()).thenReturn(statusCode);
         when(connection.getInputStream()).thenReturn(
+                new ByteArrayInputStream(EMPTY_DATA));
+        when(connection.getErrorStream()).thenReturn(
                 new ByteArrayInputStream(EMPTY_DATA));
         when(connection.getHeaderFields()).thenReturn(RESPONSE_HEADERS);
         doCallRealMethod().when(connection).setRequestMethod(anyString());
