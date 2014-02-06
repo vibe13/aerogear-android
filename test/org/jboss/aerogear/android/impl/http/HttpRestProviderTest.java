@@ -146,12 +146,12 @@ public class HttpRestProviderTest {
     public void testPutHttpCreated() throws Exception {
         testPut(HttpStatus.SC_CREATED);
     }
-    
+
     @Test
     public void testPutHttpOK() throws Exception {
         testPut(HttpStatus.SC_OK);
     }
-    
+
     private void testPut(int statusCode) throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
                 RESPONSE_DATA.length);
@@ -189,7 +189,7 @@ public class HttpRestProviderTest {
     public void testDeleteNoContent() throws Exception {
         testDelete(HttpStatus.SC_NO_CONTENT);
     }
-    
+
     @Test
     public void testDeleteNotFoundThrowsException() throws Exception {
         try {
@@ -200,7 +200,7 @@ public class HttpRestProviderTest {
         }
         fail();
     }
-    
+
     @Test
     public void testDeleteBadRequestThrowsException() throws Exception {
         try {
@@ -211,7 +211,7 @@ public class HttpRestProviderTest {
         }
         fail();
     }
-    
+
     private void testDelete(int statusCode) throws Exception {
         HttpURLConnection connection = mock(HttpURLConnection.class);
         HttpUrlConnectionProvider providerProvider = new HttpUrlConnectionProvider(
@@ -239,7 +239,7 @@ public class HttpRestProviderTest {
         assertEquals(HEADER_VALUE, result.getHeader(HEADER_KEY2_NAME));
         assertEquals(id, providerProvider.id);
     }
-    
+
     static class HttpUrlConnectionProvider
             implements
                 Provider<HttpURLConnection> {
