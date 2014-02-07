@@ -17,12 +17,10 @@
 package org.jboss.aerogear.android.impl.security;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -33,31 +31,40 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
+import java.security.spec.InvalidKeySpecException;
 import javax.crypto.KeyAgreement;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
 import org.jboss.aerogear.AeroGearCrypto;
 import org.jboss.aerogear.android.security.CryptoConfig;
 import org.jboss.aerogear.android.security.EncryptionService;
 import org.jboss.aerogear.android.security.EncryptionServiceType;
 import org.jboss.aerogear.crypto.CryptoBox;
+import org.jboss.aerogear.crypto.Random;
+import org.jboss.aerogear.crypto.encoders.Hex;
 import org.jboss.aerogear.crypto.keys.KeyPair;
+import org.jboss.aerogear.crypto.password.Pbkdf2;
+
+import static org.jboss.aerogear.crypto.encoders.Hex.*;
 
 /**
  * This class will build a CryptoBox including keys from a keystore protected
  * by a password.
- * 
+ * <p/>
  * If a keystore does not exist, one will be created and saved on the device.
- * 
  */
 public class PasswordEncryptionServices extends AbstractEncryptionService implements EncryptionService {
 
     private static final String TAG = PasswordEncryptionServices.class.getSimpleName();
+    private static final String APPLICATION_SALT_KEY = "applicationSALT";
 
+    private final Context appContext;
     private final CryptoBox crypto;
 
     public PasswordEncryptionServices(PasswordProtectedKeystoreCryptoConfig config, Context appContext) {
         super(appContext);
+        this.appContext = appContext;
         this.crypto = getCrypto(appContext, config);
     }
 
@@ -69,7 +76,7 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
             throw new IllegalArgumentException("Alias in CryptoConfig may not be null");
         }
 
-        char[] password = config.password.toCharArray();
+        char[] password = derive(config.password).toCharArray();
 
         KeyStore.ProtectionParameter passwordProtectionParameter = new KeyStore.PasswordProtection(password);
 
@@ -109,7 +116,7 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
         MessageDigest hash;
         KeyAgreement keyAgree;
 
-        final char[] password = config.password.toCharArray();
+        final char[] password = derive(config.password).toCharArray();
         final String keyAlias = config.getAlias();
         final String keyStoreFile = config.getKeyStoreFile();
         final KeyStore.ProtectionParameter passwordProtectionParameter = new KeyStore.PasswordProtection(password);
@@ -177,6 +184,32 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
         if (config.keyStoreFile == null) {
             throw new IllegalArgumentException("The keystoreFile must not be null");
         }
+    }
+
+    private String derive(String password) {
+        Pbkdf2 pbkdf2 = AeroGearCrypto.pbkdf2();
+        byte[] rawPassword = null;
+        try {
+            byte[] salt = getSalt();
+            rawPassword = pbkdf2.encrypt(password, salt);
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return HEX.encode(rawPassword);
+    }
+
+    private byte[] getSalt() {
+        byte[] salt;
+        SharedPreferences preferences = appContext.getApplicationContext().getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        if (preferences.contains(APPLICATION_SALT_KEY)) {
+            salt = new Hex().decode(preferences.getString(APPLICATION_SALT_KEY, ""));
+        } else {
+            SharedPreferences.Editor editor = preferences.edit();
+            salt = new Random().randomBytes();
+            editor.putString(APPLICATION_SALT_KEY, new Hex().encode(salt));
+            editor.commit();
+        }
+        return salt;
     }
 
     @Override
