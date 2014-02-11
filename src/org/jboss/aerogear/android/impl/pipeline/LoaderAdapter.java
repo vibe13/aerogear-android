@@ -52,6 +52,7 @@ import android.util.Log;
 import com.google.common.base.Objects;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
+import org.jboss.aerogear.android.http.HeaderAndBody;
 import org.jboss.aerogear.android.impl.reflection.Scan;
 import static org.jboss.aerogear.android.pipeline.LoaderPipe.ITEM;
 
@@ -66,7 +67,7 @@ import static org.jboss.aerogear.android.pipeline.LoaderPipe.ITEM;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 @SuppressWarnings( { "rawtypes", "unchecked" })
 public class LoaderAdapter<T> implements LoaderPipe<T>,
-        LoaderManager.LoaderCallbacks<T> {
+        LoaderManager.LoaderCallbacks<HeaderAndBody> {
 
     private static final String TAG = LoaderAdapter.class.getSimpleName();
     private final Handler handler;
@@ -218,11 +219,11 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
     }
 
     @Override
-    public Loader<T> onCreateLoader(int id, Bundle bundle) {
+    public Loader<HeaderAndBody> onCreateLoader(int id, Bundle bundle) {
         this.idsForNamedPipes.put(name, id);
         Methods method = (Methods) bundle.get(METHOD);
         Callback callback = (Callback) bundle.get(CALLBACK);
-        Loader loader = null;
+        AbstractPipeLoader loader = null;
         switch (method) {
         case READ: {
             ReadFilter filter = (ReadFilter) bundle.get(FILTER);
@@ -248,20 +249,25 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
     }
 
     @Override
-    public void onLoadFinished(Loader<T> loader, final T data) {
+    public void onLoadFinished(Loader<HeaderAndBody> loader, final HeaderAndBody data) {
         if (!(loader instanceof AbstractPipeLoader)) {
             Log.e(TAG,
                     "Adapter is listening to loaders which it doesn't support");
             throw new IllegalStateException(
                     "Adapter is listening to loaders which it doesn't support");
         } else {
-            final AbstractPipeLoader<T> modernLoader = (AbstractPipeLoader<T>) loader;
-            handler.post(new CallbackHandler<T>(this, modernLoader, data));
+            final AbstractPipeLoader<HeaderAndBody> modernLoader = (AbstractPipeLoader<HeaderAndBody>) loader;
+            Object object = null;
+            if (!modernLoader.hasException() && data != null && data.getBody() != null) {
+                object = extractObject(data, modernLoader);
+            }
+            
+            handler.post(new CallbackHandler<T>(this, modernLoader, object));
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<T> loader) {
+    public void onLoaderReset(Loader<HeaderAndBody> loader) {
         Log.e(TAG, loader.toString());
 
     }
@@ -282,14 +288,14 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
         this.idsForNamedPipes = idsForNamedPipes;
     }
 
-    private void fragmentSuccess(Callback<T> typelessCallback, T data) {
+    private void fragmentSuccess(Callback typelessCallback, Object data) {
         AbstractFragmentCallback callback = (AbstractFragmentCallback) typelessCallback;
         callback.setFragment(fragment);
         callback.onSuccess(data);
         callback.setFragment(null);
     }
 
-    private void fragmentFailure(Callback<T> typelessCallback,
+    private void fragmentFailure(Callback typelessCallback,
             Exception exception) {
         AbstractFragmentCallback callback = (AbstractFragmentCallback) typelessCallback;
         callback.setFragment(fragment);
@@ -297,14 +303,14 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
         callback.setFragment(null);
     }
 
-    private void activitySuccess(Callback<T> typelessCallback, T data) {
+    private void activitySuccess(Callback typelessCallback, Object data) {
         AbstractActivityCallback callback = (AbstractActivityCallback) typelessCallback;
         callback.setActivity(activity);
         callback.onSuccess(data);
         callback.setActivity(null);
     }
 
-    private void activityFailure(Callback<T> typelessCallback,
+    private void activityFailure(Callback typelessCallback,
             Exception exception) {
         AbstractActivityCallback callback = (AbstractActivityCallback) typelessCallback;
         callback.setActivity(activity);
@@ -312,14 +318,28 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
         callback.setActivity(null);
     }
 
+    private Object extractObject(HeaderAndBody data, AbstractPipeLoader<HeaderAndBody> modernLoader) {
+        List results = responseParser.handleResponse(data, getKlass());
+        
+        if (results == null || results.size() == 0) {
+            return results;
+        } else if (modernLoader instanceof SaveLoader) {
+            return results.get(0);
+        } else {
+            return results;
+        }
+        
+        
+    }
+    
     static class CallbackHandler<T> implements Runnable {
 
         private final LoaderAdapter<T> adapter;
         private final AbstractPipeLoader<T> modernLoader;
-        private final T data;
+        private final Object data;
 
         public CallbackHandler(LoaderAdapter<T> adapter,
-                AbstractPipeLoader<T> loader, T data) {
+                AbstractPipeLoader loader, Object data) {
             super();
             this.adapter = adapter;
             this.modernLoader = loader;
@@ -348,7 +368,7 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
                 } else if (modernLoader.getCallback() instanceof AbstractActivityCallback) {
                     adapter.activitySuccess(modernLoader.getCallback(), data);
                 } else {
-                    modernLoader.getCallback().onSuccess(data);
+                    modernLoader.getCallback().onSuccess((T) data);
                 }
             }
 
