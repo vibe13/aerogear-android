@@ -21,6 +21,7 @@ import org.jboss.aerogear.android.impl.pipeline.loader.support.AbstractSupportPi
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import org.jboss.aerogear.android.http.HeaderAndBody;
 
 /**
  * This class maintains references to the callback to be called when a Loader
@@ -31,7 +32,7 @@ import android.content.Context;
  * NOT work on devices &lt; Android 3.0. If your application needs to support
  * these devices see {@link AbstractSupportPipeLoader}
  */
-public abstract class AbstractPipeLoader<T> extends AsyncTaskLoader<T> {
+public abstract class AbstractPipeLoader<T> extends AsyncTaskLoader<HeaderAndBody> {
 
     private final Callback<T> callback;
     protected Exception exception;
