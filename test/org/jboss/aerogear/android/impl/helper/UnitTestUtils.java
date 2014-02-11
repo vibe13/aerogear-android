@@ -85,7 +85,7 @@ public class UnitTestUtils {
             method.setAccessible(true);
             return method.invoke(instance, params);
         } catch (Exception ex) {
-            Logger.getLogger(UnitTestUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UnitTestUtils.class.getName()).log(Level.FINEST, null, ex);
             throw new RuntimeException(ex);
         }
 
