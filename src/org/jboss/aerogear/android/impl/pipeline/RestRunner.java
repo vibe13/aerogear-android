@@ -60,6 +60,7 @@ import android.util.Pair;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.apache.http.HttpStatus;
+import org.jboss.aerogear.android.impl.util.ClassUtils;
 
 public class RestRunner<T> implements PipeHandler<T> {
 
@@ -87,7 +88,7 @@ public class RestRunner<T> implements PipeHandler<T> {
 
     public RestRunner(Class<T> klass, URL baseURL) {
         this.klass = klass;
-        this.arrayKlass = asArrayClass(klass);
+        this.arrayKlass = ClassUtils.asArrayClass(klass);
         this.baseURL = baseURL;
         this.dataRoot = "";
         this.requestBuilder = new GsonRequestBuilder<T>();
@@ -100,7 +101,7 @@ public class RestRunner<T> implements PipeHandler<T> {
     public RestRunner(Class<T> klass, URL baseURL,
             PipeConfig config) {
         this.klass = klass;
-        this.arrayKlass = asArrayClass(klass);
+        this.arrayKlass = ClassUtils.asArrayClass(klass);
         this.baseURL = baseURL;
         this.timeout = config.getTimeout();
 
@@ -181,7 +182,7 @@ public class RestRunner<T> implements PipeHandler<T> {
         List<T> result;
 
         HeaderAndBody httpResponse = onRawReadWithFilter(filter, requestingPipe);
-
+        
         byte[] responseBody = httpResponse.getBody();
         String responseAsString = new String(responseBody, encoding);
         JsonParser parser = new JsonParser();
@@ -211,17 +212,6 @@ public class RestRunner<T> implements PipeHandler<T> {
     public void onRemove(String id) {
         HttpProvider httpProvider = getHttpProvider();
         httpProvider.delete(id);
-    }
-
-    /**
-     * This will return a class of the type T[] from a given class. When we read
-     * from the AG pipe, Java needs a reference to a generic array type.
-     *
-     * @param klass
-     * @return an array of klass with a length of 1
-     */
-    private Class<T[]> asArrayClass(Class<T> klass) {
-        return (Class<T[]>) Array.newInstance(klass, 1).getClass();
     }
 
     /**
