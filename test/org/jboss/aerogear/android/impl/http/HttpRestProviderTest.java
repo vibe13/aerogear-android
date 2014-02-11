@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.http.HttpStatus;
 
 import static org.jboss.aerogear.android.impl.helper.UnitTestUtils.setPrivateField;
 import static org.junit.Assert.*;
@@ -50,6 +51,7 @@ public class HttpRestProviderTest {
     private static final String HEADER_KEY1_NAME = "KEY1";
     private static final String HEADER_KEY2_NAME = "KEY2";
     private static final byte[] RESPONSE_DATA = "12345".getBytes();/*Not real data*/
+    private static final byte[] EMPTY_DATA = "".getBytes();/*Not real data*/
     private static final String REQUEST_DATA = "12345";/*Not real data*/
     private static final Map<String, List<String>> RESPONSE_HEADERS;
     private static final String HEADER_VALUE = "VALUE";
@@ -75,7 +77,7 @@ public class HttpRestProviderTest {
     public void testGetFailsWith404() throws Exception {
         HttpURLConnection connection404 = mock(HttpURLConnection.class);
 
-        doReturn(404).when(connection404).getResponseCode();
+        doReturn(HttpStatus.SC_NOT_FOUND).when(connection404).getResponseCode();
         when(connection404.getErrorStream()).thenReturn(
                 new ByteArrayInputStream(RESPONSE_DATA));
 
@@ -87,7 +89,7 @@ public class HttpRestProviderTest {
             provider.get();
         } catch (HttpException exception) {
             assertArrayEquals(RESPONSE_DATA, exception.getData());
-            assertEquals(404, exception.getStatusCode());
+            assertEquals(HttpStatus.SC_NOT_FOUND, exception.getStatusCode());
             throw exception;
         }
     }
@@ -99,7 +101,7 @@ public class HttpRestProviderTest {
         setPrivateField(provider, "connectionPreparer",
                 new HttpUrlConnectionProvider(connection));
 
-        doReturn(200).when(connection).getResponseCode();
+        doReturn(HttpStatus.SC_OK).when(connection).getResponseCode();
         when(connection.getInputStream()).thenReturn(
                 new ByteArrayInputStream(RESPONSE_DATA));
         when(connection.getHeaderFields()).thenReturn(RESPONSE_HEADERS);
@@ -122,7 +124,7 @@ public class HttpRestProviderTest {
         setPrivateField(provider, "connectionPreparer",
                 new HttpUrlConnectionProvider(connection));
 
-        doReturn(200).when(connection).getResponseCode();
+        doReturn(HttpStatus.SC_OK).when(connection).getResponseCode();
         when(connection.getInputStream()).thenReturn(
                 new ByteArrayInputStream(RESPONSE_DATA));
         when(connection.getOutputStream()).thenReturn(outputStream);
@@ -141,7 +143,16 @@ public class HttpRestProviderTest {
     }
 
     @Test
-    public void testPut() throws Exception {
+    public void testPutHttpCreated() throws Exception {
+        testPut(HttpStatus.SC_CREATED);
+    }
+
+    @Test
+    public void testPutHttpOK() throws Exception {
+        testPut(HttpStatus.SC_OK);
+    }
+
+    private void testPut(int statusCode) throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
                 RESPONSE_DATA.length);
         final HttpURLConnection connection = mock(HttpURLConnection.class);
@@ -149,7 +160,7 @@ public class HttpRestProviderTest {
                 connection);
         final String id = "1";
 
-        doAnswer(new ConnectingAnswer<Integer>(connection, 200)).when(connection).getResponseCode();
+        doAnswer(new ConnectingAnswer<Integer>(connection, statusCode)).when(connection).getResponseCode();
         doAnswer(new ConnectingAnswer<ByteArrayInputStream>(connection, new ByteArrayInputStream(RESPONSE_DATA))).when(connection).getInputStream();
         doAnswer(new ConnectingAnswer<ByteArrayOutputStream>(connection, outputStream)).when(connection).getOutputStream();
         doAnswer(new ConnectingAnswer<Map>(connection, RESPONSE_HEADERS)).when(connection).getHeaderFields();
@@ -170,15 +181,48 @@ public class HttpRestProviderTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void testDeleteHttpOK() throws Exception {
+        testDelete(HttpStatus.SC_OK);
+    }
+
+    @Test
+    public void testDeleteNoContent() throws Exception {
+        testDelete(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test
+    public void testDeleteNotFoundThrowsException() throws Exception {
+        try {
+            testDelete(HttpStatus.SC_NOT_FOUND);
+        } catch (HttpException exception) {
+            assertEquals(HttpStatus.SC_NOT_FOUND, exception.getStatusCode());
+            return;
+        }
+        fail();
+    }
+
+    @Test
+    public void testDeleteBadRequestThrowsException() throws Exception {
+        try {
+            testDelete(HttpStatus.SC_BAD_REQUEST);
+        } catch (HttpException exception) {
+            assertEquals(HttpStatus.SC_BAD_REQUEST, exception.getStatusCode());
+            return;
+        }
+        fail();
+    }
+
+    private void testDelete(int statusCode) throws Exception {
         HttpURLConnection connection = mock(HttpURLConnection.class);
         HttpUrlConnectionProvider providerProvider = new HttpUrlConnectionProvider(
                 connection);
         final String id = "1";
 
-        doReturn(200).when(connection).getResponseCode();
+        when(connection.getResponseCode()).thenReturn(statusCode);
         when(connection.getInputStream()).thenReturn(
-                new ByteArrayInputStream(RESPONSE_DATA));
+                new ByteArrayInputStream(EMPTY_DATA));
+        when(connection.getErrorStream()).thenReturn(
+                new ByteArrayInputStream(EMPTY_DATA));
         when(connection.getHeaderFields()).thenReturn(RESPONSE_HEADERS);
         doCallRealMethod().when(connection).setRequestMethod(anyString());
         when(connection.getRequestMethod()).thenCallRealMethod();
@@ -188,7 +232,7 @@ public class HttpRestProviderTest {
 
         HeaderAndBody result = provider.delete(id);
 
-        assertArrayEquals(RESPONSE_DATA, result.getBody());
+        assertArrayEquals(EMPTY_DATA, result.getBody());
         assertEquals("DELETE", connection.getRequestMethod());
         assertNotNull(result.getHeader(HEADER_KEY1_NAME));
         assertNotNull(result.getHeader(HEADER_KEY2_NAME));
