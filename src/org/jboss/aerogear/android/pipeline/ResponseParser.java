@@ -16,10 +16,34 @@
  */
 package org.jboss.aerogear.android.pipeline;
 
+import java.util.List;
+import org.jboss.aerogear.android.http.HeaderAndBody;
+
 public interface ResponseParser<T> {
 
+    /**
+     * 
+     * UnMarshall a response and return an object instance.
+     * 
+     * @param response the data from the server
+     * @param responseType the type to marshal to
+     * @return an instance of responseType
+     * @deprecated use {@link ResponseParser#handleResponse(org.jboss.aerogear.android.http.HeaderAndBody, java.lang.Class)  instead
+     */
+    @Deprecated
     T handleResponse(String response, Class<T> responseType);
 
+    /**
+     * UnMarshall a response and return an object array.
+     * 
+     * @param response the data from the server
+     * @param responseType the type to marshal to
+     * @return an instance of responseType
+     * @deprecated use {@link ResponseParser#handleResponse(org.jboss.aerogear.android.http.HeaderAndBody, java.lang.Class)  instead
+     */
+    @Deprecated
     T[] handleArrayResponse(String response, Class<T[]> responseType);
 
+    List<T> handleResponse(HeaderAndBody response, Class<T> responseType);
+    
 }

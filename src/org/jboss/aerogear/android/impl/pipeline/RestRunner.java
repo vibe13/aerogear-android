@@ -182,28 +182,12 @@ public class RestRunner<T> implements PipeHandler<T> {
         List<T> result;
 
         HeaderAndBody httpResponse = onRawReadWithFilter(filter, requestingPipe);
-        
-        byte[] responseBody = httpResponse.getBody();
-        String responseAsString = new String(responseBody, encoding);
-        JsonParser parser = new JsonParser();
-        JsonElement httpJsonResult = parser.parse(responseAsString);
-        httpJsonResult = getResultElement(httpJsonResult, dataRoot);
-        if (httpJsonResult.isJsonArray()) {
-            T[] resultArray = responseParser.handleArrayResponse(httpJsonResult.toString(), arrayKlass);
-            result = Arrays.asList(resultArray);
-            if (pageConfig != null) {
-                result = computePagedList(result, httpResponse, filter.getWhere(), requestingPipe);
-            }
-        } else {
-            T resultObject = responseParser.handleResponse(httpJsonResult.toString(), klass);
-            List<T> resultList = new ArrayList<T>(1);
-            resultList.add(resultObject);
-            result = resultList;
-            if (pageConfig != null) {
-                result = computePagedList(result, httpResponse, filter.getWhere(), requestingPipe);
-            }
+        result = responseParser.handleResponse(httpResponse, klass);
+
+        if (pageConfig != null) {
+            result = computePagedList(result, httpResponse, filter.getWhere(), requestingPipe);
         }
-        
+
         return result;
 
     }
@@ -390,22 +374,6 @@ public class RestRunner<T> implements PipeHandler<T> {
         }
     }
 
-    private JsonElement getResultElement(JsonElement element, String dataRoot) {
-        String[] identifiers = dataRoot.split("\\.");
-        for (String identifier : identifiers) {
-            if (identifier.equals("")) {
-                return element;
-            }
-            JsonElement newElement = element.getAsJsonObject().get(identifier);
-            if (newElement == null) {
-                return element;
-            } else {
-                element = newElement;
-            }
-        }
-        return element;
-    }
-
     void setEncoding(Charset encoding) {
         this.encoding = encoding;
     }
@@ -454,7 +422,7 @@ public class RestRunner<T> implements PipeHandler<T> {
                 throw exception;
             }
         }
-        
+
         return httpResponse;
     }
 
