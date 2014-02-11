@@ -49,7 +49,7 @@ public class RestRunnerTest {
         AuthenticationModule mockModule = createMockModule();
         runner.setAuthenticationModule(mockModule);
 
-        HttpProvider mockProvider = getProvider(401);
+        HttpProvider mockProvider = createMockProvider(401);
         try {
             UnitTestUtils.callPrivateMethod(runner, "getResponse", new Class[] { HttpProvider.class }, new Object[] { mockProvider });
         } catch (Exception ignore) {
@@ -66,7 +66,7 @@ public class RestRunnerTest {
         AuthenticationModule mockModule = createMockModule();
         runner.setAuthenticationModule(mockModule);
 
-        HttpProvider mockProvider = getProvider(403);
+        HttpProvider mockProvider = createMockProvider(403);
         try {
             UnitTestUtils.callPrivateMethod(runner, "getResponse", new Class[] { HttpProvider.class }, new Object[] { mockProvider });
         } catch (Exception ignore) {
@@ -83,7 +83,7 @@ public class RestRunnerTest {
         return module;
     }
 
-    private HttpProvider getProvider(int statusCode) {
+    private HttpProvider createMockProvider(int statusCode) {
         HttpProvider provider = mock(HttpProvider.class);
         when(provider.get()).thenThrow(new HttpException(new byte[0], statusCode));
         return provider;
