@@ -17,9 +17,12 @@
 package org.jboss.aerogear.android.impl.helper;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jboss.aerogear.android.impl.reflection.FieldNotFoundException;
 
 public class UnitTestUtils {
@@ -74,4 +77,18 @@ public class UnitTestUtils {
 
         return fields;
     }
+
+    public static Object callPrivateMethod(Object instance, String methodName, Class[] types, Object[] params) {
+        try {
+
+            Method method = instance.getClass().getDeclaredMethod(methodName, types);
+            method.setAccessible(true);
+            return method.invoke(instance, params);
+        } catch (Exception ex) {
+            Logger.getLogger(UnitTestUtils.class.getName()).log(Level.FINEST, null, ex);
+            throw new RuntimeException(ex);
+        }
+
+    }
+
 }
