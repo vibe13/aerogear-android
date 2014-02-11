@@ -1,18 +1,18 @@
 /**
- * JBoss, Home of Professional Open Source
- * Copyright Red Hat, Inc., and individual contributors.
+ * JBoss, Home of Professional Open Source Copyright Red Hat, Inc., and
+ * individual contributors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
- * 	http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.jboss.aerogear.android.impl.pipeline;
 
@@ -170,14 +170,8 @@ public class RestRunner<T> implements PipeHandler<T> {
         id = idObject == null ? null : idObject.toString();
 
         byte[] body = requestBuilder.getBody(data);
-        final HttpProvider httpProvider = getHttpProvider();
 
-        HeaderAndBody result;
-        if (id == null || id.length() == 0) {
-            result = httpProvider.post(body);
-        } else {
-            result = httpProvider.put(id, body);
-        }
+        HeaderAndBody result = onRawSave(id, body);
 
         return responseParser.handleResponse(new String(result.getBody(), encoding), klass);
     }
@@ -185,19 +179,8 @@ public class RestRunner<T> implements PipeHandler<T> {
     @Override
     public List<T> onReadWithFilter(ReadFilter filter, Pipe<T> requestingPipe) {
         List<T> result;
-        HttpProvider httpProvider;
 
-        if (filter == null) {
-            filter = new ReadFilter();
-        }
-
-        if (filter.getLinkUri() == null) {
-            httpProvider = getHttpProvider(parameterProvider.getParameters(filter));
-        } else {
-            httpProvider = getHttpProvider(filter.getLinkUri());
-        }
-
-        HeaderAndBody httpResponse = getResponse(httpProvider);
+        HeaderAndBody httpResponse = onRawReadWithFilter(filter, requestingPipe);
 
         byte[] responseBody = httpResponse.getBody();
         String responseAsString = new String(responseBody, encoding);
@@ -219,6 +202,7 @@ public class RestRunner<T> implements PipeHandler<T> {
                 result = computePagedList(result, httpResponse, filter.getWhere(), requestingPipe);
             }
         }
+        
         return result;
 
     }
@@ -309,7 +293,7 @@ public class RestRunner<T> implements PipeHandler<T> {
     private AuthorizationFields loadAuth(URI relativeURI, String httpMethod) {
 
         if (authModule != null && authModule.isLoggedIn()) {
-            return authModule.getAuthorizationFields(relativeURI, httpMethod, new byte[] {});
+            return authModule.getAuthorizationFields(relativeURI, httpMethod, new byte[]{});
         }
 
         return new AuthorizationFields();
@@ -448,7 +432,26 @@ public class RestRunner<T> implements PipeHandler<T> {
         return authModule != null && authModule.isLoggedIn() && authModule.retryLogin();
     }
 
-    private HeaderAndBody getResponse(HttpProvider httpProvider) {
+
+    @Override
+    public HeaderAndBody onRawRead(Pipe<T> requestingPipe) {
+        return onRawReadWithFilter(new ReadFilter(), requestingPipe);
+    }
+
+    @Override
+    public HeaderAndBody onRawReadWithFilter(ReadFilter filter, Pipe<T> requestingPipe) {
+        HttpProvider httpProvider;
+
+        if (filter == null) {
+            filter = new ReadFilter();
+        }
+
+        if (filter.getLinkUri() == null) {
+            httpProvider = getHttpProvider(parameterProvider.getParameters(filter));
+        } else {
+            httpProvider = getHttpProvider(filter.getLinkUri());
+        }
+
         HeaderAndBody httpResponse;
 
         try {
@@ -461,7 +464,22 @@ public class RestRunner<T> implements PipeHandler<T> {
                 throw exception;
             }
         }
-
+        
         return httpResponse;
     }
+
+    @Override
+    public HeaderAndBody onRawSave(String id, byte[] item) {
+        final HttpProvider httpProvider = getHttpProvider();
+
+        HeaderAndBody result;
+        if (id == null || id.length() == 0) {
+            result = httpProvider.post(item);
+        } else {
+            result = httpProvider.put(id, item);
+        }
+        return result;
+    }
+
+
 }
