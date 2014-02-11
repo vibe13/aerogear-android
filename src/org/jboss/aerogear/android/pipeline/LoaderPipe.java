@@ -45,6 +45,11 @@ public interface LoaderPipe<T> extends Pipe<T> {
     public static final String ITEM = "org.jboss.aerogear.android.impl.pipeline.LoaderPipe.ITEM";
 
     /**
+     * Bundle key for the id of the item to save
+     */
+    public static final String SAVE_ID = "org.jboss.aerogear.android.impl.pipeline.LoaderPipe.SAVE_ID";
+
+    /**
      * Bundle key for the id of the item to remove
      */
     public static final String REMOVE_ID = "org.jboss.aerogear.android.impl.pipeline.LoaderPipe.REMOVIE_ID";
