@@ -16,6 +16,7 @@
  */
 package org.jboss.aerogear.android.impl.pipeline;
 
+import org.jboss.aerogear.android.pipeline.MarshallingConfig;
 import org.jboss.aerogear.android.pipeline.ResponseParser;
 
 import com.google.gson.Gson;
@@ -31,9 +32,8 @@ import org.jboss.aerogear.android.impl.util.ClassUtils;
 public class GsonResponseParser<T> implements ResponseParser<T> {
 
     private Gson gson;
-    private Charset encoding = Charset.forName("UTF-8");
-    private String dataRoot = "";
-
+    private MarshallingConfig marshallingConfig = new MarshallingConfig();
+    
     public GsonResponseParser() {
         this.gson = new Gson();
     }
@@ -56,10 +56,10 @@ public class GsonResponseParser<T> implements ResponseParser<T> {
     public List<T> handleResponse(HeaderAndBody httpResponse, Class<T> responseType) {
         byte[] responseBody = httpResponse.getBody();
         List<T> result;
-        String responseAsString = new String(responseBody, encoding);
+        String responseAsString = new String(responseBody, marshallingConfig.getEncoding());
         JsonParser parser = new JsonParser();
         JsonElement httpJsonResult = parser.parse(responseAsString);
-        httpJsonResult = getResultElement(httpJsonResult, dataRoot);
+        httpJsonResult = getResultElement(httpJsonResult, marshallingConfig.getDataRoot());
         if (httpJsonResult.isJsonArray()) {
             T[] resultArray = gson.fromJson(httpJsonResult.toString(), ClassUtils.asArrayClass(responseType));
             result = Arrays.asList(resultArray);
@@ -93,46 +93,6 @@ public class GsonResponseParser<T> implements ResponseParser<T> {
         this.gson = gson;
     }
 
-    /**
-     * Encoding is the data encoding of the http body.
-     *
-     * Default is "UTF-8"
-     *
-     * @return the current encoding.
-     */
-    public Charset getEncoding() {
-        return encoding;
-    }
-
-    /**
-     * Encoding is the data encoding of the http body.
-     *
-     * Default is "UTF-8"
-     *
-     * @param encoding a new encoding to set
-     */
-    public void setEncoding(Charset encoding) {
-        this.encoding = encoding;
-    }
-
-    /**
-     * See: {@link PipeConfig#getDataRoot() }
-     *
-     * @return the current DataRoot
-     */
-    public String getDataRoot() {
-        return dataRoot;
-    }
-
-    /**
-     * See: {@link PipeConfig#getDataRoot() }
-     *
-     * @return the current DataRoot
-     */
-    public void setDataRoot(String dataRoot) {
-        this.dataRoot = dataRoot;
-    }
-
     private JsonElement getResultElement(JsonElement element, String dataRoot) {
         String[] identifiers = dataRoot.split("\\.");
         for (String identifier : identifiers) {
@@ -147,6 +107,20 @@ public class GsonResponseParser<T> implements ResponseParser<T> {
             }
         }
         return element;
+    }
+
+    /**
+     * The marshalling config sets options for reading and processing data
+     * 
+     * @return the current config
+     */
+    @Override
+    public MarshallingConfig getMarshallingConfig() {
+        return marshallingConfig;
+    }
+
+    public void setMarshallingConfig(MarshallingConfig marshallingConfig) {
+        this.marshallingConfig = marshallingConfig;
     }
 
 }

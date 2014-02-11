@@ -45,5 +45,11 @@ public interface ResponseParser<T> {
     T[] handleArrayResponse(String response, Class<T[]> responseType);
 
     List<T> handleResponse(HeaderAndBody response, Class<T> responseType);
-    
+        
+    /**
+     * The marshalling config sets options for reading and processing data
+     * 
+     * @return the current config
+     */
+    MarshallingConfig getMarshallingConfig();
 }
