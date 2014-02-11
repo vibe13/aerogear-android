@@ -52,6 +52,7 @@ import android.util.Log;
 import com.google.common.base.Objects;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
+import org.jboss.aerogear.android.impl.reflection.Scan;
 import static org.jboss.aerogear.android.pipeline.LoaderPipe.ITEM;
 
 /**
@@ -174,9 +175,8 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
         int id = Objects.hashCode(name, item, callback);
         Bundle bundle = new Bundle();
         bundle.putSerializable(CALLBACK, callback);
-        bundle.putSerializable(ITEM, requestBuilder.getBody(item));// item may not be
-        // serializable, but it
-        // has to be gsonable
+        bundle.putSerializable(ITEM, requestBuilder.getBody(item));
+        bundle.putString(SAVE_ID, Scan.findIdValueIn(item));
         bundle.putSerializable(METHOD, Methods.SAVE);
         manager.initLoader(id, bundle, this);
     }
@@ -237,10 +237,10 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
         }
             break;
         case SAVE: {
-            byte[] json = bundle.getByteArray(ITEM);
-            T item = responseParser.handleResponse(new String(json), pipe.getKlass());
+            byte[] data = bundle.getByteArray(ITEM);
+            String dataId = bundle.getString(SAVE_ID);
             loader = new SaveLoader(applicationContext, callback,
-                    pipe.getHandler(), item);
+                    pipe.getHandler(), data, dataId);
         }
             break;
         }
