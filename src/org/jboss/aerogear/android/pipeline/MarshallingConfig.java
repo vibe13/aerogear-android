@@ -24,10 +24,10 @@ import java.nio.charset.Charset;
  * parsers to manage data.
  */
 public class MarshallingConfig {
-    
+
     private Charset encoding = Charset.forName("UTF-8");
     private String dataRoot = "";
-    
+
     /**
      * Encoding is the data encoding of the http body.
      *

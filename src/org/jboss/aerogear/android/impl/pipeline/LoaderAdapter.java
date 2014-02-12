@@ -261,7 +261,7 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
             if (!modernLoader.hasException() && data != null && data.getBody() != null) {
                 object = extractObject(data, modernLoader);
             }
-            
+
             handler.post(new CallbackHandler<T>(this, modernLoader, object));
         }
     }
@@ -320,7 +320,7 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
 
     private Object extractObject(HeaderAndBody data, AbstractPipeLoader<HeaderAndBody> modernLoader) {
         List results = responseParser.handleResponse(data, getKlass());
-        
+
         if (results == null || results.size() == 0) {
             return results;
         } else if (modernLoader instanceof SaveLoader) {
@@ -328,10 +328,9 @@ public class LoaderAdapter<T> implements LoaderPipe<T>,
         } else {
             return results;
         }
-        
-        
+
     }
-    
+
     static class CallbackHandler<T> implements Runnable {
 
         private final LoaderAdapter<T> adapter;

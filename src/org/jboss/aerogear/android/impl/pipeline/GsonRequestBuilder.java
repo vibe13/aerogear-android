@@ -62,7 +62,6 @@ public class GsonRequestBuilder<T> implements RequestBuilder<T> {
         return CONTENT_TYPE;
     }
 
-
     /**
      * The marshalling config sets options for reading and processing data
      * 

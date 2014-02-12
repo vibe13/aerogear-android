@@ -170,7 +170,7 @@ public class RestAdapterTest {
         RequestBuilder requestBuilder = new GsonRequestBuilder(builder.create());
         config.setRequestBuilder(requestBuilder);
         config.setEncoding(utf_16);
-        
+
         RestAdapter<ListClassId> restPipe = (RestAdapter<ListClassId>) pipeline
                 .pipe(ListClassId.class, config);
         Object restRunner = UnitTestUtils.getPrivateField(restPipe, "restRunner");

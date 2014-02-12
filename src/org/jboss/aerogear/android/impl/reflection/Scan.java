@@ -53,7 +53,7 @@ public final class Scan {
     public static String recordIdFieldNameIn(Class klass) {
         return recordIdFieldIn(klass).getName();
     }
-    
+
     /**
      * 
      * Finds the value of the ID property in the data object.

@@ -32,7 +32,7 @@ public interface RequestBuilder<T> {
      * @return the Content-Type header to be sent to the server.
      */
     String getContentType();
-    
+
     /**
      * The marshalling config sets options for reading and processing data
      * 
