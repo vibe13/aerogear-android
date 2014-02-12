@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
 import org.jboss.aerogear.android.http.HttpException;
 import org.jboss.aerogear.android.http.HttpProvider;
+import org.jboss.aerogear.android.impl.core.HttpProviderFactory;
 import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class RestRunnerTest {
 
         HttpProvider mockProvider = createMockProvider(401);
         try {
-            UnitTestUtils.callPrivateMethod(runner, "getResponse", new Class[] { HttpProvider.class }, new Object[] { mockProvider });
+            UnitTestUtils.callPrivateMethod(runner, "runHttpGet", new Class[] { HttpProvider.class }, new Object[] { mockProvider });
         } catch (Exception ignore) {
         }
 
@@ -65,10 +66,12 @@ public class RestRunnerTest {
         RestRunner<Data> runner = new RestRunner<Data>(Data.class, SIMPLE_URL);
         AuthenticationModule mockModule = createMockModule();
         runner.setAuthenticationModule(mockModule);
-
+        HttpProviderFactory mockFactory = mock(HttpProviderFactory.class);
+        
         HttpProvider mockProvider = createMockProvider(403);
+        when(mockFactory.get(any(), any())).thenReturn(mockProvider);
         try {
-            UnitTestUtils.callPrivateMethod(runner, "getResponse", new Class[] { HttpProvider.class }, new Object[] { mockProvider });
+            UnitTestUtils.callPrivateMethod(runner, "runHttpGet", new Class[] { HttpProvider.class }, new Object[] { mockProvider });
         } catch (Exception ignore) {
         }
 

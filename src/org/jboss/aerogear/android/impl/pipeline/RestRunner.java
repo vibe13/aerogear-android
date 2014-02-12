@@ -1,18 +1,18 @@
 /**
- * JBoss, Home of Professional Open Source
- * Copyright Red Hat, Inc., and individual contributors.
+ * JBoss, Home of Professional Open Source Copyright Red Hat, Inc., and
+ * individual contributors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
- * 	http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.jboss.aerogear.android.impl.pipeline;
 
@@ -267,7 +267,7 @@ public class RestRunner<T> implements PipeHandler<T> {
     private AuthorizationFields loadAuth(URI relativeURI, String httpMethod) {
 
         if (authModule != null && authModule.isLoggedIn()) {
-            return authModule.getAuthorizationFields(relativeURI, httpMethod, new byte[] {});
+            return authModule.getAuthorizationFields(relativeURI, httpMethod, new byte[]{});
         }
 
         return new AuthorizationFields();
@@ -390,7 +390,6 @@ public class RestRunner<T> implements PipeHandler<T> {
         return authModule != null && authModule.isLoggedIn() && authModule.retryLogin();
     }
 
-
     @Override
     public HeaderAndBody onRawRead(Pipe<T> requestingPipe) {
         return onRawReadWithFilter(new ReadFilter(), requestingPipe);
@@ -410,13 +409,18 @@ public class RestRunner<T> implements PipeHandler<T> {
             httpProvider = getHttpProvider(filter.getLinkUri());
         }
 
-        HeaderAndBody httpResponse;
+        return runHttpGet(httpProvider);
 
+    }
+    
+    private HeaderAndBody runHttpGet(HttpProvider httpProvider) {
+        HeaderAndBody httpResponse;
+        
         try {
             httpResponse = httpProvider.get();
         } catch (HttpException exception) {
-            if ((exception.getStatusCode() == HttpStatus.SC_UNAUTHORIZED ||
-                    exception.getStatusCode() == HttpStatus.SC_FORBIDDEN) && retryAuth(authModule)) {
+            if ((exception.getStatusCode() == HttpStatus.SC_UNAUTHORIZED
+                    || exception.getStatusCode() == HttpStatus.SC_FORBIDDEN) && retryAuth(authModule)) {
                 httpResponse = httpProvider.get();
             } else {
                 throw exception;
@@ -438,6 +442,5 @@ public class RestRunner<T> implements PipeHandler<T> {
         }
         return result;
     }
-
 
 }
