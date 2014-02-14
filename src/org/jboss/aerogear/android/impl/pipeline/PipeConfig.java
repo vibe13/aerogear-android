@@ -31,6 +31,7 @@ import org.jboss.aerogear.android.pipeline.ResponseParser;
 import org.jboss.aerogear.android.pipeline.paging.PageConfig;
 
 import com.google.gson.GsonBuilder;
+import org.jboss.aerogear.android.pipeline.MarshallingConfig;
 
 /**
  * Specifies configurations for {@link Pipe} to be build by {@link Pipeline}
@@ -197,7 +198,10 @@ public final class PipeConfig {
      * The Encoding is the String encoding to expect from the server.
      *
      * @return the current encoding, will not be null.
+     * 
+     * @deprecated Use {@link  MarshallingConfig#getEncoding() instead}
      */
+    @Deprecated
     public Charset getEncoding() {
         return encoding;
     }
@@ -205,20 +209,31 @@ public final class PipeConfig {
     /**
      * @param encoding a not null encoding
      * @throws IllegalArgumentException if encoding is null
+     *
+     * @deprecated Use MarshallingConfig.setEncoding
+     *
      */
+    @Deprecated
     public void setEncoding(Charset encoding) {
         if (encoding == null) {
             throw new IllegalArgumentException("Encoding may not be null");
         }
-        this.encoding = encoding;
+        responseParser.getMarshallingConfig().setEncoding(encoding);
+        requestBuilder.getMarshallingConfig().setEncoding(encoding);
     }
 
     /**
      * @param charsetName a string for the encoding to be used
      * @throws UnsupportedCharsetException if charSet is not supported
+     * 
+     * @deprecated Use MarshallingConfig.setEncoding
+     *
      */
+    @Deprecated
     public void setEncoding(String charsetName) {
         this.encoding = Charset.forName(charsetName);
+        responseParser.getMarshallingConfig().setEncoding(encoding);
+        requestBuilder.getMarshallingConfig().setEncoding(encoding);
     }
 
     /**
@@ -260,9 +275,12 @@ public final class PipeConfig {
      * array of speakers to the onSuccess method of callback.
      *
      * @return the current dataRoot
+     * 
+     * @deprecated use {@link MarshallingConfig#getDataRoot()  instead
      */
+    @Deprecated
     public String getDataRoot() {
-        return dataRoot;
+        return responseParser.getMarshallingConfig().getDataRoot();
     }
 
     /**
@@ -285,9 +303,13 @@ public final class PipeConfig {
      * array of speakers to the onSuccess method of callback.
      *
      * @param dataRoot
+     * 
+     * @deprecated use {@link MarshallingConfig#setDataRoot(java.lang.String)  instead
      */
+    @Deprecated
     public void setDataRoot(String dataRoot) {
-        this.dataRoot = dataRoot;
+        getRequestBuilder().getMarshallingConfig().setDataRoot(dataRoot);
+        getResponseParser().getMarshallingConfig().setDataRoot(dataRoot);
     }
 
     /**

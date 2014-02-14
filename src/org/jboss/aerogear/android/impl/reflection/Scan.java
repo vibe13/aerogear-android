@@ -54,4 +54,20 @@ public final class Scan {
         return recordIdFieldIn(klass).getName();
     }
 
+    /**
+     * 
+     * Finds the value of the ID property in the data object.
+     * 
+     * @param data the object to search for an id
+     * @return the id value of data, may be null
+     * 
+     * @throws RecordIdNotFoundException if data does not have a field annotated with @RecordId
+     */
+    public static String findIdValueIn(Object data) {
+        String recordIdFieldName = Scan.recordIdFieldNameIn(data.getClass());
+        Object idObject = new Property(data.getClass(), recordIdFieldName).getValue(data);
+        String id = idObject == null ? null : idObject.toString();
+        return id;
+    }
+
 }

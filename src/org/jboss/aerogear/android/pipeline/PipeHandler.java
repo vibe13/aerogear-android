@@ -19,6 +19,7 @@ package org.jboss.aerogear.android.pipeline;
 import java.util.List;
 
 import org.jboss.aerogear.android.ReadFilter;
+import org.jboss.aerogear.android.http.HeaderAndBody;
 
 /**
  * Classes which implement this interface provide the logic for how pipes 
@@ -32,11 +33,20 @@ public interface PipeHandler<T> {
      * @return a List of data.
      * 
      */
+    @Deprecated
     List<T> onRead(Pipe<T> requestingPipe);
 
+    @Deprecated
     List<T> onReadWithFilter(ReadFilter filter, Pipe<T> requestingPipe);
 
+    @Deprecated
     T onSave(T item);
+
+    HeaderAndBody onRawRead(Pipe<T> requestingPipe);
+
+    HeaderAndBody onRawReadWithFilter(ReadFilter filter, Pipe<T> requestingPipe);
+
+    HeaderAndBody onRawSave(String id, byte[] item);
 
     void onRemove(String id);
 }

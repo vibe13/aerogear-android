@@ -16,13 +16,23 @@
  */
 package org.jboss.aerogear.android.impl.pipeline;
 
+import org.jboss.aerogear.android.pipeline.MarshallingConfig;
 import org.jboss.aerogear.android.pipeline.ResponseParser;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.impl.util.ClassUtils;
 
 public class GsonResponseParser<T> implements ResponseParser<T> {
 
     private Gson gson;
+    private MarshallingConfig marshallingConfig = new MarshallingConfig();
 
     public GsonResponseParser() {
         this.gson = new Gson();
@@ -42,8 +52,32 @@ public class GsonResponseParser<T> implements ResponseParser<T> {
         return gson.fromJson(response, responseType);
     }
 
+    @Override
+    public List<T> handleResponse(HeaderAndBody httpResponse, Class<T> responseType) {
+        byte[] responseBody = httpResponse.getBody();
+        List<T> result;
+        String responseAsString = new String(responseBody, marshallingConfig.getEncoding());
+        JsonParser parser = new JsonParser();
+        JsonElement httpJsonResult = parser.parse(responseAsString);
+        httpJsonResult = getResultElement(httpJsonResult, marshallingConfig.getDataRoot());
+        if (httpJsonResult.isJsonArray()) {
+            T[] resultArray = gson.fromJson(httpJsonResult.toString(), ClassUtils.asArrayClass(responseType));
+            result = Arrays.asList(resultArray);
+
+        } else {
+            T resultObject = gson.fromJson(httpJsonResult.toString(), responseType);
+            List<T> resultList = new ArrayList<T>(1);
+            resultList.add(resultObject);
+            result = resultList;
+
+        }
+
+        return result;
+    }
+
     /**
-     * @deprecated This method exists to support another deprecated method while we transition off of it.  {@link  PipeConfig#setGsonBuilder(com.google.gson.GsonBuilder) }
+     * @deprecated This method exists to support another deprecated method while
+     * we transition off of it.  {@link  PipeConfig#setGsonBuilder(com.google.gson.GsonBuilder) }
      */
     @Deprecated
     public Gson getGson() {
@@ -51,11 +85,42 @@ public class GsonResponseParser<T> implements ResponseParser<T> {
     }
 
     /**
-     * @deprecated This method exists to support another deprecated method while we transition off of it.  {@link  PipeConfig#setGsonBuilder(com.google.gson.GsonBuilder) }
+     * @deprecated This method exists to support another deprecated method while
+     * we transition off of it.  {@link  PipeConfig#setGsonBuilder(com.google.gson.GsonBuilder) }
      */
     @Deprecated
     public void setGson(Gson gson) {
         this.gson = gson;
+    }
+
+    private JsonElement getResultElement(JsonElement element, String dataRoot) {
+        String[] identifiers = dataRoot.split("\\.");
+        for (String identifier : identifiers) {
+            if (identifier.equals("")) {
+                return element;
+            }
+            JsonElement newElement = element.getAsJsonObject().get(identifier);
+            if (newElement == null) {
+                return element;
+            } else {
+                element = newElement;
+            }
+        }
+        return element;
+    }
+
+    /**
+     * The marshalling config sets options for reading and processing data
+     * 
+     * @return the current config
+     */
+    @Override
+    public MarshallingConfig getMarshallingConfig() {
+        return marshallingConfig;
+    }
+
+    public void setMarshallingConfig(MarshallingConfig marshallingConfig) {
+        this.marshallingConfig = marshallingConfig;
     }
 
 }

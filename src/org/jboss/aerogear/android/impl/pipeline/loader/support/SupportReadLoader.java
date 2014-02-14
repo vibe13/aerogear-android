@@ -24,6 +24,7 @@ import org.jboss.aerogear.android.pipeline.Pipe;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
 
 import android.content.Context;
+import org.jboss.aerogear.android.http.HeaderAndBody;
 
 /**
  * This class performs a read operation on behalf of a Pipe using the Loader
@@ -35,9 +36,10 @@ import android.content.Context;
 public class SupportReadLoader<T> extends AbstractSupportPipeLoader<List<T>> {
 
     private final PipeHandler<T> runner;
-    private List<T> result;
+    private HeaderAndBody result;
     private final ReadFilter filter;
     private final Pipe<T> requestingPipe;
+
 
     public SupportReadLoader(Context context, Callback<List<T>> callback, PipeHandler<T> runner, ReadFilter filter, Pipe<T> pipe) {
         super(context, callback);
@@ -46,10 +48,10 @@ public class SupportReadLoader<T> extends AbstractSupportPipeLoader<List<T>> {
         this.requestingPipe = pipe;
     }
 
-    @Override
-    public List<T> loadInBackground() {
+     @Override
+    public HeaderAndBody loadInBackground() {
         try {
-            return (result = runner.onReadWithFilter(filter, requestingPipe));
+            return (result = runner.onRawReadWithFilter(filter, requestingPipe));
         } catch (Exception e) {
             super.exception = e;
         }

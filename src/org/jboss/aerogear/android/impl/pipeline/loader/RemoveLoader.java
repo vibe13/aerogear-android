@@ -20,6 +20,7 @@ import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
 
 import android.content.Context;
+import org.jboss.aerogear.android.http.HeaderAndBody;
 
 /**
  * This class performs a remove operation on behalf of a Pipe using the Loader
@@ -42,7 +43,7 @@ public class RemoveLoader<T> extends AbstractPipeLoader<T> {
     }
 
     @Override
-    public T loadInBackground() {
+    public HeaderAndBody loadInBackground() {
         try {
             runner.onRemove(id);
             isFinished = true;

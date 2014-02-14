@@ -16,6 +16,7 @@
  */
 package org.jboss.aerogear.android.impl.pipeline;
 
+import org.jboss.aerogear.android.pipeline.MarshallingConfig;
 import org.jboss.aerogear.android.pipeline.RequestBuilder;
 
 import com.google.gson.Gson;
@@ -25,6 +26,7 @@ public class GsonRequestBuilder<T> implements RequestBuilder<T> {
     public static final String CONTENT_TYPE = "application/json";
 
     private Gson gson;
+    private MarshallingConfig marshallingConfig = new MarshallingConfig();
 
     public GsonRequestBuilder() {
         this.gson = new Gson();
@@ -36,7 +38,7 @@ public class GsonRequestBuilder<T> implements RequestBuilder<T> {
 
     @Override
     public byte[] getBody(T data) {
-        return gson.toJson(data).getBytes();
+        return gson.toJson(data).getBytes(marshallingConfig.getEncoding());
     }
 
     /**
@@ -58,6 +60,20 @@ public class GsonRequestBuilder<T> implements RequestBuilder<T> {
     @Override
     public String getContentType() {
         return CONTENT_TYPE;
+    }
+
+    /**
+     * The marshalling config sets options for reading and processing data
+     * 
+     * @return the current config
+     */
+    @Override
+    public MarshallingConfig getMarshallingConfig() {
+        return marshallingConfig;
+    }
+
+    public void setMarshallingConfig(MarshallingConfig marshallingConfig) {
+        this.marshallingConfig = marshallingConfig;
     }
 
 }

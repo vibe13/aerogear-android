@@ -1,18 +1,18 @@
 /**
- * JBoss, Home of Professional Open Source
- * Copyright Red Hat, Inc., and individual contributors.
+ * JBoss, Home of Professional Open Source Copyright Red Hat, Inc., and
+ * individual contributors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
- * 	http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.jboss.aerogear.android.impl.pipeline;
 
@@ -60,6 +60,7 @@ import android.util.Pair;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.apache.http.HttpStatus;
+import org.jboss.aerogear.android.impl.util.ClassUtils;
 
 public class RestRunner<T> implements PipeHandler<T> {
 
@@ -87,7 +88,7 @@ public class RestRunner<T> implements PipeHandler<T> {
 
     public RestRunner(Class<T> klass, URL baseURL) {
         this.klass = klass;
-        this.arrayKlass = asArrayClass(klass);
+        this.arrayKlass = ClassUtils.asArrayClass(klass);
         this.baseURL = baseURL;
         this.dataRoot = "";
         this.requestBuilder = new GsonRequestBuilder<T>();
@@ -100,7 +101,7 @@ public class RestRunner<T> implements PipeHandler<T> {
     public RestRunner(Class<T> klass, URL baseURL,
             PipeConfig config) {
         this.klass = klass;
-        this.arrayKlass = asArrayClass(klass);
+        this.arrayKlass = ClassUtils.asArrayClass(klass);
         this.baseURL = baseURL;
         this.timeout = config.getTimeout();
 
@@ -170,14 +171,8 @@ public class RestRunner<T> implements PipeHandler<T> {
         id = idObject == null ? null : idObject.toString();
 
         byte[] body = requestBuilder.getBody(data);
-        final HttpProvider httpProvider = getHttpProvider();
 
-        HeaderAndBody result;
-        if (id == null || id.length() == 0) {
-            result = httpProvider.post(body);
-        } else {
-            result = httpProvider.put(id, body);
-        }
+        HeaderAndBody result = onRawSave(id, body);
 
         return responseParser.handleResponse(new String(result.getBody(), encoding), klass);
     }
@@ -185,40 +180,14 @@ public class RestRunner<T> implements PipeHandler<T> {
     @Override
     public List<T> onReadWithFilter(ReadFilter filter, Pipe<T> requestingPipe) {
         List<T> result;
-        HttpProvider httpProvider;
 
-        if (filter == null) {
-            filter = new ReadFilter();
+        HeaderAndBody httpResponse = onRawReadWithFilter(filter, requestingPipe);
+        result = responseParser.handleResponse(httpResponse, klass);
+
+        if (pageConfig != null) {
+            result = computePagedList(result, httpResponse, filter.getWhere(), requestingPipe);
         }
 
-        if (filter.getLinkUri() == null) {
-            httpProvider = getHttpProvider(parameterProvider.getParameters(filter));
-        } else {
-            httpProvider = getHttpProvider(filter.getLinkUri());
-        }
-
-        HeaderAndBody httpResponse = getResponse(httpProvider);
-
-        byte[] responseBody = httpResponse.getBody();
-        String responseAsString = new String(responseBody, encoding);
-        JsonParser parser = new JsonParser();
-        JsonElement httpJsonResult = parser.parse(responseAsString);
-        httpJsonResult = getResultElement(httpJsonResult, dataRoot);
-        if (httpJsonResult.isJsonArray()) {
-            T[] resultArray = responseParser.handleArrayResponse(httpJsonResult.toString(), arrayKlass);
-            result = Arrays.asList(resultArray);
-            if (pageConfig != null) {
-                result = computePagedList(result, httpResponse, filter.getWhere(), requestingPipe);
-            }
-        } else {
-            T resultObject = responseParser.handleResponse(httpJsonResult.toString(), klass);
-            List<T> resultList = new ArrayList<T>(1);
-            resultList.add(resultObject);
-            result = resultList;
-            if (pageConfig != null) {
-                result = computePagedList(result, httpResponse, filter.getWhere(), requestingPipe);
-            }
-        }
         return result;
 
     }
@@ -227,17 +196,6 @@ public class RestRunner<T> implements PipeHandler<T> {
     public void onRemove(String id) {
         HttpProvider httpProvider = getHttpProvider();
         httpProvider.delete(id);
-    }
-
-    /**
-     * This will return a class of the type T[] from a given class. When we read
-     * from the AG pipe, Java needs a reference to a generic array type.
-     *
-     * @param klass
-     * @return an array of klass with a length of 1
-     */
-    private Class<T[]> asArrayClass(Class<T> klass) {
-        return (Class<T[]>) Array.newInstance(klass, 1).getClass();
     }
 
     /**
@@ -309,7 +267,7 @@ public class RestRunner<T> implements PipeHandler<T> {
     private AuthorizationFields loadAuth(URI relativeURI, String httpMethod) {
 
         if (authModule != null && authModule.isLoggedIn()) {
-            return authModule.getAuthorizationFields(relativeURI, httpMethod, new byte[] {});
+            return authModule.getAuthorizationFields(relativeURI, httpMethod, new byte[]{});
         }
 
         return new AuthorizationFields();
@@ -416,22 +374,6 @@ public class RestRunner<T> implements PipeHandler<T> {
         }
     }
 
-    private JsonElement getResultElement(JsonElement element, String dataRoot) {
-        String[] identifiers = dataRoot.split("\\.");
-        for (String identifier : identifiers) {
-            if (identifier.equals("")) {
-                return element;
-            }
-            JsonElement newElement = element.getAsJsonObject().get(identifier);
-            if (newElement == null) {
-                return element;
-            } else {
-                element = newElement;
-            }
-        }
-        return element;
-    }
-
     void setEncoding(Charset encoding) {
         this.encoding = encoding;
     }
@@ -448,14 +390,37 @@ public class RestRunner<T> implements PipeHandler<T> {
         return authModule != null && authModule.isLoggedIn() && authModule.retryLogin();
     }
 
-    private HeaderAndBody getResponse(HttpProvider httpProvider) {
-        HeaderAndBody httpResponse;
+    @Override
+    public HeaderAndBody onRawRead(Pipe<T> requestingPipe) {
+        return onRawReadWithFilter(new ReadFilter(), requestingPipe);
+    }
 
+    @Override
+    public HeaderAndBody onRawReadWithFilter(ReadFilter filter, Pipe<T> requestingPipe) {
+        HttpProvider httpProvider;
+
+        if (filter == null) {
+            filter = new ReadFilter();
+        }
+
+        if (filter.getLinkUri() == null) {
+            httpProvider = getHttpProvider(parameterProvider.getParameters(filter));
+        } else {
+            httpProvider = getHttpProvider(filter.getLinkUri());
+        }
+
+        return runHttpGet(httpProvider);
+
+    }
+    
+    private HeaderAndBody runHttpGet(HttpProvider httpProvider) {
+        HeaderAndBody httpResponse;
+        
         try {
             httpResponse = httpProvider.get();
         } catch (HttpException exception) {
-            if ((exception.getStatusCode() == HttpStatus.SC_UNAUTHORIZED ||
-                    exception.getStatusCode() == HttpStatus.SC_FORBIDDEN) && retryAuth(authModule)) {
+            if ((exception.getStatusCode() == HttpStatus.SC_UNAUTHORIZED
+                    || exception.getStatusCode() == HttpStatus.SC_FORBIDDEN) && retryAuth(authModule)) {
                 httpResponse = httpProvider.get();
             } else {
                 throw exception;
@@ -464,4 +429,18 @@ public class RestRunner<T> implements PipeHandler<T> {
 
         return httpResponse;
     }
+
+    @Override
+    public HeaderAndBody onRawSave(String id, byte[] item) {
+        final HttpProvider httpProvider = getHttpProvider();
+
+        HeaderAndBody result;
+        if (id == null || id.length() == 0) {
+            result = httpProvider.post(item);
+        } else {
+            result = httpProvider.put(id, item);
+        }
+        return result;
+    }
+
 }

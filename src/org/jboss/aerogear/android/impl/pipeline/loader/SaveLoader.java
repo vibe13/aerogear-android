@@ -20,6 +20,7 @@ import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.pipeline.PipeHandler;
 
 import android.content.Context;
+import org.jboss.aerogear.android.http.HeaderAndBody;
 
 /**
  * This class performs a save operation on behalf of a Pipe using the Loader
@@ -33,19 +34,21 @@ import android.content.Context;
 public class SaveLoader<T> extends AbstractPipeLoader<T> {
 
     private final PipeHandler<T> runner;
-    private final T data;
-    private T result;
+    private final byte[] data;
+    private final String id;
+    private HeaderAndBody result;
 
-    public SaveLoader(Context context, Callback<T> callback, PipeHandler<T> runner, T data) {
+    public SaveLoader(Context context, Callback<T> callback, PipeHandler<T> runner, byte[] data, String id) {
         super(context, callback);
         this.runner = runner;
         this.data = data;
+        this.id = id;
     }
 
     @Override
-    public T loadInBackground() {
+    public HeaderAndBody loadInBackground() {
         try {
-            return (result = runner.onSave(data));
+            return (result = runner.onRawSave(id, data));
         } catch (Exception e) {
             super.exception = e;
         }

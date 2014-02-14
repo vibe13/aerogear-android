@@ -47,6 +47,14 @@ import android.util.Log;
 import com.google.common.base.Objects;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
+import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.impl.pipeline.loader.AbstractPipeLoader;
+import org.jboss.aerogear.android.impl.pipeline.loader.SaveLoader;
+import org.jboss.aerogear.android.impl.reflection.Scan;
+import static org.jboss.aerogear.android.pipeline.LoaderPipe.CALLBACK;
+import static org.jboss.aerogear.android.pipeline.LoaderPipe.ITEM;
+import static org.jboss.aerogear.android.pipeline.LoaderPipe.METHOD;
+import static org.jboss.aerogear.android.pipeline.LoaderPipe.SAVE_ID;
 
 /**
  * This class wraps a Pipe in an asynchronous Loader.
@@ -56,7 +64,7 @@ import com.google.gson.Gson;
  *
  */
 @SuppressWarnings( { "rawtypes", "unchecked" })
-public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.LoaderCallbacks<T> {
+public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.LoaderCallbacks<HeaderAndBody> {
 
     private static final String TAG = SupportLoaderAdapter.class.getSimpleName();
 
@@ -180,7 +188,8 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
         int id = Objects.hashCode(name, item, callback);
         Bundle bundle = new Bundle();
         bundle.putSerializable(CALLBACK, callback);
-        bundle.putSerializable(ITEM, requestBuilder.getBody(item));//item may not be serializable, but it has to be able to be handled by the requestBuilder
+        bundle.putSerializable(ITEM, requestBuilder.getBody(item));
+        bundle.putString(SAVE_ID, Scan.findIdValueIn(item));
         bundle.putSerializable(METHOD, Methods.SAVE);
         manager.initLoader(id, bundle, this);
     }
@@ -201,7 +210,7 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
     }
 
     @Override
-    public Loader<T> onCreateLoader(int id, Bundle bundle) {
+    public Loader<HeaderAndBody> onCreateLoader(int id, Bundle bundle) {
         this.idsForNamedPipes.put(name, id);
         Methods method = (Methods) bundle.get(METHOD);
         Callback callback = (Callback) bundle.get(CALLBACK);
@@ -218,9 +227,10 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
         }
             break;
         case SAVE: {
-            byte[] json = bundle.getByteArray(ITEM);
-            T item = responseParser.handleResponse(new String(json), pipe.getKlass());
-            loader = new SupportSaveLoader(applicationContext, callback, pipe.getHandler(), item);
+            byte[] data = bundle.getByteArray(ITEM);
+            String dataId = bundle.getString(SAVE_ID);
+            loader = new SupportSaveLoader(applicationContext, callback,
+                        pipe.getHandler(), data, dataId);
         }
             break;
         }
@@ -248,13 +258,18 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
     }
 
     @Override
-    public void onLoadFinished(Loader<T> loader, final T data) {
+    public void onLoadFinished(Loader<HeaderAndBody> loader, final HeaderAndBody data) {
         if (!(loader instanceof AbstractSupportPipeLoader)) {
             Log.e(TAG, "Adapter is listening to loaders which it doesn't support");
             throw new IllegalStateException("Adapter is listening to loaders which it doesn't support");
         } else {
-            final AbstractSupportPipeLoader<T> supportLoader = (AbstractSupportPipeLoader<T>) loader;
-            handler.post(new CallbackHandler<T>(this, supportLoader, data));
+            final AbstractSupportPipeLoader<HeaderAndBody> supportLoader = (AbstractSupportPipeLoader<HeaderAndBody>) loader;
+            Object object = null;
+            if (!supportLoader.hasException() && data != null && data.getBody() != null) {
+                object = extractObject(data, supportLoader);
+            }
+
+            handler.post(new CallbackHandler<T>(this, supportLoader, object));
         }
     }
 
@@ -262,10 +277,10 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
 
         private final SupportLoaderAdapter<T> adapter;
         private final AbstractSupportPipeLoader<T> modernLoader;
-        private final T data;
+        private final Object data;
 
         public CallbackHandler(SupportLoaderAdapter<T> adapter,
-                AbstractSupportPipeLoader<T> loader, T data) {
+                AbstractSupportPipeLoader loader, Object data) {
             super();
             this.adapter = adapter;
             this.modernLoader = loader;
@@ -292,7 +307,7 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
                 } else if (modernLoader.getCallback() instanceof AbstractFragmentActivityCallback) {
                     adapter.activitySuccess(modernLoader.getCallback(), data);
                 } else {
-                    modernLoader.getCallback().onSuccess(data);
+                    modernLoader.getCallback().onSuccess((T) data);
                 }
             }
 
@@ -300,7 +315,7 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
     }
 
     @Override
-    public void onLoaderReset(Loader<T> loader) {
+    public void onLoaderReset(Loader<HeaderAndBody> loader) {
         //Gotta do something, though I don't know what
     }
 
@@ -320,7 +335,7 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
         this.idsForNamedPipes = idsForNamedPipes;
     }
 
-    private void fragmentSuccess(Callback<T> typelessCallback, T data) {
+    private void fragmentSuccess(Callback<T> typelessCallback, Object data) {
         AbstractSupportFragmentCallback callback = (AbstractSupportFragmentCallback) typelessCallback;
         callback.setFragment(fragment);
         callback.onSuccess(data);
@@ -334,7 +349,7 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
         callback.setFragment(null);
     }
 
-    private void activitySuccess(Callback<T> typelessCallback, T data) {
+    private void activitySuccess(Callback<T> typelessCallback, Object data) {
         AbstractFragmentActivityCallback callback = (AbstractFragmentActivityCallback) typelessCallback;
         callback.setFragmentActivity(activity);
         callback.onSuccess(data);
@@ -346,5 +361,18 @@ public class SupportLoaderAdapter<T> implements LoaderPipe<T>, LoaderManager.Loa
         callback.setFragmentActivity(activity);
         callback.onFailure(exception);
         callback.setFragmentActivity(null);
+    }
+    
+    private Object extractObject(HeaderAndBody data, AbstractSupportPipeLoader<HeaderAndBody> supportLoader) {
+        List results = responseParser.handleResponse(data, getKlass());
+
+        if (results == null || results.size() == 0) {
+            return results;
+        } else if (supportLoader instanceof SupportSaveLoader) {
+            return results.get(0);
+        } else {
+            return results;
+        }
+
     }
 }

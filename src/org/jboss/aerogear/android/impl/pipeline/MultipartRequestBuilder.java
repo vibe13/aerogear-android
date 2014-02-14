@@ -37,6 +37,7 @@ import org.jboss.aerogear.android.pipeline.TypeAndStream;
 
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+import org.jboss.aerogear.android.pipeline.MarshallingConfig;
 
 /**
  * This class generates a Multipart request with the type multipart/form-data
@@ -52,6 +53,7 @@ public class MultipartRequestBuilder<T> implements RequestBuilder<T> {
     private final String boundary = UUID.randomUUID().toString();
     private final String CONTENT_TYPE = "multipart/form-data; boundary=" + boundary;
     private final String OCTECT_STREAM_MIME_TYPE = "application/octet-stream";
+    private MarshallingConfig marshallingConfig = new MarshallingConfig();
 
     @Override
     public byte[] getBody(T data) {
@@ -179,4 +181,12 @@ public class MultipartRequestBuilder<T> implements RequestBuilder<T> {
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
     }
 
+    @Override
+    public MarshallingConfig getMarshallingConfig() {
+        return marshallingConfig;
+    }
+
+    public void setMarshallingConfig(MarshallingConfig marshallingConfig) {
+        this.marshallingConfig = marshallingConfig;
+    }
 }

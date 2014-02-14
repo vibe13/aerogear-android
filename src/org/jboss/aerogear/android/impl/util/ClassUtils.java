@@ -14,29 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.aerogear.android.pipeline;
+package org.jboss.aerogear.android.impl.util;
 
-public interface RequestBuilder<T> {
+import java.lang.reflect.Array;
 
+/**
+ * Utilities for working with classes, reflection, etc
+ */
+public class ClassUtils {
     /**
-     * This method creates the body of a request for a Pipe to use.
-     * 
-     * This is basically a serialization style operation.
-     * @param data an object to form a body out of.
-     * 
-     * @return A request body which represents the data parameter
+     * This will return a class of the type T[] from a given class. When we read
+     * from the AG pipe, Java needs a reference to a generic array type.
+     *
+     * @param klass
+     * @return an array of klass with a length of 1
      */
-    byte[] getBody(T data);
-
-    /**
-     * @return the Content-Type header to be sent to the server.
-     */
-    String getContentType();
-
-    /**
-     * The marshalling config sets options for reading and processing data
-     * 
-     * @return the current config
-     */
-    MarshallingConfig getMarshallingConfig();
+    public static <T> Class<T[]> asArrayClass(Class<T> klass) {
+        return (Class<T[]>) Array.newInstance(klass, 1).getClass();
+    }
 }

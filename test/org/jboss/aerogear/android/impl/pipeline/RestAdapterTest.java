@@ -66,6 +66,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jboss.aerogear.android.pipeline.RequestBuilder;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -166,13 +167,14 @@ public class RestAdapterTest {
 
         Pipeline pipeline = new Pipeline(url);
         PipeConfig config = new PipeConfig(url, ListClassId.class);
+        RequestBuilder requestBuilder = new GsonRequestBuilder(builder.create());
+        config.setRequestBuilder(requestBuilder);
         config.setEncoding(utf_16);
-        config.setRequestBuilder(new GsonRequestBuilder(builder.create()));
 
         RestAdapter<ListClassId> restPipe = (RestAdapter<ListClassId>) pipeline
                 .pipe(ListClassId.class, config);
         Object restRunner = UnitTestUtils.getPrivateField(restPipe, "restRunner");
-        assertEquals(utf_16, UnitTestUtils.getPrivateField(restRunner, "encoding"));
+        assertEquals(utf_16, requestBuilder.getMarshallingConfig().getEncoding());
 
     }
 
