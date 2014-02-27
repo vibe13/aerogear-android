@@ -1,18 +1,18 @@
 /**
- * JBoss, Home of Professional Open Source
- * Copyright Red Hat, Inc., and individual contributors.
+ * JBoss, Home of Professional Open Source Copyright Red Hat, Inc., and
+ * individual contributors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
- * 	http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.jboss.aerogear.android.impl.datamanager;
 
@@ -48,8 +48,8 @@ public class SqlStoreTest {
     @Before
     public void setUp() {
         // Let's not run this test on Mac OS X with Java 1.7 until SQLite is compatible with that configuration
-        Assume.assumeTrue(!System.getProperty("os.name").toLowerCase().startsWith("mac os x") ||
-                !System.getProperty("java.version").startsWith("1.7.0"));
+        Assume.assumeTrue(!System.getProperty("os.name").toLowerCase().startsWith("mac os x")
+                || !System.getProperty("java.version").startsWith("1.7.0"));
 
         this.context = Robolectric.application.getApplicationContext();
         this.store = new SQLStore<Data>(Data.class, context);
@@ -247,6 +247,25 @@ public class SqlStoreTest {
 
     }
 
+    @Test
+    public void testNameProperty() throws Exception {
+        SQLStore<Data> dataStore = new SQLStore<Data>(Data.class, context);
+        SQLStore<Data> loreStore = new SQLStore<Data>(Data.class, context);
+        final CountDownLatch openLatch = new CountDownLatch(2);
+        ExceptionAwareCallback callback = new ExceptionAwareCallback(openLatch);
+        dataStore.open(callback);
+        loreStore.open(callback);
+        
+        openLatch.await(500, TimeUnit.MILLISECONDS);
+        
+        Assert.assertNull(callback.exception);
+        
+        dataStore.save(new Data(1, "test", "tist"));
+        
+        Assert.assertTrue(loreStore.readAll().isEmpty());
+        
+    }
+
     private <T> void open(SQLStore<T> store) throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
         store.open(new Callback<SQLStore<T>>() {
@@ -263,6 +282,27 @@ public class SqlStoreTest {
         });
         latch.await();
     }
+
+    private static class ExceptionAwareCallback implements Callback<SQLStore<Data>> {
+
+        public Exception exception;
+        private final CountDownLatch openLatch;
+
+        public ExceptionAwareCallback(CountDownLatch openLatch) {
+            this.openLatch = openLatch;
+        }
+
+        @Override
+        public void onSuccess(SQLStore<Data> data) {
+            openLatch.countDown();
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+            openLatch.countDown();
+            this.exception = e;
+        }
+    };
 
     private void loadBulkData() throws InterruptedException {
         saveData(1, "name", "description");
@@ -339,6 +379,7 @@ public class SqlStoreTest {
     }
 
     public static final class ListWithId<T> {
+
         @RecordId
         private Integer id;
 
