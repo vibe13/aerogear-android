@@ -33,7 +33,8 @@ public final class DefaultStoreFactory implements StoreFactory {
         Context context = config.getContext();
         GsonBuilder builder = config.getBuilder();
         String passphrase = config.getPassphrase();
-
+        String name = config.getName();
+        
         if (type.equals(StoreTypes.MEMORY)) {
             return new MemoryStorage(idGenerator);
         } else if (StoreTypes.SQL.equals(type)) {
@@ -48,12 +49,16 @@ public final class DefaultStoreFactory implements StoreFactory {
             if (builder == null) {
                 throw new IllegalArgumentException("StoreConfig.builder may not be null");
             }
+            
+            if (name == null) {
+                throw new IllegalArgumentException("StoreConfig.name may not be null");
+            }
 
-            return new SQLStore(klass, context, builder, idGenerator);
+            return new SQLStore(klass, context, builder, idGenerator, name);
         } else if (StoreTypes.ENCRYPTED_MEMORY.equals(type)) {
             return new EncryptedMemoryStore(idGenerator, passphrase, klass);
         } else if (StoreTypes.ENCRYPTED_SQL.equals(type)) {
-            return new EncryptedSQLStore(klass, context, builder, idGenerator, passphrase);
+            return new EncryptedSQLStore(klass, context, builder, idGenerator, passphrase, name);
         }
         throw new IllegalArgumentException("Type is not supported yet");
     }
