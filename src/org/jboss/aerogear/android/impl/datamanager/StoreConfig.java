@@ -61,10 +61,25 @@ public final class StoreConfig {
      * The PrivateKey used to crypt/decrypt data
      */
     private String passphrase;
+    
+    /**
+     * The name of the store, defaults to klass.getSimpleName
+     */ 
+    private String name;
 
+    /**
+     * 
+     * @deprecated please use StoreConfig#Class instead.
+     */
+    @Deprecated()
     public StoreConfig() {
     }
 
+    public StoreConfig(Class klass) {
+        this.klass = klass;
+    }
+
+    
     public Context getContext() {
         return context;
     }
@@ -113,4 +128,16 @@ public final class StoreConfig {
         this.passphrase = passphrase;
     }
 
+    public String getName() {
+        if ((name == null || name.isEmpty()) && klass != null) {
+            return klass.getSimpleName();
+        } else {
+            return name;
+        }
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
 }
