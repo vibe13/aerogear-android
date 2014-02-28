@@ -249,37 +249,6 @@ public class SqlStoreTest {
 
     }
 
-    @Test
-    public void testNameProperty() throws Exception {
-        DataManager manager = new DataManager();
-        
-        StoreConfig dataStoreConfig = new StoreConfig(Data.class);
-        dataStoreConfig.setName("Data");
-        dataStoreConfig.setContext(context);
-        dataStoreConfig.setType(StoreTypes.SQL);
-        
-        StoreConfig loreStoreConfig = new StoreConfig(Data.class);
-        loreStoreConfig.setName("Lore");
-        loreStoreConfig.setContext(context);
-        loreStoreConfig.setType(StoreTypes.SQL);
-        
-        SQLStore<Data> dataStore = (SQLStore<Data>) manager.store("data", dataStoreConfig);
-        SQLStore<Data> loreStore = (SQLStore<Data>) manager.store("lore", loreStoreConfig);
-        final CountDownLatch openLatch = new CountDownLatch(2);
-        ExceptionAwareCallback callback = new ExceptionAwareCallback(openLatch);
-        dataStore.open(callback);
-        loreStore.open(callback);
-        
-        openLatch.await(500, TimeUnit.MILLISECONDS);
-        
-        Assert.assertNull(callback.exception);
-        
-        dataStore.save(new Data(1, "test", "tist"));
-        
-        Assert.assertTrue(loreStore.readAll().isEmpty());
-        
-    }
-
     private <T> void open(SQLStore<T> store) throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
         store.open(new Callback<SQLStore<T>>() {
@@ -296,27 +265,6 @@ public class SqlStoreTest {
         });
         latch.await();
     }
-
-    private static class ExceptionAwareCallback implements Callback<SQLStore<Data>> {
-
-        public Exception exception;
-        private final CountDownLatch openLatch;
-
-        public ExceptionAwareCallback(CountDownLatch openLatch) {
-            this.openLatch = openLatch;
-        }
-
-        @Override
-        public void onSuccess(SQLStore<Data> data) {
-            openLatch.countDown();
-        }
-
-        @Override
-        public void onFailure(Exception e) {
-            openLatch.countDown();
-            this.exception = e;
-        }
-    };
 
     private void loadBulkData() throws InterruptedException {
         saveData(1, "name", "description");
