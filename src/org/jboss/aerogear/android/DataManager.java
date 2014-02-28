@@ -105,11 +105,22 @@ public class DataManager {
      * Creates a new default (in memory) Store implementation.
      *
      * @param storeName The name of the actual data store object.
+     * @deprecated use {@link DataManager#store(java.lang.String, java.lang.Class) 
      */
+    @Deprecated
     public Store store(String storeName) {
         return store(storeName, new StoreConfig());
     }
 
+    /**
+     * Creates a new default (in memory) Store implementation.
+     *
+     * @param storeName The name of the actual data store object.
+     * @param modelClass The class for the Store
+     */
+    public Store store(String storeName, Class modelClass) {
+        return store(storeName, new StoreConfig(modelClass));
+    }
     /**
      * Creates a new Store implementation. The actual type is determined by the
      * type argument.
@@ -131,7 +142,7 @@ public class DataManager {
      * @param modelClass The model class will be encrypted
      */
     public Store encryptedStore(String storeName, String passphrase, Class modelClass) throws InvalidKeySpecException {
-        StoreConfig config = new StoreConfig();
+        StoreConfig config = new StoreConfig(modelClass);
         config.setType(StoreTypes.ENCRYPTED_MEMORY);
         return encryptedStore(storeName, config, passphrase, modelClass);
     }

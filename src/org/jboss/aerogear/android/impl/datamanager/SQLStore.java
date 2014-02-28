@@ -69,6 +69,7 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
     private SQLiteDatabase database;
     private final Gson gson;
     private final IdGenerator generator;
+    
 
     public SQLStore(Class<T> klass, Context context) {
         super(context, klass.getSimpleName(), null, 1);
@@ -86,6 +87,14 @@ public class SQLStore<T> extends SQLiteOpenHelper implements Store<T> {
         this.generator = generator;
     }
 
+    public SQLStore(Class<T> klass, Context context, GsonBuilder builder, IdGenerator generator, String databaseName) {
+        super(context, databaseName, null, 1);
+        this.klass = klass;
+        this.className = databaseName;
+        this.gson = builder.create();
+        this.generator = generator;
+    }
+    
     /**
      * {@inheritDoc }
      */

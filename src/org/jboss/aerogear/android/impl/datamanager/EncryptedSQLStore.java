@@ -71,6 +71,19 @@ public class EncryptedSQLStore<T> extends SQLiteOpenHelper implements Store<T> {
 
         this.TABLE_NAME = modelClass.getSimpleName();
     }
+    
+    public EncryptedSQLStore(Class<T> modelClass, Context context, GsonBuilder builder,
+                             IdGenerator idGenerator, String passphrase, String tableName) {
+
+        super(context, modelClass.getSimpleName(), null, 1);
+
+        this.modelClass = modelClass;
+        this.builder = builder;
+        this.idGenerator = idGenerator;
+        this.passphrase = passphrase;
+
+        this.TABLE_NAME = tableName;
+    }
 
     private String getEncryptTableHelperName() {
         return TABLE_NAME.toUpperCase() + ENCRYPT_HELPER_TABLE_SUFIX;
