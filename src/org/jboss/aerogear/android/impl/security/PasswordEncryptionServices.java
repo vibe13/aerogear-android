@@ -18,24 +18,6 @@ package org.jboss.aerogear.android.impl.security;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-
-import java.io.*;
-import java.security.InvalidKeyException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
-import java.security.spec.InvalidKeySpecException;
-import javax.crypto.KeyAgreement;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.jboss.aerogear.AeroGearCrypto;
 import org.jboss.aerogear.android.security.CryptoConfig;
 import org.jboss.aerogear.android.security.EncryptionService;
@@ -47,7 +29,11 @@ import org.jboss.aerogear.crypto.encoders.Hex;
 import org.jboss.aerogear.crypto.keys.KeyPair;
 import org.jboss.aerogear.crypto.password.Pbkdf2;
 
-import static org.jboss.aerogear.crypto.encoders.Hex.*;
+import javax.crypto.KeyAgreement;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+
+import static org.jboss.aerogear.crypto.encoders.Hex.HEX;
 
 /**
  * This class will build a CryptoBox including keys from a keystore protected
@@ -79,40 +65,19 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
 
         char[] password = derive(config.password).toCharArray();
 
-        KeyStore.ProtectionParameter passwordProtectionParameter = new KeyStore.PasswordProtection(password);
-
-        try {
-            KeyStore store = KeyStore.getInstance("BKS");
-            store.load(getKeystoreStream(appContext, config.getKeyStoreFile()), password);
-            if (store.containsAlias(keyAlias)) {
-                KeyStore.SecretKeyEntry keyEntry = (KeyStore.SecretKeyEntry) store.getEntry(keyAlias, passwordProtectionParameter);
-                SecretKey key = keyEntry.getSecretKey();
-                return new CryptoBox(key.getEncoded());
-            } else {
-                return createKey(store, config, appContext);
-            }
-        } catch (KeyStoreException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (UnrecoverableEntryException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (CertificateException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            throw new RuntimeException(ex);
+        KeyStoreServices keyStoreServices = new KeyStoreServices(appContext, password);
+        byte[] keyEntry = keyStoreServices.getEntry(keyAlias);
+        if (keyEntry != null) {
+            return new CryptoBox(keyEntry);
+        } else {
+            return createKey(keyStoreServices, keyAlias);
         }
 
     }
 
-    private CryptoBox createKey(KeyStore store, PasswordProtectedKeystoreCryptoConfig config, Context context) {
+    private CryptoBox createKey(KeyStoreServices keyStoreServices, String keyAlias) {
         KeyPair pair = new KeyPair();
-
+        
         final char[] password = derive(config.password).toCharArray();
         final String keyAlias = config.getAlias();
         final String keyStoreFile = config.getKeyStoreFile();
@@ -127,7 +92,7 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
             store.store(context.openFileOutput(keyStoreFile, Context.MODE_PRIVATE), password);
             return new CryptoBox(sharedSecret);
 
-        } catch (NoSuchAlgorithmException ex) {
+        } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, ex.getMessage(), ex);
             throw new RuntimeException(ex);
         } catch (KeyStoreException ex) {
@@ -141,21 +106,7 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
             throw new RuntimeException(ex);
         }
 
-    }
 
-    private InputStream getKeystoreStream(Context context, String keystoreFile) {
-        File keystore = new File(context.getFilesDir(), keystoreFile);
-        if (!keystore.exists()) {
-            return null;
-        } else {
-            try {
-                return new FileInputStream(keystore);
-            } catch (FileNotFoundException ex) {
-                //This shouldn't happen because we do an explicit check earlier...
-                Log.e(TAG, ex.getMessage());
-                throw new RuntimeException(ex);
-            }
-        }
     }
 
     private void validate(PasswordProtectedKeystoreCryptoConfig config) {
