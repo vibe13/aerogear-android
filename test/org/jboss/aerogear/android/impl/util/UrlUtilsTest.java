@@ -16,7 +16,6 @@
  */
 package org.jboss.aerogear.android.impl.util;
 
-import com.google.android.gms.internal.ah;
 import org.junit.Test;
 
 import java.net.URL;

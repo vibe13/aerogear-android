@@ -176,14 +176,6 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
             this.password = password;
         }
 
-        public String getKeyStoreFile() {
-            return keyStoreFile;
-        }
-
-        public void setKeyStoreFile(String keyStoreFile) {
-            this.keyStoreFile = keyStoreFile;
-        }
-
         @Override
         public EncryptionServiceType getType() {
             return EncryptionServiceTypes.PASSWORD_KEYSTORE;

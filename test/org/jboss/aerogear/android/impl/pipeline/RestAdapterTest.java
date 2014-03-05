@@ -173,7 +173,6 @@ public class RestAdapterTest {
 
         RestAdapter<ListClassId> restPipe = (RestAdapter<ListClassId>) pipeline
                 .pipe(ListClassId.class, config);
-        Object restRunner = UnitTestUtils.getPrivateField(restPipe, "restRunner");
         assertEquals(utf_16, requestBuilder.getMarshallingConfig().getEncoding());
 
     }
