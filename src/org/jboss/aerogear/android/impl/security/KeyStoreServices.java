@@ -17,6 +17,7 @@
 package org.jboss.aerogear.android.impl.security;
 
 import android.content.Context;
+import android.util.Log;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -29,6 +30,7 @@ import java.security.cert.CertificateException;
 
 public class KeyStoreServices {
 
+    private static final String TAG = KeyStoreServices.class.getSimpleName();
     private static final String DEFAULT_KEYSTORE = "default.keystore";
     private char[] password;
     private Context context;
@@ -105,7 +107,7 @@ public class KeyStoreServices {
                 return new FileInputStream(keystore);
             } catch (FileNotFoundException ex) {
                 //This shouldn't happen because we do an explicit check earlier...
-                //Log.e(TAG, ex.getMessage());
+                Log.e(TAG, ex.getMessage());
                 throw new RuntimeException(ex);
             }
         }
