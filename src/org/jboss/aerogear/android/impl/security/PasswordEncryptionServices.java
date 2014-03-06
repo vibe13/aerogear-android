@@ -70,12 +70,12 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
         if (keyEntry != null) {
             return new CryptoBox(keyEntry);
         } else {
-            return createKey(keyStoreServices, keyAlias);
+            return new CryptoBox(createKey(keyStoreServices, keyAlias));
         }
 
     }
 
-    private CryptoBox createKey(KeyStoreServices keyStoreServices, String keyAlias) {
+    private byte[] createKey(KeyStoreServices keyStoreServices, String keyAlias) {
         KeyPair pair = new KeyPair();
         
         final char[] password = derive(config.password).toCharArray();
