@@ -43,8 +43,8 @@ public class KeyStoreServices {
         try {
             passwordProtectionParameter = new KeyStore.PasswordProtection(password);
             this.store = KeyStore.getInstance("BKS");
-            this.store.load(getKeystoreStream(), password);
             this.context = context;
+            this.store.load(getKeystoreStream(), password);
             this.password = password;
         } catch (IOException e) {
             e.printStackTrace();
