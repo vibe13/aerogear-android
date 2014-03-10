@@ -46,15 +46,20 @@ public class KeyStoreServices {
             this.context = context;
             this.store.load(getKeystoreStream(), password);
             this.password = password;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
+        } catch (KeyStoreException ex) {
+            Log.e(TAG, ex.getMessage());
+            throw new RuntimeException(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        } catch (CertificateException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            throw new RuntimeException(ex);
         }
+
     }
 
     public byte[] getEntry(String keyAlias) {
@@ -65,12 +70,15 @@ public class KeyStoreServices {
                 keyEntry = (KeyStore.SecretKeyEntry) store.getEntry(keyAlias, passwordProtectionParameter);
                 key = keyEntry.getSecretKey();
             }
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnrecoverableEntryException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
+        } catch (NoSuchAlgorithmException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        } catch (UnrecoverableEntryException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        } catch (KeyStoreException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            throw new RuntimeException(ex);
         }
         return key != null ? key.getEncoded() : null;
     }
@@ -87,14 +95,18 @@ public class KeyStoreServices {
     public void save(){
         try {
             store.store(createKeystoreStream(), password);
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (CertificateException e) {
-            e.printStackTrace();
+        } catch (KeyStoreException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            throw new RuntimeException(ex);
+        } catch (CertificateException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            throw new RuntimeException(ex);
         }
     }
 
