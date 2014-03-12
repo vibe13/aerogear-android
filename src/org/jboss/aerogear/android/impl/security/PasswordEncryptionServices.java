@@ -29,8 +29,6 @@ import org.jboss.aerogear.crypto.encoders.Hex;
 import org.jboss.aerogear.crypto.keys.KeyPair;
 import org.jboss.aerogear.crypto.password.Pbkdf2;
 
-import javax.crypto.KeyAgreement;
-import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 
 import static org.jboss.aerogear.crypto.encoders.Hex.HEX;
@@ -77,36 +75,14 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
 
     private byte[] createKey(KeyStoreServices keyStoreServices, String keyAlias) {
         KeyPair pair = new KeyPair();
-        
-        final char[] password = derive(config.password).toCharArray();
-        final String keyAlias = config.getAlias();
-        final String keyStoreFile = config.getKeyStoreFile();
-        final KeyStore.ProtectionParameter passwordProtectionParameter = new KeyStore.PasswordProtection(password);
 
-        try {
-            CryptoBox cryptoBox = new CryptoBox();
-            byte[] sharedSecret = cryptoBox.generateSecret(pair.getPrivateKey(), pair.getPublicKey());
+        CryptoBox cryptoBox = new CryptoBox();
+        byte[] sharedSecret = cryptoBox.generateSecret(pair.getPrivateKey(), pair.getPublicKey());
 
-            KeyStore.SecretKeyEntry secretEntry = new KeyStore.SecretKeyEntry(new SecretKeySpec(sharedSecret, "ECDH"));
-            store.setEntry(keyAlias, secretEntry, passwordProtectionParameter);
-            store.store(context.openFileOutput(keyStoreFile, Context.MODE_PRIVATE), password);
-            return new CryptoBox(sharedSecret);
+        keyStoreServices.addEntry(keyAlias, sharedSecret);
+        keyStoreServices.save();
 
-        } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (KeyStoreException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (CertificateException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        }
-
-
+        return sharedSecret;
     }
 
     private void validate(PasswordProtectedKeystoreCryptoConfig config) {
