@@ -87,8 +87,8 @@ public class KeyStoreServices {
         KeyStore.SecretKeyEntry secretEntry = new KeyStore.SecretKeyEntry(new SecretKeySpec(keyBytes, "ECDH"));
         try {
             store.setEntry(keyAlias, secretEntry, passwordProtectionParameter);
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
+        } catch (KeyStoreException ex) {
+            Log.e(TAG, ex.getMessage());
         }
     }
 
