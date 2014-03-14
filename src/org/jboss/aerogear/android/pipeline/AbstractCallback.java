@@ -27,6 +27,8 @@ import com.google.common.base.Objects;
  *
  * Using this class instead of an anonymous Callback will allow your application
  * to persist results from loaders through configuration changes.
+ * 
+ * @param <T> the type of data to be passed on onSuccess
  */
 public abstract class AbstractCallback<T> implements Callback<T> {
 
@@ -38,7 +40,9 @@ public abstract class AbstractCallback<T> implements Callback<T> {
      * generate a hashcode.  This code is used to provided the loader manager
      * with a unique value to determine uniqueness of calls to read, etc.
      * 
-     * @param params 
+     * @param params A collection of objects which will be used to generate a 
+     * hashcode
+     * 
      */
     public AbstractCallback(Object... params) {
         hashcode = Objects.hashCode(params);

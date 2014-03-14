@@ -34,8 +34,8 @@ public final class UrlUtils {
      *
      * Append the base url with endpoint
      *
-     * @param baseURL 
-     * @param endpoint
+     * @param baseURL the base url
+     * @param endpoint the string to append to the base url
      * @return a new url baseUrl + endpoint
      * @throws IllegalArgumentException if baseUrl+endpoint is not a real url.
      */
@@ -61,8 +61,9 @@ public final class UrlUtils {
      *
      * Append the base url with the query.
      *
-     * @param baseURL 
-     * @param query
+     * @param baseURL the base url to append a query to
+     * @param query the query to append.
+     * 
      * @return a new url baseUrl + endpoint
      * @throws IllegalArgumentException if baseUrl+endpoint is not a real url.
      */

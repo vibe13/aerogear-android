@@ -53,6 +53,9 @@ public class PushConfig implements Serializable {
     /**
      * The device token Identifies the device within its Push Network. It is the
      * value = GoogleCloudMessaging.getInstance(context).register(SENDER_ID);
+     * 
+     * @return the current device token
+     * 
      */
     public String getDeviceToken() {
         return deviceToken;
@@ -61,6 +64,9 @@ public class PushConfig implements Serializable {
     /**
      * The device token Identifies the device within its Push Network. It is the
      * value = GoogleCloudMessaging.getInstance(context).register(SENDER_ID);
+     * 
+     * @param deviceToken the new device token
+     * 
      */
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
@@ -68,6 +74,8 @@ public class PushConfig implements Serializable {
 
     /**
      * ID of the Variant from the AeroGear UnifiedPush Server.
+     * 
+     * @return the current variant id
      */
     public String getVariantID() {
         return variantID;
@@ -75,6 +83,8 @@ public class PushConfig implements Serializable {
 
     /**
      * ID of the Variant from the AeroGear UnifiedPush Server.
+     * 
+     * @param variantID the new variantID
      */
     public void setVariantID(String variantID) {
         this.variantID = variantID;
@@ -82,6 +92,9 @@ public class PushConfig implements Serializable {
 
     /**
      * Secret of the Variant from the AeroGear UnifiedPush Server.     
+     * 
+     * @return the current Secret
+     * 
      */
     public String getSecret() {
         return secret;
@@ -89,6 +102,8 @@ public class PushConfig implements Serializable {
 
     /**
      * Secret of the Variant from the AeroGear UnifiedPush Server.
+     * 
+     * @param secret the new secret
      */
     public void setSecret(String secret) {
         this.secret = secret;
@@ -99,6 +114,8 @@ public class PushConfig implements Serializable {
      * AeroGear Unified Push Server
      *
      * Defaults to ANDROID
+     * 
+     * @return the device type
      */
     public String getDeviceType() {
         return deviceType;
@@ -109,6 +126,9 @@ public class PushConfig implements Serializable {
      * AeroGear Unified Push Server.
      *
      * Defaults to ANDROID
+     * 
+     * @param deviceType a new device type
+     * 
      */
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
@@ -116,6 +136,8 @@ public class PushConfig implements Serializable {
 
     /**
      * The name of the operating system. Defaults to Android
+     * 
+     * @return the operating system
      */
     public String getOperatingSystem() {
         return operatingSystem;
@@ -123,6 +145,8 @@ public class PushConfig implements Serializable {
 
     /**
      * The name of the operating system. Defaults to Android
+     * 
+     * @param operatingSystem the new operating system
      */
     public void setOperatingSystem(String operatingSystem) {
         this.operatingSystem = operatingSystem;
@@ -132,6 +156,9 @@ public class PushConfig implements Serializable {
      * The version of the operating system running.
      *
      * Defaults to the value provided by android.os.Build.VERSION.RELEASE
+     * 
+     * @return the current OSversion
+     * 
      */
     public String getOsVersion() {
         return osVersion;
@@ -141,6 +168,9 @@ public class PushConfig implements Serializable {
      * The version of the operating system running.
      *
      * Defaults to the value provided by android.os.Build.VERSION.RELEASE
+     * 
+     * @param osVersion the new osVersion
+     * 
      */
     public void setOsVersion(String osVersion) {
         this.osVersion = osVersion;
@@ -151,6 +181,8 @@ public class PushConfig implements Serializable {
      *
      * Examples are an email address or a username
      *
+     * @return alias
+     * 
      */
     public String getAlias() {
         return alias;
@@ -161,6 +193,8 @@ public class PushConfig implements Serializable {
      *
      * Examples are an email address or a username
      *
+     * @param alias the new alias
+     * 
      */
     public void setAlias(String alias) {
         this.alias = alias;
@@ -168,6 +202,9 @@ public class PushConfig implements Serializable {
 
     /**
      * The categories specifies a channel which may be used to send messages
+     * 
+     * @return the current categories
+     * 
      */
     public List<String> getCategories() {
         return categories;
@@ -175,6 +212,9 @@ public class PushConfig implements Serializable {
 
     /**
      * The categories specifies a channel which may be used to send messages
+     * 
+     * @param categories the new categories
+     * 
      */
     public void setCategories(List<String> categories) {
         this.categories = categories;
@@ -193,6 +233,9 @@ public class PushConfig implements Serializable {
     /**
      * The type is a key which is used by Registrations to know which 
      * implementation of PushRegister to use.
+     * 
+     * @param type the new type
+     * 
      */
     public void setType(PushType type) {
         this.type = type;
@@ -209,6 +252,8 @@ public class PushConfig implements Serializable {
 
     /**
      * RegistryURL is the URL of the 3rd party application server
+     * 
+     * @param pushServerURI a new URI
      *
      */
     public void setPushServerURI(URI pushServerURI) {

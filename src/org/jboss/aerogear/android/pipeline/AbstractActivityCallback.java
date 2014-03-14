@@ -34,7 +34,7 @@ import com.google.common.base.Objects;
  * 
  * After onSuccess or onFailure have been called, the activity will be set to null.
  * 
- * @param <T> 
+ * @param <T> the type of data which will be passed to onSuccess
  */
 public abstract class AbstractActivityCallback<T> extends AbstractCallback<T> {
 
@@ -45,7 +45,8 @@ public abstract class AbstractActivityCallback<T> extends AbstractCallback<T> {
      * generate a hashcode.  This code is used to provided the loader manager
      * with a unique value to determine uniqueness of calls to read, etc.
      * 
-     * @param params 
+     * @param params A collection of objects which will be used to generate a 
+     * hashcode
      */
     public AbstractActivityCallback(Object... params) {
         super(params);
@@ -65,7 +66,7 @@ public abstract class AbstractActivityCallback<T> extends AbstractCallback<T> {
      * This method is called by {@link AbstractPipeLoader}
      * during the onLoadComplete method before onSuccess or onFailure are called.
      * 
-     * @param activity 
+     * @param activity the activity to be execute against.
      */
     public void setActivity(Activity activity) {
         this.activity = activity;

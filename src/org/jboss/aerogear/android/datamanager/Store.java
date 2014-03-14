@@ -53,7 +53,7 @@ public interface Store<T> {
      * Search for objects/records from the underlying storage system.
      *
      * @param filter a filter to use to fetch an object
-     * @return List<T>  SHOULD NOT BE NULL
+     * @return a list of elements, should not be null.
      */
     public List<T> readWithFilter(ReadFilter filter);
 

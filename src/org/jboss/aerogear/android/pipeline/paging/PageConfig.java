@@ -80,6 +80,10 @@ public class PageConfig {
     /**
      * NextIdentifier names the element containing data for the next page
      * (default: next)
+     * 
+     * @param nextIdentifier names the element containing data for the next page
+     * (default: next)
+     * 
      */
     public void setNextIdentifier(String nextIdentifier) {
         this.nextIdentifier = nextIdentifier;
@@ -99,7 +103,8 @@ public class PageConfig {
      * PreviousIdentifier names the element containing data for the previous
      * page (default: previous)
      *
-     * @param previousIdentifier
+     * @param previousIdentifier the element containing data for the previous
+     * page (default: previous)
      */
     public void setPreviousIdentifier(String previousIdentifier) {
         this.previousIdentifier = previousIdentifier;
@@ -119,7 +124,8 @@ public class PageConfig {
      * OffsetValue is the offset of the first element that should be included in
      * the returned collection (default: 0)
      *
-     * @param offsetValue
+     * @param offsetValue the first element that should be included in
+     * the returned collection (default: 0)
      */
     public void setOffsetValue(String offsetValue) {
         this.offsetValue = offsetValue;

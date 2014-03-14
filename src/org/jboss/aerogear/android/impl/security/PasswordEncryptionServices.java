@@ -52,7 +52,7 @@ import static org.jboss.aerogear.crypto.encoders.Hex.*;
 /**
  * This class will build a CryptoBox including keys from a keystore protected
  * by a password.
- * <p/>
+ * 
  * If a keystore does not exist, one will be created and saved on the device.
  */
 public class PasswordEncryptionServices extends AbstractEncryptionService implements EncryptionService {

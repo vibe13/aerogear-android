@@ -41,7 +41,7 @@ import com.google.common.collect.Multimap;
  * A {@link Pipeline} represents a ‘collection’ of server connections (aka
  * {@link Pipe}s). The {@link Pipeline} contains some simple management APIs to
  * create or remove {@link Pipe}s objects.
- * <p/>
+ * 
  * As a note, you should NOT extend this class for production or application
  * purposes. This class is made non-final ONLY for testing/mocking/academic
  * purposes.
@@ -73,7 +73,7 @@ public class Pipeline {
      * An initializer method to instantiate the Pipeline,
      *
      * @param baseURL     the URL of the server
-     * @param pipeFactory
+     * @param pipeFactory a PipeFactory
      */
     public Pipeline(URL baseURL, PipeFactory pipeFactory) {
         this.baseURL = baseURL;

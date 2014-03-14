@@ -37,7 +37,7 @@ import com.google.common.base.Objects;
  * After onSuccess or onFailure have been called, the fragment will be set to
  * null.
  *
- * @param <T>
+ * @param <T> the type of data to be passed on onSuccess
  */
 public abstract class AbstractFragmentCallback<T> extends AbstractCallback<T> {
 
@@ -48,7 +48,8 @@ public abstract class AbstractFragmentCallback<T> extends AbstractCallback<T> {
      * generate a hashcode.  This code is used to provided the loader manager
      * with a unique value to determine uniqueness of calls to read, etc.
      * 
-     * @param params 
+     * @param params A collection of objects which will be used to generate a 
+     * hashcode
      */
     public AbstractFragmentCallback(Object... params) {
         super(params);
@@ -69,7 +70,7 @@ public abstract class AbstractFragmentCallback<T> extends AbstractCallback<T> {
      * {@link AbstractAuthenticationLoader} during the onLoadComplete
      * method before onSuccess or onFailure are called.
      *
-     * @param fragment
+     * @param fragment the fragment which will handle this callback
      */
     public void setFragment(Fragment fragment) {
         this.fragment = fragment;

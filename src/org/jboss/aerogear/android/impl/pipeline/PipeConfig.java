@@ -77,7 +77,7 @@ public final class PipeConfig {
      * Modify the name field. This is the value Pipeline uses to reference a
      * Pipe built by this configuration.
      *
-     * @param name
+     * @param name the name of this pipe
      */
     public void setName(String name) {
         this.name = name;
@@ -93,7 +93,7 @@ public final class PipeConfig {
     /**
      * Change the URL which Endpoints are appended to.
      *
-     * @param baseURL
+     * @param baseURL the URL which Endpoints are appended to.
      */
     public void setBaseURL(URL baseURL) {
         this.baseURL = baseURL;
@@ -111,7 +111,7 @@ public final class PipeConfig {
      * Change the string appended to BaseURL. It is the resource a Pipe connects
      * to.
      *
-     * @param endpoint
+     * @param endpoint the new endpoint name
      */
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
@@ -238,8 +238,10 @@ public final class PipeConfig {
 
     /**
      * PageConfig is the configuration information for Paging.
+     * 
+     * @return the current pageConfig
      *
-     * @see PageConfig
+     * @see PageConfig the current pageconfig
      */
     public PageConfig getPageConfig() {
         return pageConfig;
@@ -248,7 +250,7 @@ public final class PipeConfig {
     /**
      * PageConfig is the configuration information for Paging.
      *
-     * @param pageConfig
+     * @param pageConfig a new pageconfig
      * @see PageConfig
      */
     public void setPageConfig(PageConfig pageConfig) {
@@ -276,7 +278,7 @@ public final class PipeConfig {
      *
      * @return the current dataRoot
      * 
-     * @deprecated use {@link MarshallingConfig#getDataRoot()  instead
+     * @deprecated use {@link MarshallingConfig#getDataRoot()}  instead
      */
     @Deprecated
     public String getDataRoot() {
@@ -302,9 +304,9 @@ public final class PipeConfig {
      * A DataRoot of "speakers.data" would make the pipe pass a List using the
      * array of speakers to the onSuccess method of callback.
      *
-     * @param dataRoot
+     * @param dataRoot  the new dataroot
      * 
-     * @deprecated use {@link MarshallingConfig#setDataRoot(java.lang.String)  instead
+     * @deprecated use {@link MarshallingConfig#setDataRoot(java.lang.String)}  instead
      */
     @Deprecated
     public void setDataRoot(String dataRoot) {
@@ -388,6 +390,8 @@ public final class PipeConfig {
      * A ResponseParser is responsible for parsing a String value of the
      * response from a remote source into a object instance.
      *
+     * @param responseParser the response parser to use
+     * 
      */
     public void setResponseParser(ResponseParser responseParser) {
         this.responseParser = responseParser;

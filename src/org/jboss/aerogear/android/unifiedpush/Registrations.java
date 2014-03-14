@@ -106,7 +106,7 @@ public class Registrations {
      * handlers.  This MUST be called when a Fragment or activity is 
      * backgrounded via onPause.
      * 
-     * @param handler 
+     * @param handler a new handler
      */
     public static void unregisterMainThreadHandler(MessageHandler handler) {
         mainThreadHandlers.remove(handler);
@@ -117,7 +117,7 @@ public class Registrations {
      * This will remove the given handler from the collection of background 
      * thread handlers.  
      * 
-     * @param handler 
+     * @param handler a new handler 
      */
     public static void unregisterBackgroundThreadHandler(MessageHandler handler) {
         backgroundThreadHandlers.remove(handler);

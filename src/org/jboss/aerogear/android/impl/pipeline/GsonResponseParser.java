@@ -76,6 +76,9 @@ public class GsonResponseParser<T> implements ResponseParser<T> {
     }
 
     /**
+     * 
+     * @return the gson Serializer
+     * 
      * @deprecated This method exists to support another deprecated method while
      * we transition off of it.  {@link  PipeConfig#setGsonBuilder(com.google.gson.GsonBuilder) }
      */
@@ -85,6 +88,8 @@ public class GsonResponseParser<T> implements ResponseParser<T> {
     }
 
     /**
+     * @param gson the gson serializer to use
+     * 
      * @deprecated This method exists to support another deprecated method while
      * we transition off of it.  {@link  PipeConfig#setGsonBuilder(com.google.gson.GsonBuilder) }
      */

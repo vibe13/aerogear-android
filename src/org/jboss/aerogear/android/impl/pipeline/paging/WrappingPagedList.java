@@ -39,10 +39,10 @@ public class WrappingPagedList<T> extends ForwardingList<T> implements PagedList
     private final ReadFilter previousFilter;
 
     /**
-     * @param pipe
-     * @param data
-     * @param nextFilter
-     * @param previousFilter 
+     * @param pipe the pipe to read for more data
+     * @param data the initial dataset
+     * @param nextFilter the filter which defines the "next" set of data
+     * @param previousFilter  the filter which defines the "previous" set of data
      */
     public WrappingPagedList(Pipe<T> pipe, List<T> data, ReadFilter nextFilter, ReadFilter previousFilter) {
         this.pipe = pipe;

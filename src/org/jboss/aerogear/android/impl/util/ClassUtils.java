@@ -26,7 +26,9 @@ public class ClassUtils {
      * This will return a class of the type T[] from a given class. When we read
      * from the AG pipe, Java needs a reference to a generic array type.
      *
-     * @param klass
+     * @param klass a class to turn into an array class
+     * @param <T> the type of the class.
+     * 
      * @return an array of klass with a length of 1
      */
     public static <T> Class<T[]> asArrayClass(Class<T> klass) {

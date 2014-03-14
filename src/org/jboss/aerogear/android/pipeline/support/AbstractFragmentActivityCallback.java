@@ -38,7 +38,6 @@ import com.google.common.base.Objects;
  * 
  * After onSuccess or onFailure have been called, the activity will be set to null.
  * 
- * @param <T> 
  */
 public abstract class AbstractFragmentActivityCallback<T> extends AbstractCallback<T> {
 
@@ -49,7 +48,8 @@ public abstract class AbstractFragmentActivityCallback<T> extends AbstractCallba
      * generate a hashcode.  This code is used to provided the loader manager
      * with a unique value to determine uniqueness of calls to read, etc.
      * 
-     * @param params 
+     * @param params A collection of objects which will be used to generate a 
+     * hashcode
      */
     public AbstractFragmentActivityCallback(Object... params) {
         super(params);
@@ -69,7 +69,7 @@ public abstract class AbstractFragmentActivityCallback<T> extends AbstractCallba
      * This method is called by {@link AbstractSupportPipeLoader} or {@link AbstractSupportAuthenticationLoader}
      * during the onLoadComplete method before onSuccess or onFailure are called.
      * 
-     * @param activity 
+     * @param activity the activity which will handle this callback
      */
     public void setFragmentActivity(FragmentActivity activity) {
         this.activity = activity;

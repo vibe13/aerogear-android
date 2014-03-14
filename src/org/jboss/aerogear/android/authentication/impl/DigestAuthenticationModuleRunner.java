@@ -1,18 +1,18 @@
 /**
- * JBoss, Home of Professional Open Source
- * Copyright Red Hat, Inc., and individual contributors.
+ * JBoss, Home of Professional Open Source Copyright Red Hat, Inc., and
+ * individual contributors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
- * 	http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.jboss.aerogear.android.authentication.impl;
 
@@ -61,10 +61,11 @@ public class DigestAuthenticationModuleRunner extends
     private String password;
 
     /**
-     * @param baseURL
-     * @param config
-     * @throws IllegalArgumentException
-     *             if an endpoint can not be appended to baseURL
+     * @param baseURL the baseURL that all urls (login, enroll, etc) will be
+     * appended to.
+     * @param config a config object
+     * @throws IllegalArgumentException if an endpoint can not be appended to
+     * baseURL
      */
     public DigestAuthenticationModuleRunner(URL baseURL,
             AuthenticationConfig config) {
@@ -93,7 +94,7 @@ public class DigestAuthenticationModuleRunner extends
 
             Map<String, String> authenticateHeaders = DigestHeaderUtils
                     .extractValues(exception.getHeaders().get(
-                            WWW_AUTHENTICATE_HEADER));
+                                    WWW_AUTHENTICATE_HEADER));
             realm = authenticateHeaders.get(REALM);
             domain = authenticateHeaders.get(DOMAIN);
             nonce = authenticateHeaders.get(NONCE);
@@ -110,7 +111,7 @@ public class DigestAuthenticationModuleRunner extends
                 provider.setDefaultHeader(
                         "Authorization",
                         getAuthorizationHeader(loginURL.toURI(), "GET",
-                                new byte[] {}));
+                                new byte[]{}));
             } catch (URISyntaxException ex) {
                 Log.e(TAG, ex.getMessage(), ex);
                 throw new RuntimeException(ex);

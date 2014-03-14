@@ -97,12 +97,12 @@ public class HttpBasicAuthenticationModule extends AbstractAuthenticationModule 
 
     /**
      * This method stores username and password. Additionally, it sets
-     * {@link #isLoggedIn} to true and calls {@link Callback#onSuccess(java.lang.Object)
+     * {@link #isLoggedIn} to true and calls {@link Callback#onSuccess(java.lang.Object) immediately
      * }.
      *
-     * @param username
-     * @param password
-     * @param callback
+     * @param username the username of the user
+     * @param password the password of the user
+     * @param callback a callback to handle the result.
      */
     @Override
     public void login(String username, String password, final Callback<HeaderAndBody> callback) {
@@ -125,7 +125,7 @@ public class HttpBasicAuthenticationModule extends AbstractAuthenticationModule 
      *
      * This method always calls {@link Callback#onSuccess(java.lang.Object) }
      *
-     * @param callback
+     * @param callback the callback whose onsuccess method will be executed
      */
     @Override
     public void logout(final Callback<Void> callback) {
@@ -162,7 +162,7 @@ public class HttpBasicAuthenticationModule extends AbstractAuthenticationModule 
      * it a UnsupportedOperationException.
      *
      * @param userData this value is ignored.
-     * @param callback
+     * @param callback the callback to be called
      */
     @Override
     public void enroll(Map<String, String> userData, final Callback<HeaderAndBody> callback) {

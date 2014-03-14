@@ -30,14 +30,14 @@ public interface PagedList<T> extends List<T> {
     /**
      * Retrieve the next result set.  This method MUST NOT pass data to the callback which can not be used.
      * 
-     * @param callback 
+     * @param callback a Callback that will handle the next page of data
      */
     public void next(Callback<List<T>> callback);
 
     /**
      * Retrieve the previous result set.  This method MUST NOT pass data to the callback which can not be used.
      * 
-     * @param callback 
+     * @param callback a Callback that will handle the previous page of data
      */
     public void previous(Callback<List<T>> callback);
 }

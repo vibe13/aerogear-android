@@ -43,47 +43,47 @@ public interface AuthenticationModule {
 
     /**
      * Will try to register a user with a service using userData.
-     * <p/>
+     * 
      * It will call the callbacks onSuccess with a parameter of a Map of the
      * values returned by the enroll service or onFailure if there is an error
      * 
-     * @param userData
-     * @param callback
+     * @param userData a collection of data to be passed to the server.
+     * @param callback a callback which will handle the server response.
      */
     public void enroll(Map<String, String> userData,
             Callback<HeaderAndBody> callback);
 
     /**
      * Will try to log in a user using username and password.
-     * <p/>
+     *
      * It will call the callbacks onSuccess with a parameter of a Map of the
      * values returned by the enroll service or onFailure if there is an error
      * 
-     * @param username
-     * @param password
-     * @param callback
+     * @param username the users userName
+     * @param password the users Password
+     * @param callback a callback which will handle the server response.
      */
     public void login(String username, String password,
             Callback<HeaderAndBody> callback);
 
     /**
      * Will try to log in a user
-     * <p/>
+     * 
      * It will call the callbacks onSuccess with a parameter of a Map of the
      * values returned by the enroll service or onFailure if there is an error
      * 
-     * @param loginData
-     * @param callback
+     * @param loginData a map of data which will be passed to the server
+     * @param callback a callback which will handle the server response.
      */
     void login(Map<String, String> loginData, Callback<HeaderAndBody> callback);
 
     /**
      * Performs a logout of the current user.
-     * <p/>
+     *
      * It will call callback.onSuccess with no value on success and
      * callback.onFailure if there is an error.
      * 
-     * @param callback
+     * @param callback a callback which will handle the server response.
      */
     public void logout(Callback<Void> callback);
 

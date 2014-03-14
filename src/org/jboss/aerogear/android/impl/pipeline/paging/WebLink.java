@@ -39,8 +39,8 @@ public class WebLink {
     /**
      * Attempts to parse a header value into a WebLink.
      * 
-     * @param headerContent
-     * @throws ParseException 
+     * @param headerContent the header to parse
+     * @throws ParseException thrown if parsing fails
      */
     public WebLink(String headerContent) throws ParseException {
         Matcher uriAndFields = P.matcher(headerContent);
