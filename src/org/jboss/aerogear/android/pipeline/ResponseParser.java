@@ -28,7 +28,7 @@ public interface ResponseParser<T> {
      * @param response the data from the server
      * @param responseType the type to marshal to
      * @return an instance of responseType
-     * @deprecated use {@link ResponseParser#handleResponse(org.jboss.aerogear.android.http.HeaderAndBody, java.lang.Class)  instead
+     * @deprecated use {@link ResponseParser#handleResponse(org.jboss.aerogear.android.http.HeaderAndBody, java.lang.Class)}  instead
      */
     @Deprecated
     T handleResponse(String response, Class<T> responseType);
@@ -39,7 +39,7 @@ public interface ResponseParser<T> {
      * @param response the data from the server
      * @param responseType the type to marshal to
      * @return an instance of responseType
-     * @deprecated use {@link ResponseParser#handleResponse(org.jboss.aerogear.android.http.HeaderAndBody, java.lang.Class)  instead
+     * @deprecated use {@link ResponseParser#handleResponse(org.jboss.aerogear.android.http.HeaderAndBody, java.lang.Class)}  instead
      */
     @Deprecated
     T[] handleArrayResponse(String response, Class<T[]> responseType);

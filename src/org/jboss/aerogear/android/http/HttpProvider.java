@@ -39,6 +39,8 @@ public interface HttpProvider {
      * Issues an HTTP request, consumes the content, and cleans up
      * after itself.
      *
+     * @param data the string body of the http request
+     * 
      * @return the HeaderAndBody response from the server
      * @throws HttpException if the http request doesn't return status 200
      */
@@ -48,6 +50,8 @@ public interface HttpProvider {
      * Issues an HTTP request, consumes the content, and cleans up
      * after itself.
      *
+     * @param data the binary body of the http request
+     * 
      * @return the HeaderAndBody response from the server
      * @throws HttpException if the http request doesn't return status 200
      */
@@ -57,6 +61,9 @@ public interface HttpProvider {
      * Issues an HTTP request, consumes the content, and cleans up
      * after itself.
      *
+     * @param id an ID which will be appended to the baseURL
+     * @param data the string body of the http request
+     * 
      * @return the HeaderAndBody response from the server
      * @throws HttpException if the http request doesn't return status 200
      */
@@ -65,7 +72,10 @@ public interface HttpProvider {
     /**
      * Issues an HTTP request, consumes the content, and cleans up
      * after itself.
-     *
+     * 
+     * @param id an ID which will be appended to the baseURL
+     * @param data the binary body of the http request
+     * 
      * @return the HeaderAndBody response from the server
      * @throws HttpException if the http request doesn't return status 200
      */
@@ -75,6 +85,8 @@ public interface HttpProvider {
      * Issues an HTTP request, consumes the content, and cleans up
      * after itself.
      *
+     * @param id an ID which will be appended to the baseURL
+     * 
      * @return the HeaderAndBody response from the server
      * @throws HttpException if the http request doesn't return status 200
      */

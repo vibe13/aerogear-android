@@ -50,8 +50,9 @@ public final class AGSecurityAuthenticationModule extends AbstractAuthentication
 
     /**
      *
-     * @param baseURL
-     * @param config
+     * @param baseURL the url that all of the other URLs (enroll, login, etc) will be appended to.
+     * @param config a config object
+     * 
      * @throws IllegalArgumentException if an endpoint can not be appended to
      * baseURL
      */

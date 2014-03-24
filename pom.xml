@@ -180,6 +180,27 @@
         </pluginManagement>
         <plugins>
             <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourcepath>${basedir}/src</sourcepath>
+                    <sourceFileExcludes>
+                        <exclude>
+                            **com/google/**
+                        </exclude>
+                        <exclude>**/R.java</exclude>
+                    </sourceFileExcludes>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
@@ -204,16 +225,16 @@
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
                     <proguard>
                         <skip>${proguard.skip}</skip>
-                    </proguard>
+                    </proguard>                    
                 </configuration>
                 <executions>
-                        <execution>
-                                <phase>package</phase>
-                                <goals>
-                                        <goal>aar</goal>
-                                        <goal>apklib</goal>
-                                </goals>
-                        </execution>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>aar</goal>
+                            <goal>apklib</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

@@ -1,18 +1,18 @@
 /**
- * JBoss, Home of Professional Open Source
- * Copyright Red Hat, Inc., and individual contributors.
+ * JBoss, Home of Professional Open Source Copyright Red Hat, Inc., and
+ * individual contributors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
- * 	http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package org.jboss.aerogear.android.authentication.impl;
 
@@ -33,11 +33,11 @@ import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 
 /**
- * This is the default implementation of Authenticator.
- * It uses a HashMap behind the scenes to store its modules.
- * <p/>
+ * This is the default implementation of Authenticator. It uses a HashMap behind
+ * the scenes to store its modules.
+ * 
  * As a note, you should NOT extend this class for production or application
- * purposes.  This class is made non-final ONLY for testing/mocking/academic
+ * purposes. This class is made non-final ONLY for testing/mocking/academic
  * purposes.
  */
 public class Authenticator {
@@ -60,9 +60,10 @@ public class Authenticator {
 
     /**
      * Removes a AuthenticationModule for name
-     * 
-     * @param name
-     * @return a AuthenticationModule for name or null if there isn't a value for name
+     *
+     * @param name the name of the module to remove
+     * @return a AuthenticationModule for name or null if there isn't a value
+     * for name
      * @throws NullPointerException is name is null
      */
     public AuthenticationModule remove(String name) {
@@ -70,12 +71,12 @@ public class Authenticator {
     }
 
     /**
-     * 
-     * Builds a AuthenticationModule based on the AuthenticationConfig and 
+     *
+     * Builds a AuthenticationModule based on the AuthenticationConfig and
      * records it as name
-     * 
-     * @param name
-     * @param config
+     *
+     * @param name the name of the module to add
+     * @param config a config object
      * @return a fully operational AuthenticationModule
      * @throws NullPointerException is config or name is null
      */
@@ -87,16 +88,16 @@ public class Authenticator {
         }
 
         switch (type) {
-        case AG_SECURITY:
-            modules.put(name, new AGSecurityAuthenticationModule(baseURL, config));
-            break;
-        case HTTP_BASIC:
-            modules.put(name, new HttpBasicAuthenticationModule(baseURL));
-            break;
-        case HTTP_DIGEST:
-            modules.put(name, new HttpDigestAuthenticationModule(baseURL, config));
-            break;
-        default:
+            case AG_SECURITY:
+                modules.put(name, new AGSecurityAuthenticationModule(baseURL, config));
+                break;
+            case HTTP_BASIC:
+                modules.put(name, new HttpBasicAuthenticationModule(baseURL));
+                break;
+            case HTTP_DIGEST:
+                modules.put(name, new HttpDigestAuthenticationModule(baseURL, config));
+                break;
+            default:
 
         }
 
@@ -110,13 +111,14 @@ public class Authenticator {
 
     /**
      * Gets a AuthenticationModule for name
-     * 
-     * This method should NOT be called by Activities or Fragments.  
-     * This method is safe for Services, tests, etc.
-     * 
-     * @param name
-     * 
-     * @return a AuthenticationModule for name or null if there isn't a value for name
+     *
+     * This method should NOT be called by Activities or Fragments. This method
+     * is safe for Services, tests, etc.
+     *
+     * @param name the name of the module to return
+     *
+     * @return a AuthenticationModule for name or null if there isn't a value
+     * for name
      * @throws NullPointerException is name is null
      */
     public AuthenticationModule get(String name) {
@@ -124,11 +126,12 @@ public class Authenticator {
     }
 
     /**
-     * Gets a AuthenticationModule for name. This will wrap the module in a Loader.
-     * 
-     * @param name
+     * Gets a AuthenticationModule for name. This will wrap the module in a
+     * Loader.
+     *
+     * @param name the name of the module to fetch
      * @param activity the activity which the Loaders should be bound against.
-     * 
+     *
      * @return a {@link AuthenticationModuleAdapter} for name
      * @throws NullPointerException is name is null
      */
@@ -137,12 +140,13 @@ public class Authenticator {
     }
 
     /**
-     * Gets a AuthenticationModule for name. This will wrap the module in a Loader.
-     * 
-     * @param name
+     * Gets a AuthenticationModule for name. This will wrap the module in a
+     * Loader.
+     *
+     * @param name the name of the module to fetch
      * @param fragment the fragment the Loaders will be bound against.
-     * @param applicationContext 
-     * 
+     * @param applicationContext the applicationContext to bind against
+     *
      * @return a {@link AuthenticationModuleAdapter}for name
      * @throws NullPointerException is name is null
      */
@@ -151,11 +155,12 @@ public class Authenticator {
     }
 
     /**
-     * Gets a AuthenticationModule for name. This will wrap the module in a Loader.
-     * 
-     * @param name
+     * Gets a AuthenticationModule for name. This will wrap the module in a
+     * Loader.
+     *
+     * @param name the name of the module to fetch
      * @param activity the activity which the Loaders should be bound against.
-     * 
+     *
      * @return a SupportAuthenticationModuleAdapter for name
      * @throws NullPointerException is name is null
      */
@@ -164,11 +169,12 @@ public class Authenticator {
     }
 
     /**
-     * Gets a AuthenticationModule for name.  This will wrap the module in a Loader.
-     * 
-     * @param name
+     * Gets a AuthenticationModule for name. This will wrap the module in a
+     * Loader.
+     *
+     * @param name the name of the module to fetch
      * @param fragment the fragment the Loaders will be bound against.
-     * @param applicationContext 
+     * @param applicationContext the applicationContext to bind against
      *
      * @return a SupportAuthenticationModuleAdapter for name
      * @throws NullPointerException is name is null

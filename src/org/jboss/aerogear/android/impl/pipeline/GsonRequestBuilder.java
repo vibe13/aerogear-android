@@ -43,6 +43,9 @@ public class GsonRequestBuilder<T> implements RequestBuilder<T> {
 
     /**
      * @deprecated This method exists to support another deprecated method while we transition off of it.  {@link  PipeConfig#setGsonBuilder(com.google.gson.GsonBuilder) }
+     * 
+     * @return the Gson serializer used.
+     * 
      */
     @Deprecated
     public Gson getGson() {
@@ -51,6 +54,9 @@ public class GsonRequestBuilder<T> implements RequestBuilder<T> {
 
     /**
      * @deprecated This method exists to support another deprecated method while we transition off of it.  {@link  PipeConfig#setGsonBuilder(com.google.gson.GsonBuilder) }
+     * 
+     * @param gson the gson serializer to use
+     * 
      */
     @Deprecated
     public void setGson(Gson gson) {

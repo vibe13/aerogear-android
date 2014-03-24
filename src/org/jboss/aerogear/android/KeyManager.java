@@ -58,7 +58,7 @@ public class KeyManager {
     /**
      * Fetches an instance of encryption service.
      * 
-     * @param name the name provided to {@link KeyManager#encryptionService(org.jboss.aerogear.android.security.CryptoConfig, java.lang.String, android.content.Context) 
+     * @param name the name provided to {@link KeyManager#encryptionService(java.lang.String, org.jboss.aerogear.android.security.CryptoConfig, android.content.Context)  }
      * @return a cached encryption service or null.
      */
     public EncryptionService get(String name) {
@@ -68,7 +68,7 @@ public class KeyManager {
     /**
      * Removes an instance of encryption service.
      * 
-     * @param name the name provided to {@link KeyManager#encryptionService(org.jboss.aerogear.android.security.CryptoConfig, java.lang.String, android.content.Context) 
+     * @param name the name provided to {@link KeyManager#encryptionService(java.lang.String, org.jboss.aerogear.android.security.CryptoConfig, android.content.Context) }
      */
     public void remove(String name) {
         services.remove(name);

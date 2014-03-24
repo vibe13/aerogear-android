@@ -26,18 +26,18 @@ public interface EncryptionService {
      * 
      * Encrypt the message with an application scoped IV
      * 
-     * @param message
-     * @return 
+     * @param message the message to encrypt
+     * @return a encrypted version of message
      */
     public byte[] encrypt(byte[] message);
 
     /**
      * 
-     * Encrypt the message with
+     * Encrypt the message with a iv
      * 
-     * @param message
+     * @param message  the message to encrypt
      * @param iv The IV to encrypted the message with
-     * @return 
+     * @return an encrypted version of the method
      */
     public byte[] encrypt(byte[] iv, byte[] message);
 
@@ -45,18 +45,18 @@ public interface EncryptionService {
      * 
      * Decrypt the message with an application scoped IV
      * 
-     * @param message
-     * @return 
+     * @param message the message to decrypt
+     * @return the decrypted method
      */
     public byte[] decrypt(byte[] message);
 
     /**
      * 
-     * Decrypt the message with
+     * Decrypt the message with an IV
      * 
-     * @param message
+     * @param message the message to decrypt
      * @param iv The IV to encrypted the message with
-     * @return 
+     * @return  the message decrypted
      */
     public byte[] decrypt(byte[] iv, byte[] message);
 

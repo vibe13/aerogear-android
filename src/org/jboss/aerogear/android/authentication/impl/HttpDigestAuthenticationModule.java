@@ -52,8 +52,8 @@ public class HttpDigestAuthenticationModule extends AbstractAuthenticationModule
 
     /**
      *
-     * @param baseURL
-     * @param config
+     * @param baseURL the url that the other endpoints (enroll, login, eyc) will be appended to
+     * @param config a config object
      * @throws IllegalArgumentException if an endpoint can not be appended to
      * baseURL
      */
@@ -180,7 +180,7 @@ public class HttpDigestAuthenticationModule extends AbstractAuthenticationModule
     }
 
     /**
-     * This will log in the user using the keys "loginName" and "password".
+     * {@inheritDoc }
      */
     @Override
     public void login(Map<String, String> loginData, Callback<HeaderAndBody> callback) {

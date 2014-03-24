@@ -30,7 +30,7 @@ import java.util.Map;
 
 /**
  * Represents an abstraction layer for a storage system.
- * <p/>
+ * 
  * As a note, you should NOT extend this class for production or application
  * purposes. This class is made non-final ONLY for testing/mocking/academic
  * purposes.
@@ -59,7 +59,7 @@ public class DataManager {
      * Creates a new DataManager using the idGenerator parameter and
      * {@link DefaultStoreFactory}
      *
-     * @param idGenerator
+     * @param idGenerator an idGenerator
      * @throws IllegalArgumentException if idGenerator is null
      */
     public DataManager(IdGenerator idGenerator) {
@@ -70,7 +70,7 @@ public class DataManager {
      * Creates a new DataManager using the storeFactory parameter and
      * {@link DefaultIdGenerator}
      *
-     * @param storeFactory
+     * @param storeFactory a store factory
      * @throws IllegalArgumentException if storeFactory is null
      */
     public DataManager(StoreFactory storeFactory) {
@@ -80,8 +80,8 @@ public class DataManager {
     /**
      * Creates a DataManager using the supplied parameters
      *
-     * @param idGenerator
-     * @param storeFactory
+     * @param idGenerator an idGenerator
+     * @param storeFactory a store factory
      * @throws IllegalArgumentException if idGenerator is null
      * @throws IllegalArgumentException if storeFactory is null
      */
@@ -105,7 +105,10 @@ public class DataManager {
      * Creates a new default (in memory) Store implementation.
      *
      * @param storeName The name of the actual data store object.
-     * @deprecated use {@link DataManager#store(java.lang.String, java.lang.Class) 
+     * 
+     * @return a default in MemoryStore
+     * 
+     * @deprecated use {@link DataManager#store(java.lang.String, java.lang.Class)}
      */
     @Deprecated
     public Store store(String storeName) {
@@ -117,6 +120,8 @@ public class DataManager {
      *
      * @param storeName The name of the actual data store object.
      * @param modelClass The class for the Store
+     * 
+     * @return a default in MemoryStore 
      */
     public Store store(String storeName, Class modelClass) {
         return store(storeName, new StoreConfig(modelClass));
@@ -127,6 +132,8 @@ public class DataManager {
      *
      * @param storeName The name of the actual data store object.
      * @param config    The config object used to build the store
+     * 
+     * @return a store configured by the config param
      */
     public Store store(String storeName, StoreConfig config) {
         Store store = storeFactory.createStore(config);
@@ -140,6 +147,11 @@ public class DataManager {
      * @param storeName  The name of the actual data store object.
      * @param passphrase The passphrase used to create a KeyStore
      * @param modelClass The model class will be encrypted
+     * 
+     * @return a default encrypted in memory store
+     * 
+     * @throws InvalidKeySpecException if the key spec is invalid
+     * 
      */
     public Store encryptedStore(String storeName, String passphrase, Class modelClass) throws InvalidKeySpecException {
         StoreConfig config = new StoreConfig(modelClass);
@@ -155,6 +167,9 @@ public class DataManager {
      * @param config     The config object used to build the store
      * @param passphrase The passphrase used to create a KeyStore
      * @param modelClass The model class will be encrypted
+     * 
+     * @return a default encrypted in memory store
+     * 
      */
     public Store encryptedStore(String storeName, StoreConfig config, String passphrase, Class modelClass)
             throws InvalidKeySpecException {
@@ -171,6 +186,8 @@ public class DataManager {
      * removed is determined by the storeName argument.
      *
      * @param storeName The name of the actual data store object.
+     * 
+     * @return the store removed or null
      */
     public Store remove(String storeName) {
         return stores.remove(storeName);
@@ -180,6 +197,8 @@ public class DataManager {
      * Loads a given Store implementation, based on the given storeName argument.
      *
      * @param storeName The name of the actual data store object.
+     * 
+     * @return the store stored at storeName
      */
     public Store get(String storeName) {
         return stores.get(storeName);

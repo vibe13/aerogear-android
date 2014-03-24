@@ -213,6 +213,8 @@ public class AeroGearGCMPushRegistrar implements PushRegistrar {
      * <p>
      * If result is empty, the registration has failed.
      *
+     * @param context the application context
+     * 
      * @return registration id, or empty string if the registration is not
      *      complete.
      */

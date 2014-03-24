@@ -62,7 +62,7 @@ public interface LoaderPipe<T> extends Pipe<T> {
     /**
      * Passes in a multimap of ids for the named pipe.  LoaderPipe should manage this collection.
      * 
-     * @param idsForNamedPipes 
+     * @param idsForNamedPipes A map of all LoaderIds for pipes hased by their name
      */
     public void setLoaderIds(Multimap<String, Integer> idsForNamedPipes);
 

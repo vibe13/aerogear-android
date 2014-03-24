@@ -30,6 +30,8 @@ public interface PipeHandler<T> {
      * This method is called after a call to read.  It performs the actual load of data
      * and returns.
      * 
+     * @param requestingPipe the Pipe which is calling the this handler.
+     * 
      * @return a List of data.
      * 
      */

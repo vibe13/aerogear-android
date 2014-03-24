@@ -25,7 +25,9 @@ public class PropertyNotFoundException extends RuntimeException {
      * Constructs with class and fieldName cannot be found.
      *
      * @param klass Class where field cannot be found.
+     * @param type the type of the field that was being looked for
      * @param fieldName field cannot be found property.
+     * 
      */
     public PropertyNotFoundException(Class klass, Class type, String fieldName) {
         super("Cannot find get/set to field " + fieldName + " (" + type.getSimpleName() + ") on " + klass.getSimpleName());
