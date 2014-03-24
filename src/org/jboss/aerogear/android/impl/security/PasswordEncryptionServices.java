@@ -41,6 +41,7 @@ import org.jboss.aerogear.android.security.CryptoConfig;
 import org.jboss.aerogear.android.security.EncryptionService;
 import org.jboss.aerogear.android.security.EncryptionServiceType;
 import org.jboss.aerogear.crypto.CryptoBox;
+import org.jboss.aerogear.crypto.Hash;
 import org.jboss.aerogear.crypto.Random;
 import org.jboss.aerogear.crypto.encoders.Hex;
 import org.jboss.aerogear.crypto.keys.KeyPair;
@@ -111,10 +112,6 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
 
     private CryptoBox createKey(KeyStore store, PasswordProtectedKeystoreCryptoConfig config, Context context) {
         KeyPair pair = new KeyPair();
-        PrivateKey privateKey = pair.getPrivateKey();
-        PublicKey publicKey = pair.getPublicKey();
-        MessageDigest hash;
-        KeyAgreement keyAgree;
 
         final char[] password = derive(config.password).toCharArray();
         final String keyAlias = config.getAlias();
@@ -122,28 +119,18 @@ public class PasswordEncryptionServices extends AbstractEncryptionService implem
         final KeyStore.ProtectionParameter passwordProtectionParameter = new KeyStore.PasswordProtection(password);
 
         try {
-            hash = MessageDigest.getInstance("SHA-256", AeroGearCrypto.PROVIDER);
-            keyAgree = KeyAgreement.getInstance("ECDH", AeroGearCrypto.PROVIDER);
-            keyAgree.init(privateKey);
-            keyAgree.doPhase(publicKey, true);
+            CryptoBox cryptoBox = new CryptoBox();
+            byte[] sharedSecret = cryptoBox.generateSecret(pair.getPrivateKey(), pair.getPublicKey());
 
-            byte[] keyBytes = hash.digest(keyAgree.generateSecret());
-
-            KeyStore.SecretKeyEntry secretEntry = new KeyStore.SecretKeyEntry(new SecretKeySpec(keyBytes, "ECDH"));
+            KeyStore.SecretKeyEntry secretEntry = new KeyStore.SecretKeyEntry(new SecretKeySpec(sharedSecret, "ECDH"));
             store.setEntry(keyAlias, secretEntry, passwordProtectionParameter);
             store.store(context.openFileOutput(keyStoreFile, Context.MODE_PRIVATE), password);
-            return new CryptoBox(keyBytes);
+            return new CryptoBox(sharedSecret);
 
         } catch (NoSuchAlgorithmException ex) {
             Log.e(TAG, ex.getMessage(), ex);
             throw new RuntimeException(ex);
         } catch (KeyStoreException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (NoSuchProviderException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            throw new RuntimeException(ex);
-        } catch (InvalidKeyException ex) {
             Log.e(TAG, ex.getMessage(), ex);
             throw new RuntimeException(ex);
         } catch (CertificateException ex) {
