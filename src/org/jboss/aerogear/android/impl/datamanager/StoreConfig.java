@@ -92,6 +92,10 @@ public final class StoreConfig {
         return klass;
     }
 
+    /**
+     *
+     * @deprecated please use StoreConfig#Class instead.
+     */
     public void setKlass(Class klass) {
         this.klass = klass;
     }
