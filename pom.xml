@@ -64,7 +64,7 @@
         <roboeletric.version>1.2</roboeletric.version>
         <junit.version>4.8.2</junit.version>
         <mockito.version>1.9.5</mockito.version>
-        <scprov.version>1.47.0.3</scprov.version>
+        <bouncycastle.version>140</bouncycastle.version>
         <maven.android.plugin.verson>3.8.0</maven.android.plugin.verson>
         <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
         <java.version>1.7</java.version>
@@ -146,7 +146,7 @@
         <dependency>
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk16</artifactId>
-            <version>140</version>
+            <version>${bouncycastle.version}</version>
             <scope>test</scope>
         </dependency>
 
