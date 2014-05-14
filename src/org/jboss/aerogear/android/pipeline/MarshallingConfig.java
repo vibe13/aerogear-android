@@ -17,7 +17,6 @@
 package org.jboss.aerogear.android.pipeline;
 
 import java.nio.charset.Charset;
-import org.jboss.aerogear.android.impl.pipeline.PipeConfig;
 
 /**
  * This class holds configuration data used by requestBuilders and response

@@ -17,15 +17,12 @@
 package org.jboss.aerogear.android.impl.pipeline;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.jboss.aerogear.android.Provider;
@@ -57,8 +54,6 @@ import org.json.JSONObject;
 import android.util.Log;
 import android.util.Pair;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import org.apache.http.HttpStatus;
 import org.jboss.aerogear.android.impl.util.ClassUtils;
 

@@ -20,12 +20,6 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.authentication.AbstractAuthenticationModule;
 import org.jboss.aerogear.android.authentication.AuthenticationModule;
-import org.jboss.aerogear.android.authentication.AuthorizationFields;
-import org.jboss.aerogear.android.http.HttpProvider;
-import org.jboss.aerogear.android.impl.core.HttpProviderFactory;
-import org.jboss.aerogear.android.impl.helper.Data;
-import org.jboss.aerogear.android.impl.helper.UnitTestUtils;
-import org.jboss.aerogear.android.impl.pipeline.RestAdapter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,10 +27,7 @@ import org.junit.runner.RunWith;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import org.jboss.aerogear.android.impl.pipeline.PipeConfig;
 
 import static org.mockito.Mockito.*;
 

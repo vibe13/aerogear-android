@@ -17,21 +17,17 @@
 package org.jboss.aerogear.android.impl.datamanager;
 
 import org.jboss.aerogear.android.ReadFilter;
-import org.jboss.aerogear.android.datamanager.StoreType;
 import org.jboss.aerogear.android.impl.helper.Data;
 import org.jboss.aerogear.android.impl.helper.DataWithNoIdConfigured;
 import org.jboss.aerogear.android.impl.helper.DataWithNoPropertyId;
 import org.jboss.aerogear.android.impl.reflection.PropertyNotFoundException;
 import org.jboss.aerogear.android.impl.reflection.RecordIdNotFoundException;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
 
 import static org.jboss.aerogear.android.impl.datamanager.StoreTypes.ENCRYPTED_MEMORY;
-import static org.jboss.aerogear.android.impl.datamanager.StoreTypes.MEMORY;
 import static org.junit.Assert.*;
 
 public class EncryptedMemoryStorageTest {
