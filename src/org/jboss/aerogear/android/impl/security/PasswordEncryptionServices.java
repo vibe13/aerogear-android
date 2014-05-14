@@ -23,7 +23,6 @@ import org.jboss.aerogear.android.security.CryptoConfig;
 import org.jboss.aerogear.android.security.EncryptionService;
 import org.jboss.aerogear.android.security.EncryptionServiceType;
 import org.jboss.aerogear.crypto.CryptoBox;
-import org.jboss.aerogear.crypto.Hash;
 import org.jboss.aerogear.crypto.Random;
 import org.jboss.aerogear.crypto.encoders.Hex;
 import org.jboss.aerogear.crypto.keys.KeyPair;

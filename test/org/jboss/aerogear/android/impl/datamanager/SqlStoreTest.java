@@ -36,8 +36,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import org.jboss.aerogear.android.DataManager;
-import org.jboss.aerogear.android.datamanager.Store;
 
 @RunWith(RobolectricTestRunner.class)
 public class SqlStoreTest {
